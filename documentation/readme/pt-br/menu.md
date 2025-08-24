@@ -104,5 +104,14 @@ Passos:
 
 # Tutoriais relacionados
 
-LINK1
-LINK2
+[LEIA ME](/documentation/readme/README-pt-BR.md)
+
+[Primeiros passos](/documentation/readme/pt-br/primeiros_passos.md)
+
+[Após subir o container](/documentation/readme/pt-br/container_criado.md)
+
+[Barra Superior](/documentation/readme/pt-br/barra_superior.md)
+
+→ [Menu](/documentation/readme/pt-br/menu.md)
+
+[Barra de Ações do Editor](/documentation/readme/pt-br/barra_acoes.md)
