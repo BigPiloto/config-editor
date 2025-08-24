@@ -6,7 +6,7 @@
 
 Config Editor is a Flask-based web application that allows you to safely edit Docker container configuration files directly from your browser.
 
-It supports secure login, Two-Factor Authentication (2FA TOTP), manual backups, Save & Apply to write configs, and a dedicated Restart container button.
+It supports secure login, Two-Factor Authentication (2FA TOTP), manual backups, **`Save & Apply / Aplly`** to write configs, and a dedicated **`Restart container`** button.
 
 ## Features
 
