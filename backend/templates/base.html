@@ -1,0 +1,396 @@
+<!doctype html>
+<html lang="{{ current_lang|lower }}">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>{% block title %}{{ T("app.title") }}{% endblock %}</title>
+  <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='app.css') }}">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script>
+    // Tema central para todos os modais
+    window.swalCenter = Swal.mixin({
+      buttonsStyling: false,
+      heightAuto: false,
+      scrollbarPadding: true,
+      customClass: {
+        popup: 'swal2-dark',
+        confirmButton: 'btn primary',
+        cancelButton: 'btn'
+      },
+      background: '#0f172a',
+      color: '#e6e7ea'
+      });
+  </script>
+  {% block head %}{% endblock %}
+</head>
+<body>
+<header class="row">  
+  <div><h3>{{ T("app.title") }}</h3></div>
+  <div class="right">
+    <span class="pill">
+      {{ T("app.mode.label") }} {{ T(dry_run and "app.mode.dry" or "app.mode.prod") }}
+    </span>
+    {% if current_user.is_authenticated %}
+      {% if container_name %}
+        <span class="pill">
+          {{ T("app.container.set", name=container_name) }}
+        </span>
+        <span id="pill-health" class="pill" style="display:inline-flex;align-items:center;gap:8px;cursor:pointer" title="{{ T('health.tooltip') }}">
+          <span id="pill-health-dot" aria-hidden="true" style="width:10px;height:10px;border-radius:999px;background:#9ca3af;display:inline-block"></span>
+          <span id="pill-health-text" style="font-size:12px;color:#cbd5e1">{{ T('health.checking') }}</span>
+        </span>
+      {% else %}
+        <span class="pill">
+          {{ T("app.container.unset") }}
+        </span>
+        <span id="pill-health" class="pill" style="display:inline-flex;align-items:center;gap:8px;cursor:pointer" title="{{ T('health.tooltip') }}">
+          <span id="pill-health-dot" aria-hidden="true" style="width:10px;height:10px;border-radius:999px;background:#9ca3af;display:inline-block"></span>
+          <span id="pill-health-text" style="font-size:12px;color:#cbd5e1">{{ T('health.checking') }}</span>
+        </span>
+      {% endif %}
+      <div class="usermenu" id="usermenu">
+        <button class="btn" id="usermenu-btn" aria-haspopup="true" aria-expanded="false" style="border-radius: 999px; ">
+          {{ current_user.id }} ▾
+        </button>
+        <div class="usermenu-panel" id="usermenu-panel" role="menu" hidden>
+          <a role="menuitem" href="{{ url_for('editor.view_editor') }}">{{ T("app.menu.editor") }}</a>
+          <div class="sep"></div>
+          <a role="menuitem" href="{{ url_for('auth.change_username') }}">{{ T("app.menu.change_user") }}</a>
+          <a role="menuitem" href="{{ url_for('auth.change_password') }}">{{ T("app.menu.change_pass") }}</a>
+          {% if TOTP_ENABLED %}
+            <a role="menuitem" href="{{ url_for('auth.totp_manage') }}">{{ T("app.menu.2fa") }}</a>
+          {% endif %}
+          <div class="sep"></div>
+          <a role="menuitem" href="{{ url_for('i18n.choose_lang', next=(request.full_path if request.query_string else request.path)) }}">{{ T("app.menu.change_lang") }}</a>
+        </div>
+      </div>
+      <a 
+        class="pill logout"
+        id="btn-logout"
+        href="{{ url_for('auth.logout') }}"
+        data-title="{{ T('auth.logout_question') }}"
+        data-text="{{ T('auth.logout_text') }}"
+        data-ok="{{ T('btn.logout') }}"
+        data-cancel="{{ T('btn.cancel') }}"
+        >
+        {{ T("btn.logout") }}
+      </a>
+    {% endif %}
+  </div>
+</header>
+<main>
+  {# Exporta flashes como JSON puro #}
+  {% set __raw = get_flashed_messages(with_categories=true) %}
+  {% set ns = namespace(msgs=[]) %}
+  {% for cat, raw in __raw %}
+    {% if raw is string %}
+      {% set ns.msgs = ns.msgs + [[cat, T(raw, default=raw)]] %}
+    {% elif raw is mapping %}
+      {% set ns.msgs = ns.msgs + [[cat, raw]] %}
+    {% else %}
+      {# fallback: força string #}
+      {% set ns.msgs = ns.msgs + [[cat, raw|string]] %}
+    {% endif %}
+  {% endfor %}
+  <script id="flash-data" type="application/json">{{ ns.msgs | tojson }}</script>
+
+  <script id="health-data" type="application/json">
+    {{ {
+      "health_url": url_for("editor.health"),
+      "container_name": container_name if container_name else None,
+      "is_authenticated": current_user.is_authenticated
+    } | tojson }}
+  </script>
+  
+  {% block content %}{% endblock %}
+</main>
+
+<footer>{{ T("app.working_in") }} {{ data_dir or "/data" }}</footer>
+
+<script id="i18n" type="application/json">
+{{ {
+  "health.tooltip": T("health.tooltip"),
+  "health.checking": T("health.checking"),
+  "health.not_found": T("health.not_found"),
+  "health.error": T("health.error"),
+  "health.failed": T("health.failed"),
+
+  "health.modal.title": T("health.modal.title"),
+  "health.modal.col.container": T("health.modal.col.container"),
+  "health.modal.col.status": T("health.modal.col.status"),
+  "health.modal.col.health": T("health.modal.col.health"),
+  "health.modal.close": T("health.modal.close"),
+  "health.modal.empty": T("health.modal.empty"),
+
+  "docker.status.running": T("docker.status.running"),
+  "docker.status.created": T("docker.status.created"),
+  "docker.status.restarting": T("docker.status.restarting"),
+  "docker.status.exited": T("docker.status.exited"),
+  "docker.status.dead": T("docker.status.dead"),
+  "docker.status.unknown": T("docker.status.unknown"),
+
+  "docker.health.healthy": T("docker.health.healthy"),
+  "docker.health.starting": T("docker.health.starting"),
+  "docker.health.unhealthy": T("docker.health.unhealthy"),
+  "docker.health.unknown": T("docker.health.unknown"),
+
+  "health.title.fmt": T("health.title.fmt", status="{{status}}", health="{{health}}")
+} | tojson }}
+</script>
+
+<script>
+  // Apresenta todos os flashes como modais centrais
+  (async function(){
+    const tag = document.getElementById('flash-data');
+    const msgs = tag ? JSON.parse(tag.textContent || '[]') : [];
+    const map = {
+      success: { icon: 'success', color: '#22c55e' },
+      error:   { icon: 'error',   color: '#ef4444' },
+      warning: { icon: 'warning', color: '#f59e0b' },
+      info:    { icon: 'info',    color: '#60a5fa' }
+    };
+    for (const [cat, msg] of msgs) {
+      const m = map[cat] || map.info;
+      
+      let opts = {
+        icon: m.icon,
+        iconColor: m.color,
+        confirmButtonText: 'OK'
+      }
+      
+      // Se a mensagem veio como objeto {title, html}
+      if (typeof msg === "object" && msg.title) {
+        opts.title = msg.title;
+        opts.html  = msg.html || "";
+      } else {
+        // Se veio como string normal
+        opts.title = msg;
+      }
+      
+      await swalCenter.fire(opts);
+    }
+  })();
+
+  // Confirmação de "Sair"
+  (function () {
+    const btn = document.getElementById('btn-logout');
+    if (!btn) return;
+    btn.addEventListener('click', function (e) {
+      e.preventDefault();
+      const url = this.getAttribute('href');
+      (window.swalCenter || Swal).fire({
+        icon: 'question',
+        title: btn.dataset.title,
+        text: btn.dataset.text,
+        showCancelButton: true,
+        confirmButtonText: btn.dataset.ok,
+        cancelButtonText: btn.dataset.cancel,
+        reverseButtons: true
+      }).then((res) => {
+        if (res.isConfirmed) window.location.href = url;
+      });
+    });
+  })();
+
+  // Menu suspenso (usermenu)
+  (function () {
+    const root  = document.getElementById('usermenu');
+    if (!root) return;
+    const btn   = document.getElementById('usermenu-btn');
+    const panel = document.getElementById('usermenu-panel');
+
+    function open()  { panel.hidden = false; btn.setAttribute('aria-expanded','true'); }
+    function close() { panel.hidden = true;  btn.setAttribute('aria-expanded','false'); }
+    function toggle(){ panel.hidden ? open() : close(); }
+
+    // Abre/fecha no clique do botão
+    btn.addEventListener('click', (e) => {
+      e.preventDefault();
+      toggle();
+    });
+
+    // Fecha ao clicar fora
+    document.addEventListener('click', (e) => {
+      if (!panel.hidden && !root.contains(e.target)) close();
+    });
+
+    // Fecha com ESC
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') close();
+    });
+
+    // Acessibilidade básica pelo teclado (setas navegam pelos links)
+    panel.addEventListener('keydown', (e) => {
+      const items = [...panel.querySelectorAll('[role="menuitem"]')];
+      if (!items.length) return;
+      const i = items.indexOf(document.activeElement);
+      if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        (items[(i + 1) % items.length] || items[0]).focus();
+      } else if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        (items[(i - 1 + items.length) % items.length] || items[items.length - 1]).focus();
+      }
+    });
+  })();
+
+  // i18n helper simples
+  const I18N = (() => {
+    try { return JSON.parse(document.getElementById('i18n')?.textContent || '{}'); }
+    catch { return {}; }
+  })();
+
+  function t(key, vars) {
+    let s = I18N[key] ?? key;
+    if (vars) {
+      s = s.replace(/\{\{(\w+)\}\}/g, (_, k) => (vars[k] ?? ""));
+      s = s.replace(/\{(\w+)\}/g,        (_, k) => (vars[k] ?? "")); // aceita {x} também
+    }
+    return s;
+  }
+
+  function trStatus(s){
+    const key = `docker.status.${String(s || '').toLowerCase()}`;
+    const v = t(key);
+    return (v === key) ? (s || '—') : v;
+  }
+  function trHealth(s){
+    const key = `docker.health.${String(s || '').toLowerCase()}`;
+    const v = t(key);
+    return (v === key) ? (s || '—') : v;
+  }
+
+  (function () {
+    // Desabilita avisos de globals do linter, caso tenha eslint/ts
+    /* eslint-disable no-undef */
+
+    const el = document.getElementById('pill-health');
+    if (!el) return;
+
+    const ctxEl = document.getElementById('health-data');
+    let ctx = {};
+    try { ctx = JSON.parse(ctxEl?.textContent || '{}'); } catch {}
+    //if (!ctx.is_authenticated) return;
+
+    const dot  = document.getElementById('pill-health-dot');
+    const text = document.getElementById('pill-health-text');
+
+    function colorFor(status, health) {
+      const C = { green:'#22c55e', amber:'#f59e0b', red:'#ef4444', gray:'#9ca3af' };
+      const s = (status || '').toLowerCase();
+      const h = (health || '').toLowerCase();
+      
+      // nomes já traduzidos
+      const S = {
+        running:    t('docker.status.running'),
+        created:    t('docker.status.created'),
+        restarting: t('docker.status.restarting'),
+        exited:     t('docker.status.exited'),
+        dead:       t('docker.status.dead'),
+        unknown:    t('docker.status.unknown')
+      };
+      const H = {
+        healthy:    t('docker.health.healthy'),
+        starting:   t('docker.health.starting'),
+        unhealthy:  t('docker.health.unhealthy'),
+        unknown:    t('docker.health.unknown')
+      };
+
+      if (s === 'running') {
+        if (h === 'healthy')   return { color: C.green, label: `${S.running} · ${H.healthy}` };
+        if (h === 'starting')  return { color: C.amber, label: `${S.running} · ${H.starting}` };
+        if (h === 'unhealthy') return { color: C.red,   label: `${S.running} · ${H.unhealthy}` };
+        return { color: C.green, label: S.running };
+      }
+      if (s === 'created' || s === 'restarting') return { color: C.amber, label: S[s] || S.unknown };
+      if (s === 'exited' || s === 'dead')        return { color: C.red,   label: S[s] || S.unknown };
+      return { color: C.gray, label: S.unknown };
+    }
+
+    async function fetchHealth() {
+      try {
+        const res = await fetch(ctx.health_url, { headers: { 'Accept':'application/json' }, credentials: 'same-origin' });
+        if (!res.ok) throw new Error('HTTP ' + res.status);
+        const data = await res.json();
+
+        const name = ctx.container_name;
+        const all  = (data && data.containers) || {};
+        const item = name ? all[name] : null;
+
+        if (!item) {
+          dot.style.backgroundColor = '#9ca3af';
+          text.textContent = t('health.not_found');
+          el.title = t('health.tooltip');
+          return {all};
+        }
+
+        if (item.ok) {
+          const { color, label } = colorFor(item.status, item.health);
+          dot.style.backgroundColor = color;
+          text.textContent = label;
+          el.title = t('health.title.fmt', {
+            status: trStatus(item.status),
+            health: trHealth(item.health)
+          });
+        } else {
+          dot.style.backgroundColor = '#ef4444';
+          text.textContent = t('health.error');
+          el.title = item.error || t('health.error');
+        }
+        return {all};
+      } catch (e) {
+        dot.style.backgroundColor = '#ef4444';
+        text.textContent = t('health.failed');
+        el.title = t('health.tooltip');
+        return {all:null, error:String(e)};
+      }
+    }
+
+    // inicial + polling
+    let lastAll = null;
+    fetchHealth().then(r => { lastAll = r && r.all; });
+    const interval = setInterval(async ()=> {
+      const r = await fetchHealth(); lastAll = r && r.all;
+    }, 15000);
+
+    // modal ao clicar
+    el.addEventListener('click', () => {
+      const all = lastAll || {};
+      const rows = Object.entries(all).map(([name, info]) => {
+        const st = info && info.ok ? trStatus(info.status) : t('health.error');
+        const hl = info && info.ok ? trHealth(info.health) : (info && info.error ? t('health.error') : '—');
+        return `<tr>
+          <td style="padding:6px 10px;border-bottom:1px solid #334155;">${name}</td>
+          <td style="padding:6px 10px;border-bottom:1px solid #334155;">${st}</td>
+          <td style="padding:6px 10px;border-bottom:1px solid #334155;">${hl}</td>
+        </tr>`;
+      }).join('') || `<tr><td colspan="3" style="padding:6px 10px;">${t('health.modal.empty')}</td></tr>`;
+
+      const html = `
+        <div style="text-align:left">
+          <table style="width:100%;border-collapse:collapse">
+            <thead>
+              <tr>
+                <th style="text-align:left;padding:6px 10px;border-bottom:1px solid #475569;">${t('health.modal.col.container')}</th>
+                <th style="text-align:left;padding:6px 10px;border-bottom:1px solid #475569;">${t('health.modal.col.status')}</th>
+                <th style="text-align:left;padding:6px 10px;border-bottom:1px solid #475569;">${t('health.modal.col.health')}</th>
+              </tr>
+            </thead>
+            <tbody>${rows}</tbody>
+          </table>
+        </div>
+      `;
+      (window.swalCenter || window.Swal).fire({
+        icon: 'info',
+        title: t('health.modal.title'),
+        html,
+        confirmButtonText: t('health.modal.close'),
+      });
+    });
+
+    window.addEventListener('beforeunload', () => clearInterval(interval));
+  })();
+</script>
+</body>
+</html>

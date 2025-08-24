@@ -1,0 +1,231 @@
+{
+  "api": {
+    "invalid_params": "Invalid parameters",
+    "backup_out_of_scope": "Path outside backup area",
+    "file_not_found": "File not found"
+  },
+
+  "app": {
+    "container": {
+      "set": "Container: {name}",
+      "unset": "Container: Not Set"
+    },
+    "menu": {
+      "editor": "Editor",
+      "change_lang": "Change language",
+      "change_user": "Change user",
+      "change_pass": "Change password",
+      "2fa": "Two-factor authentication"
+    },
+    "mode": {
+      "label": "Mode: ",
+      "dry": "DRY-RUN",
+      "prod": "PRODUCTION"
+    },
+    "title": "CONFIG EDITOR",
+    "working_in": "Working on: "
+  },
+
+  "auth": {
+    "2fa_code": "2FA Code",
+    "caps_on": "Caps Lock on",
+    "logout_question": "Logout?",
+    "logout_text": "You will need to log-in again."
+  },  
+  
+  "btn": {
+    "back": "Back",
+    "cancel": "Cancel",
+    "enter": "Login",
+    "logout": "Logout",
+    "save": "Save"
+  },
+
+  "commom": {
+    "action": "Invalid action",
+    "delete": "Delete",
+    "pass": "Password",
+    "user": "User"
+  },
+
+  "change": {
+    "2fa_activate": "Enable 2FA",
+    "2fa_disable": "Disable 2FA",
+    "2fa_disabled": "2FA Disabled",
+    "2fa_enabled": "2FA Enabled",
+    "2fa_text": "Enable 2FA for added security.",
+    "2fa_text_2": "(of the new secret)",
+    "2fa_text_3": "Open the Authenticator app, add a new item",
+    "2fa_text_4": "and use the current code.",
+    "confirm_new_pass": "Confirm new password",
+    "current_user": "Current user",
+    "current_pass": "Current password",
+    "new_user": "New name user",
+    "new_pass": "New password",
+    "qr_text_1": "1) Scan the QR code in the authenticator app (it will create ",
+    "qr_text_2": "2) Enter the 6-digit code below and activate it",
+    "qr_text_3": "The QR will be generated automatically on this screen",
+    "qr_text_4": "Rescan this QR in your app if needed (shows the current secret)",
+    "qr_text_5": "by clicking on",
+    "qr_text_6": "1) Scan the QR code in the authenticator app"
+  },
+
+  "docker": {
+    "health": {
+      "healthy": "Healthy",
+      "starting": "Starting",
+      "unhealthy": "Unhealthy",
+      "unknown": "—"
+    },
+    "status": {
+      "created": "Created",
+      "dead": "Dead",
+      "exited": "Exited",
+      "restarting": "Restarting",
+      "running": "Running",
+      "unknown": "Unknown"
+    }
+  },
+
+  "editor": {
+    "apply": "Apply",
+    "diff": "Diff",
+    "file_label": "File",
+    "file_use": "File in use (current)",
+    "open": "Open",
+    "opening": "Opening",
+    "restart": "Restart container",
+    "restore": "Restore",
+    "return_editor": "Return to Editor",
+    "save": "Save",
+    "save_apply": "Save & Apply",
+    "saved_ok": "File saved successfully",
+    "text_1": "When you select a version, it loads into the editor. To save it to the file, click 'Save & Apply' or 'Apply'",
+    "validate": "Validate",
+    "validating": "Validating…",
+    "versions": "Versions",
+    "versions_select": "Select version"
+  },
+
+  "flash": {
+    "2fa_already_enabled": "2FA is already enabled",
+    "2fa_already_disabled": "2FA is already disabled",
+    "2fa_enabled_sucess": "2FA successfully enabled",
+    "2fa_disable_admin": "2FA management disabled by administrator",
+    "2fa_invalid": "Invalid 2FA code",
+    "2fa_invalid_activation": "Invalid 2FA code for activation",
+    "confirm_dont_match": "Confirmation does not match",
+    "change_user_sucess": "User changed successfully",
+    "dont_match": "The passwords don't match",
+    "failed_temp_secret": "Failed to generate temporary secret. Please reload the page",
+    "new_pass_diff": "The new password must be different from the current one",
+    "new_user_diff": "Enter a new user different from the current one",
+    "pass_empty": "New password cannot be empty",
+    "pass_incorrect": "Current password incorrect",
+    "pass_wrong": "Current password incorrect",
+    "sucess_change_pass": "Password changed successfully",
+    "user_2fa": "Registered User - 2FA Enabled",
+    "user_pass": "Fill in username and password",
+    "user_register": "Registered user",
+    "no_files": "No files available in /data",
+    "file_missing": "File not provided",
+    "saved_dry_run": "Saved (dry-run, nothing written to disk)",
+    "save_ok_title": "File saved and applied successfully",
+    "save_ok_backup": "Backup at: {path}",
+    "applied_dry_run": "Applied (dry-run, no backup; nothing written to disk)",
+    "applied_ok": "Applied as current version (no backup)",
+    "restart": {
+      "file_missing": "File not provided to restart container",
+      "no_mapping": "No container associated with this file",
+      "ok": "Container restarted: {name}",
+      "fail": "Failed to restart: {err}"
+    },
+    "restore": {
+      "missing_params": "Select file and backup",
+      "bad_backup": "Corrupted backup: {err}",
+      "ok": "Restored successfully"
+    }
+  },
+  
+  "health": {
+    "checking": "Checking…",
+    "error": "Error",
+    "failed": "Failed",
+    "modal": {
+      "close": "Close",
+      "col": {
+        "container": "Container",
+        "status": "Status",
+        "health": "Health"
+      },
+      "empty": "No data",
+      "title": "Containers health"
+    },
+    "not_found": "Not found",
+    "title": {
+      "fmt": "Status: {{status}} · Health: {{health}}"
+    },
+    "tooltip": "Container status"
+  },
+
+  "language": {
+    "continue": "Continue",
+    "label": "Language",
+    "title": "Choose your language"
+  },
+
+  "login": {
+    "label": "Login"
+  },
+
+  "register": {
+    "confirm_pass": "Confirm password",
+    "first": "Register user (first access)",
+    "label": "Register",
+    "text_1": "The name in the app will appear as",
+    "your_user": "YourUser"
+  },
+
+  "swal":{
+    "btn": {
+      "cancel": "Cancel",
+      "confirm": "Yes, restart",
+      "delete": "Delete",
+      "save": "Save"
+    },
+    "delete": {
+      "exclude_backup": "Delete this backup?",
+      "fail": "Failed to delete",
+      "select_backup": "Select a backup to delete",
+      "sucess": "Backup deleted"
+    },
+    "error_backup": "Error loading backup",
+    "fail_request": "Preview request failed",
+    "load": {
+      "text": "<small>Remember to save and/or apply at the end of editing</small>",
+      "title": "The selected file has been uploaded"
+    },
+    "restart": {
+      "text": "This will quickly disrupt service",
+      "title": "Restart container?"
+    },
+    "save": {
+      "text": "The current file will be replaced by this one<br> and a backup of the new version will be made",
+      "title": "Do you really want to save?"
+    },
+    "validate": {
+      "fail": "Fail {kind}",
+      "file": "file",
+      "no_validator": "No validator for this file type",
+      "ok": " Valid {kind}",
+      "xml_error": "Invalid XML: {err}",
+      "yaml_error": "Invalid YAML: {err}"
+    }
+  },
+
+  "kind": {
+    "file": "FILE",
+    "xml": "XML",
+    "yaml": "YAML"
+  }
+}

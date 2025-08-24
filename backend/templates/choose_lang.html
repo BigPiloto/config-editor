@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+{% block title %}{{ T("language.title", default="Choose your language") }}{% endblock %}
+
+{% block content %}
+<div class="login-wrap">
+  <div class="card login-card">
+    <header class="card-head row">
+      <h2>{{ T("language.title", default="Choose your language") }}</h2>
+    </header>
+
+    <form method="post" class="form" action="{{ url_for('i18n.apply_lang') }}">
+      <div class="form-row">
+        <label for="lang" class="muted">{{ T("language.label", default="Language") }}</label>
+        <select id="lang" name="lang" class="input" required onchange="onLangChange(this.value)" autofocus>
+          {% for code in supported %}
+            <option value="{{ code }}" {% if code == current %}selected{% endif %}>
+              {{ "English" if code == "en" else "Português (Brasil)" }}
+            </option>
+          {% endfor %}
+        </select>
+        <div 
+          class="row" style="justify-content:center; gap:10px; margin: 20px 0 10px 0;">
+          <button class="btn primary" type="submit">{{ T("language.continue", default="Continue") }}</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+  function onLangChange(code) {
+    // monta URL /set-lang/<code>?next=/lang
+    const base = "{{ url_for('i18n.set_lang', lang='__LANG__') }}".replace('__LANG__', code);
+    const next = "{{ url_for('i18n.choose_lang') }}";
+    const url  = base + "?next=" + encodeURIComponent(next);
+    window.location.href = url;
+  }
+</script>
+{% endblock %}

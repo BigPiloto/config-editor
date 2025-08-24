@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="login-wrap">
+  <div class="card login-card">
+    <header class="card-head row" style="justify-content: space-between; align-items: center;">
+      <div class="row" style="gap:10px; align-items:center;">
+        <h2>{{ T("app.menu.2fa") }}</h2>
+        <span class="tag info">{{ T(status_enabled and "change.2fa_enabled" or "change.2fa_disabled") }}</span>
+        {% if not status_enabled %}
+          <div class="muted" style="margin:10px;">{{ T("change.2fa_text") }}</div>
+        {% endif %}
+      </div>
+      <a href="{{ url_for('editor.view_editor') }}" class="btn">{{ T("btn.back") }}</a>
+    </header>
+
+    {% if not status_enabled %}
+      <div class="form-row" style="display:flex; gap:16px; align-items:flex-start;">
+        {% if show_qr %}
+          <img id="preview-qr" alt="QR 2FA (preview)" src="{{ url_for('auth.totp_qr_preview') }}" class="qr">
+          <div class="muted">
+            <br>
+            {{ T("change.qr_text_1") }} “Config Editor - {{ username }}”).
+            <br>
+            <br>
+            {{ T("change.qr_text_2") }}.
+          </div>
+        {% else %}
+          <div class="muted">{{ T("change.qr_text_3") }}.</div>
+        {% endif %}
+      </div>
+      <form method="post" class="form" autocomplete="off">
+        <input type="hidden" name="action" value="enable">
+
+        <div class="form-row">
+          <label class="muted">{{ T("change.current_pass") }}</label>
+          <input class="input" type="password" name="current" placeholder="••••••••" required autocomplete="current-password" autofocus>
+        </div>
+
+        <div class="form-row">
+          <label class="muted">{{ T("auth.2fa_code") }} {{ T("change.2fa_text_2") }}</label>
+          <input class="input" name="totp" placeholder="000000" inputmode="numeric" pattern="\d{6}" maxlength="6" required autocomplete="one-time-code">
+          <small class="muted">{{ T("change.2fa_text_3") }} “Config Editor - {{ username }}” {{ T("change.2fa_text_4") }}</small>
+        </div>
+
+        <div class="form-row">
+          <button class="btn primary w-full" type="submit">{{ T("change.2fa_activate") }}</button>
+        </div>
+      </form>
+      
+      <script>
+        // Cache-buster no QR ao abrir a tela
+        const img = document.getElementById('preview-qr');
+        if (img) {
+          const u = new URL(img.src, location.origin);
+          u.searchParams.set('_', Date.now());
+          img.src = u.toString();
+        }
+      </script>
+
+    {% else %}
+      <div class="form-row" style="display:flex; gap:16px; align-items:flex-start;">
+          <img id="qr-current" class="qr" alt="QR 2FA" src="{{ url_for('auth.totp_qr') }}">
+          <div class="muted">
+            <br>
+            {{ T("change.qr_text_4") }}.
+          </div>
+        </div>
+
+        <!-- Desabilitar -->
+        <form method="post" class="form" autocomplete="off" style="margin-top:8px;">
+          <input type="hidden" name="action" value="disable">
+          <div class="form-row">
+            <label class="muted">{{ T("change.current_pass") }}</label>
+            <input class="input" type="password" name="current" placeholder="••••••••" required autocomplete="current-password" autofocus>
+          </div>
+          <div class="form-row">
+            <label class="muted">{{ T("auth.2fa_code") }}</label>
+            <input class="input" name="totp" placeholder="000000" inputmode="numeric" pattern="\d{6}" maxlength="6" required autocomplete="one-time-code">
+          </div>
+          <div class="form-row">
+            <button class="btn pill logout" type="submit" style="width: 100%; margin: 0;">{{ T("change.2fa_disable") }}</button>
+          </div>
+        </form>
+    {% endif %}
+  </div>
+</div>
+
+<script>
+  const cur = document.getElementById('qr-current');
+  if (cur) {
+    const u = new URL(cur.src, location.origin);
+    u.searchParams.set('_', Date.now());
+    cur.src = u.toString();
+  }
+
+  document.querySelectorAll('input[name="totp"]').forEach(el=>{
+    el.addEventListener('input',()=>{ el.value = el.value.replace(/\D/g,'').slice(0,6); });
+  });
+
+  document.querySelectorAll('form[method="post"]').forEach(f=>{
+    let sent=false;
+    f.addEventListener('submit', e=>{
+      if(sent){ e.preventDefault(); return; }
+      sent=true;
+      f.querySelector('button[type="submit"]')?.setAttribute('disabled','true');
+    });
+  });
+
+</script>
+
+
+{% endblock %}

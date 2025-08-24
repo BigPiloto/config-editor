@@ -1,0 +1,423 @@
+{% extends "base.html" %}
+{% block head %}
+  <script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.52.0/min/vs/loader.min.js"></script>
+{% endblock %}
+{% block content %}
+  <div class="row" style="align-items:flex-end">
+    <form method="get" action="{{ url_for('editor.view_editor') }}" class="row">
+      <label for="backup-select" class="muted">{{ T("editor.file_label") }}:</label>
+      <select name="file" id="file-select" onchange="this.form.submit()">
+        {% for f in files %}
+          <option value="{{ f.name }}" {% if current_file and f.name == current_file.name %}selected{% endif %}>
+            {{ f.name }}
+          </option>
+        {% endfor %}
+      </select>
+      <noscript><button class="btn">{{ T("editor.open") }}</button></noscript>
+    </form>
+
+    <div class="editor-actions" style="display:flex; gap:10px; margin-top:15px;">
+      <!-- Botão Salvar e Aplicar (gera backup) -->
+      <form id="save-form" method="post" action="{{ url_for('editor.save') }}">
+        <input type="hidden" name="file" value="{{ current_file.name if current_file }}">
+        <input type="hidden" name="text" id="editor-text-save">
+        <button type="button" class="btn primary" onclick="return confirmSave()" {{ 'disabled' if not current_file else '' }}>
+          {{ T("editor.save_apply")}}
+        </button>
+      </form>
+
+      <!-- Botão Aplicar (sem backup) -->
+      <form id="apply-form" method="post" action="{{ url_for('editor.apply') }}" onsubmit="return beforeApply()">
+        <input type="hidden" name="file" value="{{ current_file.name if current_file }}">
+        <input type="hidden" name="text" id="editor-text-apply">
+        <button type="submit" class="btn btn-secondary" {{ 'disabled' if not current_file else '' }}>
+          {{ T("editor.apply")}}
+        </button>
+      </form>
+      
+    </div>
+
+    <!-- Reiniciar container -->
+    <form method="post" action="{{ url_for('editor.restart_container') }}" class="row">
+      <input type="hidden" name="file" value="{{ current_file.name if current_file }}">
+      <button type="button" class="btn" id="btn-restart" onclick="return confirmRestart()">{{ T("editor.restart") }}</button>
+    </form>
+
+    <button type="button" class="btn" id="btn-validate" onclick="validateFile()">{{ T("editor.validate") }}</button>
+    <button type="button" class="btn" id="btn-diff" onclick="return showDiff()">{{ T("editor.diff") }}</button>
+    <button type="button" class="btn" id="btn-back" style="display:none" onclick="return hideDiff()">{{ T("editor.return_editor") }}</button>
+
+    <div class="row" style="flex-direction:row; align-items:center; gap:8px;">
+      <label for="backup-select" class="muted">{{ T("editor.versions") }}:</label>
+      <select id="backup-select" style="max-width:420px;">
+        <option value="">— {{ T("editor.versions_select") }} —</option>
+        <option value="__original__">{{ T("editor.file_use") }}</option>
+        {% for b in backups %}
+          <option value="{{ b }}">{{ b }}</option>
+        {% endfor %}
+      </select>
+      <button type="button" class="btn danger" id="btn-del-backup" onclick="return deleteSelectedBackup()">
+        {{ T("commom.delete") }}
+      </button>
+    </div>
+      <small class="muted">
+        {{ T("editor.text_1") }}
+      </small>
+  </div>
+
+  <div class="pill" style="margin-top:10px">{{ T("editor.opening") }}: {{ data_dir or "/data" }}/{{ current_file.name if current_file }}</div>
+
+  <div id="editor" style="height:65vh; border:1px solid #334155; border-radius:10px; margin-top:10px"></div>
+  <div id="diff" style="display:none; height:65vh; border:1px solid #334155; border-radius:10px; margin-top:10px"></div>
+
+  <!-- Dados iniciais em JSON "puro" (linters não reclamam) -->
+  <script id="initial-content" type="application/json">{{ content|tojson }}</script>
+  <script id="flags" type="application/json">
+    {{ {'diffAllowEdit': diff_allow_edit} | tojson }}
+  </script>
+
+  {# i18n local do editor #}
+  <script id="i18n-editor" type="application/json">
+  {{ {
+    "swal.restart.title": T("swal.restart.title"),
+    "swal.restart.text": T("swal.restart.text"),
+    "swal.btn.confirm": T("swal.btn.confirm"),
+    "swal.btn.cancel": T("swal.btn.cancel"),
+    "swal.btn.save": T("swal.btn.save"),
+    "swal.btn.delete": T("swal.btn.delete"),
+    "swal.validate.ok": T("swal.validate.ok"),
+    "swal.validate.fail": T("swal.validate.fail"),
+    "swal.validate.file": T("swal.validate.file"),
+    "swal.save.title": T("swal.save.title"),
+    "swal.save.text": T("swal.save.text"),
+    "swal.load.title": T("swal.load.title"),
+    "swal.load.text": T("swal.load.text"),
+    "swal.error_backup": T("swal.error_backup"),
+    "swal.fail_request": T("swal.fail_request"),
+    "swal.delete.select_backup": T("swal.delete.select_backup"),
+    "swal.delete.exclude_backup": T("swal.delete.exclude_backup"),
+    "swal.delete.sucess": T("swal.delete.sucess"),
+    "swal.delete.fail": T("swal.delete.fail"),
+  } | tojson }}
+  </script>
+
+  <script>
+    // carrega o pacote i18n desta página
+    const __I18N_EDITOR__ = (() => {
+      try { return JSON.parse(document.getElementById('i18n-editor')?.textContent || '{}'); }
+      catch { return {}; }
+    })();
+
+    // mescla quando o I18N global existir
+    (function waitAndMerge(){
+      if (typeof I18N !== 'undefined') {
+        Object.assign(I18N, __I18N_EDITOR__);
+      } else {
+        setTimeout(waitAndMerge, 0);
+      }
+    })();
+  </script>
+
+  <script type="application/javascript">
+    const swal = window.swalCenter || window.Swal;
+
+    function escapeHtml(s){ const d=document.createElement('div'); d.textContent=String(s||''); return d.innerHTML; }
+    // Lê o conteúdo inicial sem quebrar o linter
+    const initial = JSON.parse(document.getElementById('initial-content').textContent);
+    let editor;
+    const CURRENT_FILE = "{{ current_file.name if current_file }}";
+
+    require.config({ paths: { 'vs': 'https://cdn.jsdelivr.net/npm/monaco-editor@0.52.0/min/vs' }});
+    require(['vs/editor/editor.main'], function() {
+      editor = monaco.editor.create(document.getElementById('editor'), {
+        value: initial,
+        language: getLangByName(CURRENT_FILE),
+        automaticLayout: true,
+        theme: (window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches) ? 'vs-dark' : 'vs',
+        minimap: { enabled: true }
+      });
+    });
+
+    function getLangByName(name){
+      const n = (name || "").toLowerCase();
+      if (n.endsWith(".xml")) return "xml";
+      if (n.endsWith(".yml") || n.endsWith(".yaml")) return "yaml";
+      return "plaintext";
+    }
+
+    // Salva editor -> hidden input
+    //function doSave(){
+    //  document.getElementById('text').value = editor.getValue();
+    //  return true;
+    //}
+
+    // Confirma reinício
+    function confirmRestart(){
+      swal.fire({
+        icon: 'warning',
+        title: t('swal.restart.title'),
+        text: t('swal.restart.text'),
+        showCancelButton: true,
+        confirmButtonText: t('swal.btn.confirm'),
+        cancelButtonText: t('swal.btn.cancel'),
+        reverseButtons: true
+      }).then((res) => {
+        if(res.isConfirmed){
+          // envia o form
+          document.querySelector('form[action="{{ url_for("editor.restart_container") }}"]').submit();
+        }
+      });
+      return false; // impede submit automático
+    }
+
+    // Validar documento
+    async function validateFile() {
+      const text = editor.getValue();
+      const res = await fetch('{{ url_for("editor.validate") }}', {
+        method: 'POST',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({ text, file: CURRENT_FILE })
+      });
+      const json = await res.json();
+      const rawKind  = String(json.kind || 'file').toLowerCase();
+      const normKind = (rawKind === 'yml') ? 'yaml' : rawKind;
+      const trKey = `kind.${normKind}`;
+      const trVal = t(trKey);
+      const kind = (trVal === trKey ? normKind.toUpperCase() : trVal);
+
+      if (json.ok) {
+        swal.fire({
+          icon: 'success',
+          iconColor: '#22c55e',
+          title: t('swal.validate.ok',{kind}),
+          confirmButtonText: 'OK'
+        });
+      } else {
+        swal.fire({
+          icon:'error',
+          iconColor: '#ef4444',
+          title: t('swal.validate.fail',{kind}),
+          html: `<pre style="text-align:left;white-space:pre-wrap;margin:0;">${escapeHtml(json.error)}</pre>`,
+          confirmButtonText: 'OK'
+        });
+      }
+    }
+
+    // ⇩ escolha o comportamento do Diff
+    const FLAGS = JSON.parse(document.getElementById('flags').textContent);
+    const DIFF_ALLOW_EDIT = !!FLAGS.diffAllowEdit;
+
+    let diffEditor, originalModel, modifiedModel;
+
+    function showDiff(){
+      // Alterna visibilidade
+      document.getElementById('editor').style.display = 'none';
+      document.getElementById('diff').style.display = 'block';
+      document.getElementById('btn-diff').style.display = 'none';
+      document.getElementById('btn-back').style.display = 'inline-block';
+
+      setDiffUI(true);
+      
+      // Cria diff editor uma vez
+      if(!diffEditor){
+        diffEditor = monaco.editor.createDiffEditor(document.getElementById('diff'), {
+          automaticLayout: true,
+          theme: (window.matchMedia && matchMedia('(prefers-color-scheme: dark)').matches) ? 'vs-dark' : 'vs',
+          renderSideBySide: true,
+          ignoreTrimWhitespace: false
+        });
+      }
+      // Modelos: original = conteúdo salvo; modificado = conteúdo atual do editor
+      const lang = getLangByName(CURRENT_FILE);
+
+      // Libera modelos antigos se existirem
+      if (originalModel) { originalModel.dispose(); }
+      if (modifiedModel) { modifiedModel.dispose(); }
+      
+      originalModel = monaco.editor.createModel(initial, lang);
+      modifiedModel = monaco.editor.createModel(editor.getValue(), lang);
+      diffEditor.setModel({ original: originalModel, modified: modifiedModel });
+
+      // Opção B: bloquear edição no painel da direita
+      const modEditor = diffEditor.getModifiedEditor();
+      modEditor.updateOptions({ readOnly: !DIFF_ALLOW_EDIT });
+
+      return false;
+    }
+
+    function hideDiff(){
+      // Opção A: aplicar o que foi digitado no painel da direita de volta ao editor principal
+      if (DIFF_ALLOW_EDIT && diffEditor) {
+        const modEditor = diffEditor.getModifiedEditor();
+        const newVal = modEditor.getValue();
+        if (typeof newVal === 'string') {
+          editor.setValue(newVal);
+        }
+      }
+
+      // Limpa modelos do diff (evita vazamento)
+      if (diffEditor) {
+        const m = diffEditor.getModel();
+        if (m) { m.original?.dispose(); m.modified?.dispose(); }
+      }
+      originalModel = null;
+      modifiedModel = null;
+
+      // Alterna visibilidade de volta
+      document.getElementById('editor').style.display = 'block';
+      document.getElementById('diff').style.display = 'none';
+      document.getElementById('btn-diff').style.display = 'inline-block';
+      document.getElementById('btn-back').style.display = 'none';
+
+      setDiffUI(false);
+      return false;
+    }
+
+    // Salvar documento
+    function confirmSave(){
+      swal.fire({
+        icon: 'question',
+        title: t('swal.save.title'),
+        html: t('swal.save.text'),
+        showCancelButton: true,
+        confirmButtonText: t('swal.btn.save'),
+        cancelButtonText: t('swal.btn.cancel'),
+        reverseButtons: true
+      }).then(res => {
+        if(res.isConfirmed){
+          // injeta o conteúdo do editor no hidden e envia
+          document.getElementById('editor-text-save').value = editor.getValue();
+          document.getElementById('save-form').submit();
+        }
+      });
+      return false; // evita submit imediato
+    }
+
+    function beforeApply(){
+      document.getElementById('editor-text-apply').value = editor.getValue();
+      return true;
+    }
+
+    // Carrega original/backup no editor sem sobrescrever o arquivo em disco
+    document.getElementById('backup-select').addEventListener('change', async function () {
+      const val = this.value;
+      if (!val) return;
+
+      if (val === "__original__") {
+        editor.setValue(initial);
+        swal.fire({
+          icon: 'info',
+          title: t('swal.load.title'),
+          html: t('swal.load.text'),
+          timer: 5000,
+          showConfirmButton: true
+        });
+        return;
+      }
+
+      const url = '{{ url_for("editor.preview") }}?file={{ current_file.name if current_file }}&backup=' + encodeURIComponent(val);
+      try {
+        const res = await fetch(url);
+        const json = await res.json();
+        if (json.ok) {
+          editor.setValue(json.content);
+          swal.fire({
+            icon: 'info',
+            title: t('swal.load.title'),
+            html: t('swal.load.text'),
+            timer: 5000,
+            showConfirmButton: true
+          });
+        } else {
+          swal.fire({ 
+            icon: 'error',
+            title: t('swal.error_backup'),
+          });
+        }
+      } catch (e) {
+        swal.fire({
+          icon: 'error',
+          title: t('swal.fail_request'),
+        });
+      }
+    });
+
+    // Deletar backup
+    async function deleteSelectedBackup(){
+      const sel = document.getElementById('backup-select');
+      const val = sel.value;
+      if (!val || val === '__original__') {
+        swal.fire({
+          icon:'info',
+          title: t('swal.delete.select_backup'),
+        });
+        return false;
+      }
+      const ok = await swal.fire({
+        icon:'warning',
+        title: t('swal.delete.exclude_backup'),
+        text: val,
+        showCancelButton:true,
+        confirmButtonText: t('swal.btn.delete'),
+        cancelButtonText: t('swal.btn.cancel'),
+        reverseButtons:true
+      }).then(r => r.isConfirmed);
+      if (!ok) return false;
+
+      const res = await fetch('{{ url_for("editor.delete_backup") }}', {
+        method: 'POST',
+        headers: {'Content-Type':'application/json'},
+        body: JSON.stringify({ file: "{{ current_file.name }}", backup: val })
+      });
+      const j = await res.json();
+      if (j.ok) {
+        // 1) Remove a opção do backup apagado
+        sel.querySelector(`option[value="${CSS.escape(val)}"]`)?.remove();
+
+        // 2) Volta explicitamente para o “Arquivo em uso (atual)”
+        sel.value = '__original__';
+
+        // 3) Dispara o mesmo fluxo do listener de change
+        sel.dispatchEvent(new Event('change', { bubbles: true }));
+
+        swal.fire({
+          icon:'success',
+          title: t('swal.delete.sucess'),
+        });
+      } else {
+        swal.fire({
+          icon:'error',
+          title: t('swal.delete.fail'),
+          text: j.error || 'Unknown error'
+        });
+      }
+      return false;
+    }
+
+    function setDiffUI(disabled){
+      const btnSelectors = [
+        '#save-form button',
+        '#apply-form button',
+        '#btn-restart',
+        '#btn-validate',
+        '#btn-diff',
+        '#btn-del-backup'
+      ];
+      const fieldSelectors = ['#backup-select', '#file-select'];
+
+      btnSelectors.forEach(sel => document.querySelector(sel)?.toggleAttribute('disabled', disabled));
+      fieldSelectors.forEach(sel => document.querySelector(sel)?.toggleAttribute('disabled', disabled));
+
+      // “Voltar ao Editor” sempre ativo
+      const btnBack = document.querySelector('#btn-back');
+      btnBack?.removeAttribute('disabled');
+
+      // Classe visual (esmaecer)
+      document.querySelectorAll('.btn, select').forEach(el => {
+        if (el === btnBack) return;
+        el.classList.toggle('is-disabled', disabled);
+      });
+    }
+
+  </script>
+{% endblock %}

@@ -1,0 +1,34 @@
+# Git
+.git
+.gitignore
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.venv/
+.pytest_cache/
+
+# Configs locais (não subir pra imagem)
+.env
+**/.env
+*.log
+
+# IDE/editor
+.vscode/
+.idea/
+
+# Node / frontend (se aparecer no futuro)
+node_modules/
+dist/
+build/
+
+# Docker (artefatos locais, não necessários no build)
+docker-compose.yml
+compose/
+
+# Dados locais (runtime apenas, não no build)
+data/
+backups/
+state/

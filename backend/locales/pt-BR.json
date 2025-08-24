@@ -1,0 +1,231 @@
+{
+  "api": {
+    "invalid_params": "Parâmetros inválidos",
+    "backup_out_of_scope": "Caminho fora da área de backups",
+    "file_not_found": "Arquivo não encontrado"
+  },
+
+  "app": {
+    "container": {
+      "set": "Container: {name}",
+      "unset": "Container: Não definido"
+    },
+    "menu": {
+      "editor": "Editor",
+      "change_lang": "Alterar idioma",
+      "change_user": "Alterar usuário",
+      "change_pass": "Alterar senha",
+      "2fa": "Autenticação de 2 fatores"
+    },
+    "mode": {
+      "label": "Modo: ",
+      "dry": "DRY-RUN",
+      "prod": "PRODUÇÃO"
+    },
+    "title": "CONFIG EDITOR",
+    "working_in": "Trabalhando em: "
+  },
+
+  "auth": {
+    "2fa_code": "Código 2FA",
+    "caps_on": "Caps Lock ligado",
+    "logout_question": "Sair da sessão?",
+    "logout_text": "Você precisará fazer login novamente."
+  },
+
+  "btn": {
+    "back": "Voltar",
+    "cancel": "Cancelar",
+    "enter": "Entrar",
+    "logout": "Sair",
+    "save": "Salvar"
+  },
+
+  "commom": {
+    "action": "Ação inválida",
+    "delete": "Excluir",
+    "pass": "Senha",
+    "user": "Usuário"
+  },
+
+  "change": {
+    "2fa_activate": "Ativar 2FA",
+    "2fa_disable": "Desativar 2FA",
+    "2fa_disabled": "2FA Desativado",
+    "2fa_enabled": "2FA Habilitado",
+    "2fa_text": "Ative o 2FA para maior segurança.",
+    "2fa_text_2": "(do novo segredo)",
+    "2fa_text_3": "Abra o app Autenticador, adicione um novo item",
+    "2fa_text_4": "e use o código atual.",
+    "confirm_new_pass": "Confirmar nova senha",
+    "current_user": "Usuário atual",
+    "current_pass": "Senha atual",
+    "new_user": "Novo nome de usuário",
+    "new_pass": "Nova senha",
+    "qr_text_1": "1) Escaneie o QR no app autenticador (criará ",
+    "qr_text_2": "2) Digite o código de 6 dígitos abaixo e ative",
+    "qr_text_3": "O QR será gerado automaticamente nesta tela",
+    "qr_text_4": "Reescaneie este QR no seu app, se necessário (mostra o segredo atual)",
+    "qr_text_5": "clicando em",
+    "qr_text_6": "1) Escaneie o QR no app autenticador"
+  },
+
+  "docker": {
+    "health": {
+      "healthy": "Saudável",
+      "starting": "Iniciando",
+      "unhealthy": "Doente",
+      "unknown": "—"
+    },
+    "status": {
+      "created": "Criado",
+      "dead": "Morto",
+      "exited": "Encerrado",
+      "restarting": "Reiniciando",
+      "running": "Em execução",
+      "unknown": "Desconhecido"
+    }
+  },
+
+  "editor": {
+    "apply": "Aplicar",
+    "diff": "Diferenças",
+    "file_label": "Arquivo",
+    "file_use": "Arquivo em uso (atual)",
+    "open": "Abrir",
+    "opening": "Abrindo",
+    "restart": "Reiniciar container",
+    "restore": "Restaurar",
+    "return_editor": "Voltar ao Editor",
+    "save": "Salvar",
+    "save_apply": "Salvar e Aplicar",
+    "saved_ok": "Arquivo salvo com sucesso",
+    "text_1": "Ao selecionar uma versão ela é carregada no editor. Para gravar no arquivo, clique em 'Salvar e Aplicar' ou 'Aplicar'",
+    "validate": "Validar",
+    "validating": "Validando…",
+    "versions": "Versões",
+    "versions_select": "Selecionar versão"
+  },
+
+  "flash": {
+    "2fa_already_enabled": "2FA já está habilitado",
+    "2fa_already_disabled": "2FA já está desabilitado",
+    "2fa_enabled_sucess": "2FA habilitado com sucesso",
+    "2fa_disable_admin": "Gestão de 2FA desabilitada pelo administrador",
+    "2fa_invalid": "Código 2FA inválido",
+    "2fa_invalid_activation": "Código 2FA inválido para ativação",
+    "confirm_dont_match": "A confirmação não confere",
+    "change_user_sucess": "Usuário alterado com sucesso",
+    "dont_match": "As senhas não conferem",
+    "failed_temp_secret": "Falha ao gerar segredo temporário. Recarregue a página",
+    "new_pass_diff": "A nova senha deve ser diferente da atual",
+    "new_user_diff": "Informe um novo usuário diferente do atual",
+    "pass_empty": "Nova senha não pode estar vazia",
+    "pass_incorrect": "Senha atual incorreta",
+    "pass_wrong": "Senha atual incorreta",
+    "sucess_change_pass": "Senha alterada com sucesso",
+    "user_2fa": "Usuário registrado - 2FA ativado",
+    "user_pass": "Preencha usuário e senha",
+    "user_register": "Usuário registrado",
+    "no_files": "Nenhum arquivo disponível em /data",
+    "file_missing": "Arquivo não informado",
+    "saved_dry_run": "Salvo (dry-run, nada escrito em disco)",
+    "save_ok_title": "Arquivo salvo e aplicado com sucesso",
+    "save_ok_backup": "Backup em: {path}",
+    "applied_dry_run": "Aplicado (dry-run, sem backup; nada escrito em disco)",
+    "applied_ok": "Arquivo aplicado como versão atual (sem backup)",
+    "restart": {
+      "file_missing": "Arquivo não informado para reiniciar container",
+      "no_mapping": "Nenhum container associado a este arquivo",
+      "ok": "Container reiniciado: {name}",
+      "fail": "Falhou ao reiniciar: {err}"
+    },
+    "restore": {
+      "missing_params": "Selecione arquivo e backup",
+      "bad_backup": "Backup corrompido: {err}",
+      "ok": "Restaurado com sucesso"
+    }
+  },
+  
+  "health": {
+    "checking": "Verificando…",
+    "error": "Erro",
+    "failed": "Falhou",
+    "modal": {
+      "close": "Fechar",
+      "col": {
+        "container": "Container",
+        "status": "Status",
+        "health": "Estado"
+      },
+      "empty": "Sem dados",
+      "title": "Saúde dos containers"
+    },
+    "not_found": "Não encontrado",
+    "title": {
+      "fmt": "Status: {{status}} · Health: {{health}}"
+    },
+    "tooltip": "Status dos containers"
+  },
+
+  "language": {
+    "continue": "Continuar",
+    "label": "Idioma",
+    "title": "Escolha seu idioma"
+  },
+
+  "login": {
+    "label": "Login"
+  },
+
+  "register": {
+    "confirm_pass": "Confirmar senha",
+    "first": "Registrar usuário (primeiro acesso)",
+    "label": "Registrar",
+    "text_1": "O nome no app aparecerá como",
+    "your_user": "SeuUsuário"
+  },
+
+  "swal":{
+    "btn": {
+      "cancel": "Cancelar",
+      "confirm": "Sim, reiniciar",
+      "delete": "Excluir",
+      "save": "Salvar"
+    },
+    "delete": {
+      "exclude_backup": "Excluir este backup?",
+      "fail": "Falha ao excluir",
+      "select_backup": "Selecione um backup para excluir",
+      "sucess": "Backup excluído"
+    },
+    "error_backup": "Error loading backup",
+    "fail_request": "Preview request failed",
+    "load": {
+      "text": "<small>Lembre-se de no final da edição salvar e/ou aplicar.</small>",
+      "title": "O arquivo selecionado foi carregado"
+    },
+    "restart": {
+      "text": "Isso irá interromper o serviço rapidamente",
+      "title": "Reiniciar container?"
+    },
+    "save": {
+      "text": "O arquivo atual será substituído por este<br> e será feito um backup da nova versão", 
+      "title": "Quer mesmo salvar?"
+    },
+    "validate": {
+      "fail": "{kind} inválido",
+      "file": "file",
+      "no_validator": "Sem validador para este tipo de arquivo",
+      "ok": "{kind} válido",
+      "xml_error": "XML inválido: {err}",
+      "yaml_error": "YAML inválido: {err}"
+    }
+  },
+
+  "kind": {
+    "file": "FILE",
+    "xml": "XML",
+    "yaml": "YAML"
+  }
+}

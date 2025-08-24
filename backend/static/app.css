@@ -1,0 +1,328 @@
+/* ===== Tema base ===== */
+:root {
+  color-scheme: dark light;
+}
+
+:root{
+  --panel:#0f172a;
+  --border:#334155;
+  --text:#e6e7ea;
+  --muted:#94a3b8;
+  --bg:#0b0f1a;
+  --field:#0b1220;
+  --primary:#2563eb;
+  --primary-border:#1d4ed8;
+  --danger:#ef4444;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  margin:0;
+  font:14px system-ui, Segoe UI, Roboto, sans-serif;
+  background:var(--bg);
+  color:var(--text);
+}
+
+header, footer {
+  padding:12px 16px;
+  background:var(--panel);
+  color:var(--text);
+  border-bottom:1px solid rgba(255,255,255,0.04);
+}
+
+header .right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+footer {
+  border-top:1px solid rgba(255,255,255,0.04);
+  border-bottom:none;
+}
+
+main {
+  flex: 1;
+  padding:12px 16px;
+}
+
+/* ===== UI comuns ===== */
+.pill {
+  display:inline-block;
+  padding:4px 10px;
+  border:1px solid var(--border);
+  border-radius:999px;
+  margin-right:6px;
+}
+
+.pill.logout {
+  background-color: #dc2626;
+  color: #fff;
+  text-decoration: none;
+  border: 1px solid #dc2626;
+  margin-left: 12px;
+}
+
+.pill.logout:hover {
+  background-color: #b91c1c;
+  border-color: #b91c1c;
+  cursor: pointer;
+}
+
+.btn {
+  padding:8px 12px;
+  border-radius:10px;
+  border:1px solid var(--border);
+  background:#111827;
+  color:#fff;
+  cursor:pointer;
+  font-weight:600;
+  text-decoration: none;
+}
+
+.btn.primary { 
+  background:var(--primary);
+  border-color:var(--primary-border);
+}
+
+.btn.w, .btn.w-full {
+  width:100%;
+}
+
+.row {
+  display:flex;
+  gap:10px;
+  flex-wrap:wrap;
+  align-items:center;
+}
+
+.right {
+  margin-left:auto;
+}
+
+select, input, .input, textarea {
+  background:var(--field);
+  color:#fff;
+  border:1px solid var(--border);
+  border-radius:8px;
+  padding:6px 8px;
+  outline:none;
+}
+
+.input, textarea {
+  padding:12px;
+  border-radius:10px;
+}
+
+.input:focus, input:focus, select:focus, textarea:focus {
+  border-color:var(--primary-border);
+  box-shadow:0 0 0 3px rgba(37,99,235,.25);
+}
+
+/* Cartões genéricos (login/setup) */
+.card {
+  background:var(--panel);
+  border:1px solid var(--border);
+  border-radius:16px;
+  box-shadow:0 10px 30px rgba(0,0,0,.35);
+  overflow:hidden;
+}
+
+.card header {
+  padding:16px 18px;
+  border-bottom:1px solid #1f2937;
+}
+
+.login-wrap, .setup-wrap {
+  min-height: 100%;
+  display:grid;
+  place-items:center;
+}
+
+.qr-row {
+  display:flex;
+  gap:14px;
+  align-items:flex-start;
+}
+
+.qr-row img, .qr {
+  border-radius:10px;
+  border:1px solid var(--border);
+  width:160px;
+  height:160px;
+}
+
+.muted {
+  color:var(--muted);
+  font-size:12px;
+}
+
+/* ===== SweetAlert2 no tema ===== */
+.swal2-popup.swal2-dark {
+  background:var(--panel) !important;
+  color:var(--text) !important;
+  border:1px solid var(--border);
+  border-radius:12px;
+}
+
+.swal2-title {
+  color:var(--text) !important;
+}
+
+.swal2-html-container {
+  color:#cbd5e1 !important;
+}
+
+.swal2-actions {
+  gap:10px !important;
+  justify-content:center !important;
+}
+
+header h1, header h2, header h3 {
+  margin: 0;
+  line-height: 1.2;
+}
+
+header h3 {
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: .08em;
+}
+
+/* ==== Fix pulo de layout com SweetAlert2 (sem gutter) ==== */
+
+.swal2-container {
+  overscroll-behavior: contain;
+}
+
+/* ===== Login refinado ===== */
+.login-card {
+  width: min(720px, 92vw);
+  margin: 10vh auto;
+}
+
+.card-head {
+  padding:16px 18px;
+  border-bottom:1px solid #1f2937;
+}
+
+.form-row {
+  display: grid;
+  gap: 6px;
+  margin: 12px 18px;
+}
+
+.form-row.has-addon {
+  position: relative;
+}
+
+.form-row .hint {
+  color: var(--muted);
+  font-size: 12px;
+  margin-top: 2px;
+}
+
+.addon {
+  position: absolute;
+  right: 26px;
+  top: 38px;
+  height: 32px;
+  width: 36px;
+  border-radius: 8px;
+  border:1px solid var(--border);
+  background:#111827;
+  color:#9fb0ff;
+  cursor:pointer;
+}
+
+.alert.error {
+  margin: 8px 18px 0;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background:#2a1420;
+  color:#ffd2de;
+  border:1px solid #5a2a3c;
+}
+
+.tag.info {
+  display:inline-block;
+  padding:3px 10px;
+  border-radius:999px;
+  background:#14263a;
+  border:1px solid #1f3d66;
+  color:#a9c3ff;
+  font-size:12px;
+}
+
+/* Caps Lock hint */
+#caps-hint,
+#caps-hint-current,
+#caps-hint-new,
+#caps-hint-confirm,
+#caps-hint-pass {
+  margin-top: 4px;
+  color: var(--danger);
+  font-size: 12px;
+}
+
+.is-disabled {
+  opacity: .2;
+  pointer-events: none;
+}
+
+.usermenu {
+  position: relative;
+  display: inline-block;
+}
+
+.usermenu .btn {
+  display:flex;
+  align-items:center;
+  gap:.4rem;
+}
+
+.usermenu-panel{
+  position:absolute;
+  right:0;
+  top:calc(100% + 6px);
+  min-width:200px;
+  background:#111826;
+  border:1px solid #2b3240;
+  border-radius:12px;
+  box-shadow:0 10px 24px rgba(0,0,0,.35);
+  padding:8px;
+  z-index:1000;
+}
+
+.usermenu-panel a{
+  display:block;
+  padding:10px 12px;
+  border-radius:8px;
+  text-decoration:none;
+  color:#dbe2f7;
+}
+
+.usermenu-panel a:hover{
+  background:#1a2233;
+}
+
+.usermenu-panel a.active {
+  background: rgba(255,255,255,.12);
+  font-weight: 600;
+  outline: 1px solid rgba(255,255,255,.06);
+}
+
+.usermenu-panel .sep{
+  height:1px;
+  background:#2b3240;
+  margin:6px 4px;
+}
