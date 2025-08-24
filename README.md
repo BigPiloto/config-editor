@@ -122,6 +122,12 @@ docker run -d --name config-editor \
 ### Change Language UI
 ![Change Language UI](/documentation/images/screenshot_change_lang.png)
 
+### Web Editor UI
+![Web Editor UI](/documentation/images/screenshot_editor.png)
+
+### Healthy Status UI
+![Healthy Status UI](/documentation/images/screenshot_containers.png)
+
 ## Support & Issues
 
 - Report bugs or suggestions at: [Issues](https://github.com/BigPiloto/config-editor/issues)
