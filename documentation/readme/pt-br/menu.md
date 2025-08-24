@@ -82,6 +82,8 @@ Passos:
 
 ![Desativar 2FA](/documentation/images/desativar_2fa.png)
 
+Passos:
+
 1. Inserir senha atual.
 2. Inserir o código 2FA.
 3. Clicar em `Desativar 2FA`.
