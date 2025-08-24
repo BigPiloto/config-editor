@@ -119,6 +119,9 @@ docker run -d --name config-editor \
 
 ## Screenshots
 
+### Change Language UI
+![Change Language UI](/documentation/images/screenshot_change_lang.png)
+
 ## Support & Issues
 
 - Report bugs or suggestions at: [Issues](https://github.com/BigPiloto/config-editor/issues)
