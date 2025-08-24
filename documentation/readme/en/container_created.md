@@ -32,7 +32,16 @@ Select the language `English` and click `Continue`
 
 After registration, the username and password (with or without 2FA, depending on the configuration) are saved, and the web editor is ready for use.
 
-## Related tutorials
+# Related tutorials
 
-LINK1
-LINK2
+[READ ME](README.md)
+
+[Getting Started](/documentation/readme/en/getting_started.md)
+
+→ [After starting the container](/documentation/readme/en/container_created.md)
+
+[Top Bar](/documentation/readme/en/top_bar.md)
+
+[User Menu](/documentation/readme/en/menu.md)
+
+[Editor Action Bar](/documentation/readme/en/actions_bar.md)
