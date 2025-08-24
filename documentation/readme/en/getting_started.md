@@ -157,7 +157,16 @@ Controls whether the diff view allows editing.
 - `false` → you can only view differences.
 - `true` → enables editing directly in the diff view.
 
-## Related tutorials
+# Related tutorials
 
-LINK1
-LINK2
+[READ ME](README.md)
+
+→ [Getting Started](/documentation/readme/en/getting_started.md)
+
+[After starting the container](/documentation/readme/en/container_created.md)
+
+[Top Bar](/documentation/readme/en/top_bar.md)
+
+[User Menu](/documentation/readme/en/menu.md)
+
+[Editor Action Bar](/documentation/readme/en/actions_bar.md)
