@@ -117,6 +117,18 @@ docker run -d --name config-editor \
 
 ## Usage
 
+→ [READ ME](README.md)
+
+[Getting Started](/documentation/readme/en/getting_started.md)
+
+[After starting the container](/documentation/readme/en/container_created.md)
+
+[Top Bar](/documentation/readme/en/top_bar.md)
+
+[User Menu](/documentation/readme/en/menu.md)
+
+[Editor Action Bar](/documentation/readme/en/actions_bar.md)
+
 ## Screenshots
 
 ### Change Language UI
