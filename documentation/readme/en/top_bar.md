@@ -67,6 +67,7 @@ Clicking it opens a menu with options such as:
 - `Change user` → page to modify the username.
 - `Change password` → page to update the login password.
 - `Two-Factor Authentication` → page to enable or disable 2FA (TOTP).
+  - ⚠️ This option only appears if the environment variable **TOTP_ENABLED** is set to `true`.
 - `Change Language` → page to switch the interface language.
 
 ![Menu](/documentation/images/menu_en.png)
