@@ -67,7 +67,7 @@ Menu suspenso que lista os arquivos configurados no parâmetro **FILE_CONTAINERS
 
 - Lista as versões de backup do arquivo.
 - Ao selecionar uma versão, ela é carregada no editor.
-- Para gravar no arquivo atual, é necessário clicar em Salvar & Aplicar ou Aplicar.
+- Para gravar no arquivo atual, é necessário clicar em `Salvar & Aplicar` ou `Aplicar`.
 
 ![Versões](/documentation/images/versoes.png)
 
