@@ -80,7 +80,7 @@ Red button in the top-right corner, used to end the user session.
 
 # Related tutorials
 
-[READ ME](README.md)
+[READ ME](/README.md)
 
 [Getting Started](/documentation/readme/en/getting_started.md)
 
