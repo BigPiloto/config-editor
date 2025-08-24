@@ -159,7 +159,7 @@ Controls whether the diff view allows editing.
 
 # Related tutorials
 
-[READ ME](README.md)
+[READ ME](/README.md)
 
 → [Getting Started](/documentation/readme/en/getting_started.md)
 
