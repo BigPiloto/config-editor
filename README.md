@@ -57,10 +57,10 @@ services:
 #### Legend
 
 1. `Container name`: choose any name you want for the container.
-2. `Run as root`: required to allow interaction with docker.sock.
+2. `Run as root (user: "0:0")`: required to allow interaction with docker.sock.
 3. `Ports`: map port 5000 of the container to your host (UI available at http://host:5000).
 4. `Flask secret key`: put a secure random key here (used for session encryption).
-5. `TOTP enabled`: enable or disable two-factor authentication (2FA) in server.
+5. `TOTP Enabled true/false`: enable or disable two-factor authentication (2FA) in server.
 6. `File containers`: map config files to the corresponding container names (file:container).
 7. `Docker host`: path to Docker socket used for container management.
 8. `Data directory`: where the editor reads/writes configuration files.
