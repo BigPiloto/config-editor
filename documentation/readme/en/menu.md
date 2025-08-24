@@ -102,7 +102,16 @@ Steps:
 1. Select an option from the list.
 2. Click `Continue`.
 
-# Related Tutorials
+# Related tutorials
 
-LINK1
-LINK2
+[READ ME](README.md)
+
+[Getting Started](/documentation/readme/en/getting_started.md)
+
+[After starting the container](/documentation/readme/en/container_created.md)
+
+[Top Bar](/documentation/readme/en/top_bar.md)
+
+→ [User Menu](/documentation/readme/en/menu.md)
+
+[Editor Action Bar](/documentation/readme/en/actions_bar.md)
