@@ -29,6 +29,7 @@ Selecione o idioma `Português (Brasil)` e clique em `Continuar`
 2. Clique em `Registrar`
 
 ## Pronto para uso
+
 Após o registro, o usuário e senha (com ou sem 2FA, conforme configurado) ficam cadastrados, e o editor web já estará disponível para uso.
 
 ## Tutoriais relacionados
