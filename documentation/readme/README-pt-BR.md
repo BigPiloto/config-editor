@@ -59,35 +59,78 @@ services:
 1. `Container name`: nome do container (pode ser qualquer um).
 2. `Run as root (user: "0:0")`: necessário para permitir interação com o docker.sock.
 3. `Ports`: expõe a porta 5000 do container no host (UI acessível em http://host:5000).
-4. Flask secret key: insira aqui uma chave secreta aleatória e segura (usada para criptografia de sessão).
-5. TOTP true/false: ativa ou desativa a autenticação de dois fatores (2FA) no servidor.
+4. `Flask secret key`: insira aqui uma chave secreta aleatória e segura (usada para criptografia de sessão).
+5. `TOTP Enabled true/false`: ativa ou desativa a autenticação de dois fatores (2FA) no servidor.
+6. `File containers`: mapeia arquivos de configuração para os nomes dos containers (arquivo:container).
+7. `Docker host`: caminho para o socket do Docker usado no gerenciamento dos containers.
+8. `Data directory`: onde o editor lê e grava arquivos de configuração.
+9. `Backup directory`: onde os backups criados em um clique são armazenados.
+10. `State directory`: armazena o estado da aplicação (usuários, dados de 2FA, etc).
+11. `Docker socket volume`: necessário para que o app execute docker inspect e docker restart.
+12. `Config volume`: faça o bind da pasta que contém as configurações do serviço, e não de um arquivo específico.
+  - Se você tem um único serviço ou múltiplos arquivos de configuração na mesma pasta, basta mapear essa pasta:
+    - ✅ /srv/servico/config:/data
+  - Se você tem múltiplos serviços em pastas diferentes, precisa mapear cada uma:
+    - ✅ /srv/service_1/config:/data
+    - ✅ /srv/service_2/config:/data
+  - ❌ Não faça bind de um arquivo individual: /srv/servico/config/arquivo.xml:/data/arquivo.xml
+13. `Backups volume`: armazenamento persistente para backups.
+14. `State volume`: armazenamento persistente para o estado da aplicação.
 
-File containers: mapeia arquivos de configuração para os nomes dos containers (arquivo:container).
+### Método 2: Docker CLI
 
-Docker host: caminho para o socket do Docker usado no gerenciamento dos containers.
+#### Criar pastas de dados
+``` bash
+sudo mkdir -p /srv/service/config \
+             /srv/config-editor/backups \
+             /srv/config-editor/state
+```
 
-Data directory: onde o editor lê e grava arquivos de configuração.
+#### Gerar uma chave secreta (opcional)
+``` python
+python - <<'PY'
+import secrets, base64
+print(base64.urlsafe_b64encode(secrets.token_bytes(48)).decode())
+PY
+```
 
-Backup directory: onde os backups criados em um clique são armazenados.
+#### Executar o container
+``` bash
+docker run -d --name config-editor \
+  --user 0:0 \
+  --restart unless-stopped \
+  -p 5000:5000 \
+  -e FLASK_SECRET_KEY="PUT_YOUR_SECRET_KEY_HERE" \
+  -e TOTP_ENABLED=true \
+  -e FILE_CONTAINERS="file_example.xml:container_name_of_this_file" \
+  -e DOCKER_HOST='unix:///var/run/docker.sock' \
+  -e DATA_DIR=/data \
+  -e BACKUP_DIR=/backups \
+  -e STATE_DIR=/state \
+  -v /var/run/docker.sock:/var/run/docker.sock \
+  -v /srv/service/config:/data \
+  -v /srv/config-editor/backups:/backups \
+  -v /srv/config-editor/state:/state \
+  bigpiloto/config-editor:latest
+```
 
-State directory: armazena o estado da aplicação (usuários, dados de 2FA, etc).
+## Uso
 
-Docker socket volume: necessário para que o app execute docker inspect e docker restart.
+## Capturas de Tela
 
-Config volume: faça o bind da pasta que contém as configurações do serviço, e não de um arquivo específico.
+### Interface Trocar Idioma
+![Interface Trocar Idioma](/documentation/images/screenshot_change_lang.png)
 
-Se você tem um único serviço ou múltiplos arquivos de configuração na mesma pasta, basta mapear essa pasta:
+### Interface Editor Web
+![Interface Editor Web](/documentation/images/screenshot_editor.png)
 
-✅ /srv/servico/config:/data
+### Interace Status de Saúde dos Containers
+![Interace Status de Saúde dos Containers](/documentation/images/screenshot_containers.png)
 
-Se você tem múltiplos serviços em pastas diferentes, precisa mapear cada uma:
+## Suporte & Problemas
 
-✅ /srv/service_1/config:/data
+- Relate bugs ou sugestões em: [Problemas](https://github.com/BigPiloto/config-editor/issues)
 
-✅ /srv/service_2/config:/data
+## Licença
 
-❌ Não faça bind de um arquivo individual: /srv/servico/config/arquivo.xml:/data/arquivo.xml
-
-Backups volume: armazenamento persistente para backups.
-
-State volume: armazenamento persistente para o estado da aplicação.
+Este projeto é licenciado sob a MIT License – veja o arquivo [MIT License](LICENSE) para mais detalhes.
