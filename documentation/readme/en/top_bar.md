@@ -1,4 +1,4 @@
-## Esse tutorial é referente ao idioma Português - Brasil
+## This tutorial refers to the English language
 
 # Top Bar
 
