@@ -15,7 +15,7 @@ Menu suspenso que lista os arquivos configurados no parâmetro **FILE_CONTAINERS
 
 ![Arquivo](/documentation/images/arquivo.png)
 
-### Salvar e Aplicar
+### Salvar & Aplicar
 
 - Salva o conteúdo editado e aplica imediatamente a alteração no container vinculado.
 - Também cria um backup antes de aplicar a modificação.
@@ -57,7 +57,7 @@ Menu suspenso que lista os arquivos configurados no parâmetro **FILE_CONTAINERS
 ### Voltar ao Editor
 
 - Botão exibido apenas quando o modo Diferenças (diff) está ativo.
-- Enquanto o diff está aberto, os demais botões da barra de ações (Salvar e Aplicar, Aplicar, Reiniciar container, Validar, Versões, Excluir) ficam desabilitados.
+- Enquanto o diff está aberto, os demais botões da barra de ações (Salvar & Aplicar, Aplicar, Reiniciar container, Validar, Versões, Excluir) ficam desabilitados.
 - Serve para retornar ao editor normal, onde todas as ações voltam a ficar disponíveis.
 - O conteúdo no editor permanece exatamente como estava antes de abrir o diff.
 
@@ -67,11 +67,11 @@ Menu suspenso que lista os arquivos configurados no parâmetro **FILE_CONTAINERS
 
 - Lista as versões de backup do arquivo.
 - Ao selecionar uma versão, ela é carregada no editor.
-- Para gravar no arquivo atual, é necessário clicar em Salvar e Aplicar ou Aplicar.
+- Para gravar no arquivo atual, é necessário clicar em Salvar & Aplicar ou Aplicar.
 
 ![Versões](/documentation/images/versoes.png)
 
-![Lista de versões](/documentation/images/versions_menu.png)
+![Lista de versões](/documentation/images/menu_versoes.png)
 
 ### Excluir
 
