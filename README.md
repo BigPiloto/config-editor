@@ -6,7 +6,7 @@
 
 Config Editor is a Flask-based web application that allows you to safely edit Docker container configuration files directly from your browser.
 
-It supports secure login, Two-Factor Authentication (2FA TOTP), backups, and one-click application of changes (which restarts the associated container).
+It supports secure login, Two-Factor Authentication (2FA TOTP), manual backups, Save & Apply to write configs, and a dedicated Restart container button.
 
 ## Features
 
@@ -54,7 +54,7 @@ services:
       - /srv/config-editor/backups:/backups # --------------------------- #13
       - /srv/config-editor/state:/state # ------------------------------- #14
 ```
-Legend
+#### Legend
 
 1. `Container name`: choose any name you want for the container.
 2. `Run as root`: required to allow interaction with docker.sock.
@@ -101,9 +101,9 @@ docker run -d --name config-editor \
   --user 0:0 \
   --restart unless-stopped \
   -p 5000:5000 \
-  -e FLASK_SECRET_KEY= "PUT_YOUR_SECRET_KEY_HERE" \
+  -e FLASK_SECRET_KEY="PUT_YOUR_SECRET_KEY_HERE" \
   -e TOTP_ENABLED=true \
-  -e FILE_CONTAINERS= "file_example.xml:container_name_of_this_file" \
+  -e FILE_CONTAINERS="file_example.xml:container_name_of_this_file" \
   -e DOCKER_HOST='unix:///var/run/docker.sock' \
   -e DATA_DIR=/data \
   -e BACKUP_DIR=/backups \
@@ -135,3 +135,4 @@ docker run -d --name config-editor \
 ## License
 
 This project is licensed under the MIT License - see the file [MIT License](LICENSE) for details.
+manual backups, Save & Apply to write configs, and a dedicated Restart container button.
