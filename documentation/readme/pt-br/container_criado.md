@@ -23,7 +23,7 @@ Selecione o idioma `Português (Brasil)` e clique em `Continuar`
 
 - Se a variável `TOTP_ENABLED` estiver definida como `false`, você verá a tela de registro sem o 2FA:
 
-![Interface Registro com 2FA](/documentation/images/registro.png)
+![Interface Registro sem 2FA](/documentation/images/registro.png)
 
 1. Preencha os campos `Usuário` e `Senha` (e confirme a senha)
 2. Clique em `Registrar`
