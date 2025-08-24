@@ -14,7 +14,7 @@ Returns to the main configuration file editor.
 
 - Useful when you are on other pages, such as change user, change password, or change language.
 
-![Editor](/documentation/images/editor_pt.png)
+![Editor](/documentation/images/editor_en.png)
 
 ### Change User
 
