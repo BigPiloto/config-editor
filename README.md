@@ -16,7 +16,7 @@ It supports secure login, Two-Factor Authentication (2FA TOTP), manual backups, 
 
 3. 💾 Manual backup in one click, with restore option.
 
-4. 💡 Save: saves the file without applying changes.
+4. 💡 Apply: applies the file without saving a backup.
 
 5. ⚡ Save & Apply: saves the file and applies the configuration.
 
