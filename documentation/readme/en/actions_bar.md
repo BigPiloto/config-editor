@@ -84,7 +84,7 @@ Dropdown menu listing the files configured in the **FILE_CONTAINERS** parameter.
 
 # Related tutorials
 
-[READ ME](README.md)
+[READ ME](/README.md)
 
 [Getting Started](/documentation/readme/en/getting_started.md)
 
