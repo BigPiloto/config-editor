@@ -34,7 +34,7 @@ After registration, the username and password (with or without 2FA, depending on
 
 # Related tutorials
 
-[READ ME](README.md)
+[READ ME](/README.md)
 
 [Getting Started](/documentation/readme/en/getting_started.md)
 
