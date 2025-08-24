@@ -1,6 +1,6 @@
 # Config Editor
 
-[🇧🇷 Read in Brazilian Portuguese](/documentation/README/README.pt-br.md)
+[🇧🇷 Ler em Português - Brasil](/documentation/readme/README.pt-br.md)
 
 ## Overview
 
