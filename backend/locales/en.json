@@ -111,6 +111,7 @@
     "2fa_already_enabled": "2FA is already enabled",
     "2fa_already_disabled": "2FA is already disabled",
     "2fa_enabled_sucess": "2FA successfully enabled",
+    "2fa_disabled": "2FA disabled successfully",
     "2fa_disable_admin": "2FA management disabled by administrator",
     "2fa_invalid": "Invalid 2FA code",
     "2fa_invalid_activation": "Invalid 2FA code for activation",
@@ -119,6 +120,7 @@
     "dont_match": "The passwords don't match",
     "failed_temp_secret": "Failed to generate temporary secret. Please reload the page",
     "new_pass_diff": "The new password must be different from the current one",
+    "invalid_action": "Invalid action",
     "new_user_diff": "Enter a new user different from the current one",
     "pass_empty": "New password cannot be empty",
     "pass_incorrect": "Current password incorrect",
@@ -175,6 +177,9 @@
   },
 
   "login": {
+    "2fa_invalid": "Invalid 2FA code",
+    "2fa_required": "Enter the 2FA code",
+    "invalid_credentials": "Invalid credentials",
     "label": "Login"
   },
 
@@ -184,6 +189,11 @@
     "label": "Register",
     "text_1": "The name in the app will appear as",
     "your_user": "YourUser"
+  },
+
+  "setup": {
+    "totp_disabled": "TOTP is disabled",
+    "secret_missing": "Temporary secret not found"
   },
 
   "swal":{
@@ -221,6 +231,12 @@
       "xml_error": "Invalid XML: {err}",
       "yaml_error": "Invalid YAML: {err}"
     }
+  },
+
+  "totp": {
+    "disabled": "TOTP is disabled",
+    "no_secret": "No TOTP secret configured",
+    "preview_missing": "No preview secret available"
   },
 
   "kind": {

@@ -226,17 +226,17 @@ def setup():
     session["reg_username"] = username
 
     if not username or not password:
-      flash("flash.user_pass", "error")
+      flash_t("flash.user_pass", "error")
       return render_template("setup.html", totp_enabled=totp_on, show_qr=totp_on)
 
     if password != confirm:
-      flash("flash.dont_match", "error")
+      flash_t("flash.dont_match", "error")
       return render_template("setup.html", totp_enabled=totp_on, show_qr=totp_on)
 
     if totp_on:
     # 2FA obrigatório quando o recurso global está habilitado
       if not _verify_totp_with(reg_secret, code):
-        flash("flash.2fa_invalid", "error")
+        flash_t("flash.2fa_invalid", "error")
         return render_template("setup.html", totp_enabled=totp_on, show_qr=totp_on)
       secret_to_save = reg_secret
     else:
@@ -254,9 +254,9 @@ def setup():
     login_user(User(username))
 
     if totp_on:
-      flash("flash.user_2fa", "success")
+      flash_t("flash.user_2fa", "success")
     else:
-      flash("flash.user_register", "success")
+      flash_t("flash.user_register", "success")
     
     lang = _chosen_lang()
     return set_lang_and_redirect(lang, url_for("editor.view_editor"))
@@ -270,11 +270,11 @@ def setup_qr():
   Gera o QR a partir do segredo temporário da sessão.
   """
   if not settings.TOTP_ENABLED:
-    return Response("TOTP desabilitado", 404)
+    return response_t("setup.totp_disabled", 404)
 
   secret = session.get("reg_secret")
   if not secret:
-    return Response("Secret ausente", 404)
+    return response_t("setup.secret_missing", 404)
 
   username = (request.args.get("u") or session.get("reg_username") or "user").strip() or "user"
   uri = pyotp.TOTP(secret).provisioning_uri(
@@ -314,11 +314,11 @@ def login():
 
       if totp_required:
         if not code:
-          error = "Informe o código 2FA."
+          error = _T("login.2fa_required")
           return render_template("login.html", totp_required=True, error=error)
 
         if not _verify_totp_with(secret, code):
-          error = "Código 2FA inválido."
+          error = _T("login.2fa_invalid")
           return render_template(
             "login.html",
             totp_required=True,
@@ -333,7 +333,7 @@ def login():
       dest = nxt if _is_safe_next_url(nxt) else url_for("editor.view_editor")
       return set_lang_and_redirect(lang, dest)
 
-    error = "Credenciais inválidas."
+    error = _T("login.invalid_credentials")
 
   # GET ou POST com erro → mostra tela de login
   # Exibe campo 2FA somente se global ON e já houver segredo salvo
@@ -374,26 +374,26 @@ def change_password():
 
     # 1) Confere a senha atual
     if not p_hash or not check_password_hash(p_hash, current):
-      flash("flash.pass_incorrect", "error")
+      flash_t("flash.pass_incorrect", "error")
       return render_template("change_password.html", totp_required=totp_required)
 
     # 2) Se TOTP requerido, valida o código
     if totp_required:
       if not _verify_totp_with(secret, code):
-        flash("flash.2fa_invalid", "error")
+        flash_t("flash.2fa_invalid", "error")
         return render_template("change_password.html", totp_required=totp_required)
 
     # 3) Regras básicas para a nova senha
     if not new:
-      flash("flash.pass_empty", "error")
+      flash_t("flash.pass_empty", "error")
       return render_template("change_password.html", totp_required=totp_required)
 
     if new != confirm:
-      flash("flash.confirm_dont_match", "error")
+      flash_t("flash.confirm_dont_match", "error")
       return render_template("change_password.html", totp_required=totp_required)
 
     if current == new:
-      flash("flash.new_pass_diff", "error")
+      flash_t("flash.new_pass_diff", "error")
       return render_template("change_password.html", totp_required=totp_required)
 
     # 4) Persiste a nova senha
@@ -402,7 +402,7 @@ def change_password():
     st["user"]["password_hash"] = generate_password_hash(new)
     _save_state(st)
 
-    flash("flash.sucess_change_pass", "success")
+    flash_t("flash.sucess_change_pass", "success")
     return redirect(url_for("editor.view_editor"))
 
   # GET → formulário
@@ -426,16 +426,16 @@ def change_username():
 
     # Senha obrigatória para autorizar
     if not p_hash or not check_password_hash(p_hash, current_pass):
-      flash("flash.pass_wrong", "error")
+      flash_t("flash.pass_wrong", "error")
       return render_template("change_username.html", totp_required=totp_required, current_username=u_saved)
 
     # Se 2FA ativo/global, exige código
     if totp_required and not _verify_totp_with(secret, code):
-      flash("flash.2fa_invalid", "error")
+      flash_t("flash.2fa_invalid", "error")
       return render_template("change_username.html", totp_required=totp_required, current_username=u_saved)
 
     if not new_user or new_user == u_saved:
-      flash("flash.new_user_diff", "error")
+      flash_t("flash.new_user_diff", "error")
       return render_template("change_username.html", totp_required=totp_required, current_username=u_saved)
 
     _set_username(new_user)
@@ -444,7 +444,7 @@ def change_username():
     logout_user()
     login_user(User(new_user))
 
-    flash("flash.change_user_sucess", "success")
+    flash_t("flash.change_user_sucess", "success")
     return redirect(url_for("editor.view_editor"))
 
   # GET
@@ -458,7 +458,7 @@ def change_username():
 @login_required
 def totp_manage():
   if not settings.TOTP_ENABLED:
-    flash("flash.2fa_disable_admin", "error")
+    flash_t("flash.2fa_disable_admin", "error")
     return redirect(url_for("editor.view_editor"))
 
   secret = _get_totp_secret()
@@ -475,44 +475,44 @@ def totp_manage():
 
     _, p_hash = _get_user()
     if not p_hash or not check_password_hash(p_hash, current_pass):
-      flash("flash.pass_wrong", "error")
+      flash_t("flash.pass_wrong", "error")
       return render_template("totp_manage.html", status_enabled=status_enabled, username=u_saved, show_qr=not status_enabled)
 
     if action == "enable":
       if status_enabled:
-        flash("flash.2fa_already_enabled", "error")
+        flash_t("flash.2fa_already_enabled", "error")
         return render_template("totp_manage.html", status_enabled=True, username=u_saved)
 
       preview_secret = session.get("enable_secret")
       if not preview_secret:
-        flash("flash.failed_temp_secret", "error")
+        flash_t("flash.failed_temp_secret", "error")
         return redirect(url_for(".totp_manage"))
 
       # exige confirmação já com o novo segredo
       if not _verify_totp_with(preview_secret, code):
-        flash("flash.2fa_invalid_activation", "error")
+        flash_t("flash.2fa_invalid_activation", "error")
         return render_template("totp_manage.html", status_enabled=False, username=u_saved, show_qr=True)
 
       _set_totp_secret(preview_secret)
       session.pop("enable_secret", None)
-      flash("flash.2fa_enabled_sucess", "success")
+      flash_t("flash.2fa_enabled_sucess", "success")
       return redirect(url_for(".totp_manage"))
 
     elif action == "disable":
       if not status_enabled:
-        flash("flash.2fa_already_disabled", "error")
+        flash_t("flash.2fa_already_disabled", "error")
         return render_template("totp_manage.html", status_enabled=False, username=u_saved)
 
       if not _verify_totp_with(secret, code):
-        flash("flash.2fa_invalid", "error")
+        flash_t("flash.2fa_invalid", "error")
         return render_template("totp_manage.html", status_enabled=True, username=u_saved)
 
       _set_totp_secret(None)
-      flash("flash.2fa_disabled.", "success")
+      flash_t("flash.2fa_disabled", "success")
       return redirect(url_for(".totp_manage"))
 
     else:
-      flash("Ação inválida", "error")
+      flash_t("flash.invalid_action", "error")
 
   return render_template("totp_manage.html", status_enabled=status_enabled, username=u_saved, show_qr=not status_enabled)
 
@@ -521,12 +521,12 @@ def totp_manage():
 @login_required
 def totp_qr():
   if not settings.TOTP_ENABLED:
-    return Response("TOTP disabled", 404)
+    return response_t("totp.disabled", 404)
 
   # QR do segredo persistido (estado atual)
   secret = _get_totp_secret()
   if not secret:
-    return Response("No secret", 404)
+    return response_t("totp.no_secret", 404)
 
   u_saved, _ = _get_user()
   username = u_saved or "user"
@@ -541,11 +541,11 @@ def totp_qr():
 @login_required
 def totp_qr_preview():
   if not settings.TOTP_ENABLED:
-    return Response("TOTP disabled", 404)
+    return response_t("totp.disabled", 404)
 
   preview_secret = session.get("enable_secret")
   if not preview_secret:
-    return Response("No preview secret", 404)
+    return response_t("totp.preview_missing", 404)
 
   u_saved, _ = _get_user()
   username = u_saved or "user"

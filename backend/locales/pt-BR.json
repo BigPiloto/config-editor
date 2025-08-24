@@ -111,6 +111,7 @@
     "2fa_already_enabled": "2FA já está habilitado",
     "2fa_already_disabled": "2FA já está desabilitado",
     "2fa_enabled_sucess": "2FA habilitado com sucesso",
+    "2fa_disabled": "2FA desativado com sucesso",
     "2fa_disable_admin": "Gestão de 2FA desabilitada pelo administrador",
     "2fa_invalid": "Código 2FA inválido",
     "2fa_invalid_activation": "Código 2FA inválido para ativação",
@@ -118,6 +119,7 @@
     "change_user_sucess": "Usuário alterado com sucesso",
     "dont_match": "As senhas não conferem",
     "failed_temp_secret": "Falha ao gerar segredo temporário. Recarregue a página",
+    "invalid_action": "Ação Inválida",
     "new_pass_diff": "A nova senha deve ser diferente da atual",
     "new_user_diff": "Informe um novo usuário diferente do atual",
     "pass_empty": "Nova senha não pode estar vazia",
@@ -175,6 +177,9 @@
   },
 
   "login": {
+    "2fa_invalid": "Código 2FA Inválido",
+    "2fa_required": "Digite o código 2FA",
+    "invalid_credentials": "Credenciais Inválidas",
     "label": "Login"
   },
 
@@ -184,6 +189,11 @@
     "label": "Registrar",
     "text_1": "O nome no app aparecerá como",
     "your_user": "SeuUsuário"
+  },
+
+  "setup": {
+    "totp_disabled": "TOTP está desativado",
+    "secret_missing": "Segredo temporário não encontrado"
   },
 
   "swal":{
@@ -221,6 +231,12 @@
       "xml_error": "XML inválido: {err}",
       "yaml_error": "YAML inválido: {err}"
     }
+  },
+
+  "totp": {
+    "disabled": "TOTP está desativado",
+    "no_secret": "Sem segredo TOTP configurado",
+    "preview_missing": "Sem prévia de segredo disponível"
   },
 
   "kind": {
