@@ -73,7 +73,7 @@ services:
   - Se você tem múltiplos serviços em pastas diferentes, precisa mapear cada arquivo individualmente:
     - ✅ /srv/servico_1/config/arquivo_1.extensao:/data/arquivo_1.extensao:rw
     - ✅ /srv/servico_1/config/arquivo_2.extensao:/data/arquivo_2.extensao:rw
-    - ✅ /srv/servico_2/config/arquivo_2.extensao:/data/arquivo_2.exntesao:rw
+    - ✅ /srv/servico_2/config/arquivo_1.extensao:/data/arquivo_1.exntesao:rw
   - ❌ Não faça bind de pastas dentro do mesmo diretório:
     - ❌ /srv/servico_1/config:/data
     - ❌ /srv/servico_2/config:/data
