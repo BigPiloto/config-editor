@@ -70,10 +70,13 @@ services:
 12. `Config volume`: faça o bind da pasta que contém as configurações do serviço, e não de um arquivo específico.
   - Se você tem um único serviço ou múltiplos arquivos de configuração na mesma pasta, basta mapear essa pasta:
     - ✅ /srv/servico/config:/data
-  - Se você tem múltiplos serviços em pastas diferentes, precisa mapear cada uma:
-    - ✅ /srv/service_1/config:/data
-    - ✅ /srv/service_2/config:/data
-  - ❌ Não faça bind de um arquivo individual: /srv/servico/config/arquivo.xml:/data/arquivo.xml
+  - Se você tem múltiplos serviços em pastas diferentes, precisa mapear cada arquivo individualmente:
+    - ✅ /srv/servico_1/config/arquivo_1.extensao:/data/arquivo_1.extensao:rw
+    - ✅ /srv/servico_1/config/arquivo_2.extensao:/data/arquivo_2.extensao:rw
+    - ✅ /srv/servico_2/config/arquivo_2.extensao:/data/arquivo_2.exntesao:rw
+  - ❌ Não faça bind de pastas dentro do mesmo diretório:
+    - ❌ /srv/servico_1/config:/data
+    - ❌ /srv/servico_2/config:/data
 13. `Backups volume`: armazenamento persistente para backups.
 14. `State volume`: armazenamento persistente para o estado da aplicação.
 
