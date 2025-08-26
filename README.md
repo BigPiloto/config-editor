@@ -67,13 +67,17 @@ services:
 9. `Backup directory`: where backups created in one click are stored.
 10. `State directory`: stores application state (user data, 2FA secrets, etc).
 11. `Docker socket volume`: required so the app can run docker inspect and docker restart.
-12. `Config volume`: bind the **`folder`** that contains your service config, not the single file.
-  - If you have a single service or multiple config files in the same folder, just bind that folder:
+12. `Config volume`: Define the volumes so the container can access the service configuration file(s).
+  - If you have a single service or multiple files within the same folder, you can simply map the entire folder:
     - ✅ `/srv/service/config:/data`
-  - If you have multiple services with configs in different folders, you must bind each folder separately:
-    - ✅ `/srv/service_1/config:/data`
-    - ✅ `/srv/service_2/config:/data`
-  - ❌ Do not bind a single file: `/srv/service/config/file_example.xml:/data/file_example.xml`
+  - If you have multiple services with configuration files in different folders, you must map each file individually:
+    - ✅ `/srv/service_1/config/file_1.extension:/data/file_1.extension:rw`
+    - ✅ `/srv/service_1/config/file_2.extension:/data/file_2.extension:rw`
+    - ✅ `/srv/service_2/config/file_3.extension:/data/file_3.extension:rw`
+      - ⚠️ Warning: do not use duplicate filenames in /data, as they will conflict.
+  - ❌ Do not map different folders to the same /data destination:
+    -  ❌ `/srv/service_1/config:/data`
+    -  ❌ `/srv/service_2/config:/data`
 13. `Backups volume`: persistent storage for backups.
 14. `State volume`: persistent storage for application state.
 
