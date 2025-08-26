@@ -74,7 +74,7 @@ services:
     - ✅ `/srv/servico_1/config/arquivo_1.extensao:/data/arquivo_1.extensao:rw`
     - ✅ `/srv/servico_1/config/arquivo_2.extensao:/data/arquivo_2.extensao:rw`
     - ✅ `/srv/servico_2/config/arquivo_3.extensao:/data/arquivo_3.exntesao:rw`
-      - ⚠️ Atenção: não use nomes duplicados em /data/, pois haverá conflito.
+      - ⚠️ Atenção: não use nomes duplicados em /data, pois haverá conflito.
   - ❌ Não é permitido mapear pastas diferentes para o mesmo destino /data:
     - ❌ `/srv/servico_1/config:/data`
     - ❌ `/srv/servico_2/config:/data`
