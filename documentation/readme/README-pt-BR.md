@@ -67,14 +67,15 @@ services:
 9. `Backup directory`: onde os backups criados em um clique são armazenados.
 10. `State directory`: armazena o estado da aplicação (usuários, dados de 2FA, etc).
 11. `Docker socket volume`: necessário para que o app execute docker inspect e docker restart.
-12. `Config volume`: faça o bind da pasta que contém as configurações do serviço, e não de um arquivo específico.
-  - Se você tem um único serviço ou múltiplos arquivos de configuração na mesma pasta, basta mapear essa pasta:
+12. `Config volume`: defina os volumes para que o container tenha acesso aos arquivos de configuração do(s) serviço(s).
+  - Caso tenha apenas um serviço ou vários arquivos dentro da mesma pasta, basta mapear a pasta inteira:
     - ✅ /srv/servico/config:/data
-  - Se você tem múltiplos serviços em pastas diferentes, precisa mapear cada arquivo individualmente:
+  - Caso tenha múltiplos serviços com configurações em pastas diferentes, é necessário mapear cada arquivo individualmente:
     - ✅ /srv/servico_1/config/arquivo_1.extensao:/data/arquivo_1.extensao:rw
     - ✅ /srv/servico_1/config/arquivo_2.extensao:/data/arquivo_2.extensao:rw
-    - ✅ /srv/servico_2/config/arquivo_1.extensao:/data/arquivo_1.exntesao:rw
-  - ❌ Não faça bind de pastas dentro do mesmo diretório:
+    - ✅ /srv/servico_2/config/arquivo_3.extensao:/data/arquivo_3.exntesao:rw
+      - ⚠️ Atenção: não use nomes duplicados em /data/, pois haverá conflito.
+  - ❌ Não é permitido mapear pastas diferentes para o mesmo destino /data:
     - ❌ /srv/servico_1/config:/data
     - ❌ /srv/servico_2/config:/data
 13. `Backups volume`: armazenamento persistente para backups.
