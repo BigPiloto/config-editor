@@ -116,16 +116,18 @@ Without it, inspecting containers and using the Restart container button will no
 
 Define the volumes so the container can access the service configuration file(s).
 
-  - If you have a single service or multiple files within the same folder, you can simply map the entire folder:
-    - ✅ `/srv/service/config:/data`
-  - If you have multiple services with configuration files in different folders, you must map each file individually:
-    - ✅ `/srv/service_1/config/file_1.extension:/data/file_1.extension:rw`
-    - ✅ `/srv/service_1/config/file_2.extension:/data/file_2.extension:rw`
-    - ✅ `/srv/service_2/config/file_3.extension:/data/file_3.extension:rw`
-      - ⚠️ Warning: do not use duplicate filenames in /data, as they will conflict.
+If you have a single service or multiple files within the same folder, you can simply map the entire folder:
+  - ✅ `/srv/service/config:/data`
+
+If you have multiple services with configuration files in different folders, you must map each file individually:
+  - ✅ `/srv/service_1/config/file_1.extension:/data/file_1.extension:rw`
+  - ✅ `/srv/service_1/config/file_2.extension:/data/file_2.extension:rw`
+  - ✅ `/srv/service_2/config/file_3.extension:/data/file_3.extension:rw`
+    - ⚠️ Warning: do not use duplicate filenames in /data, as they will conflict.
+
   - ❌ Do not map different folders to the same /data destination:
-    -  ❌ `/srv/service_1/config:/data`
-    -  ❌ `/srv/service_2/config:/data`
+    - ❌ `/srv/service_1/config:/data`
+    - ❌ `/srv/service_2/config:/data`
 
 If you have multiple services in different folders, map each folder separately.
 
