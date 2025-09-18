@@ -1,0 +1,227 @@
+<!-- frontend/templates/totp_manage.html -->
+{% extends "base.html" %}
+
+{% block title %}{{ T("2fa.title") }} · {{ T("app.title") }}{% endblock %}
+
+{% block content %}
+<div class="login-wrap">
+  <div class="card login-card">
+    <header class="card-head row" style="justify-content: space-between; align-items: center;">
+      <div class="row" style="gap:10px; align-items:center;">
+        <h2>{{ T("app.menu.2fa") }}</h2>
+        <span class="tag info">{{ T(status_enabled and "2fa.enabled" or "2fa.disabled") }}</span>
+        {% if not status_enabled %}
+          <div class="muted" style="margin:10px;">{{ T("2fa.text.enable") }}</div>
+        {% endif %}
+      </div>
+      <a href="{{ url_for('editor') }}" class="btn">{{ T("btn.back") }}</a>
+    </header>
+
+    {% if not status_enabled %}
+      <div class="form-row" style="display:flex; gap:16px; align-items:flex-start;">
+        {% if show_qr %}
+          <img id="preview-qr" alt="QR 2FA (preview)" src="{{ url_for('settings.totp_qr_preview') }}" class="qr">
+          <div class="muted">
+            <br>
+            {{ T("auth.qr.text.1") }}
+            <br>
+            <br>
+            {{ T("auth.qr.text.2") }} {{ T("auth.qr.text.3") }} <strong>{{ T("btn.2fa_enable") }}</strong>
+            <br>
+            <br>
+            {{ T("auth.qr.text.4") }} “Config Editor - {{ username }}”
+          </div>
+        {% else %}
+          <div class="muted">{{ T("auth.qr.text.5") }}</div>
+        {% endif %}
+      </div>
+
+      <form method="post" action="/totp-manage" class="form" autocomplete="off">
+        <input type="hidden" name="action" value="enable">
+
+        <div class="form-row">
+          <label class="muted">{{ T("auth.current_pass") }}</label>
+          <input class="input" type="password" name="current" placeholder="••••••••" required autocomplete="current-password" autofocus>
+          <small class="hint" id="caps-hint" hidden>{{ T("auth.caps_on") }}</small>
+        </div>
+
+        <div class="form-row">
+          <label class="muted">{{ T("auth.2fa_code") }} {{ T("auth.qr.text.6") }}</label>
+          <input class="input" name="totp" placeholder="000000" inputmode="numeric" pattern="\d{6}" maxlength="6" required autocomplete="one-time-code">
+        </div>
+
+        <div class="form-row">
+          <button class="btn primary w-full" type="submit">{{ T("btn.2fa_enable") }}</button>
+        </div>
+      </form>
+
+      <script>
+        const img = document.getElementById('preview-qr');
+        if (img) {
+          const u = new URL(img.src, location.origin);
+          u.searchParams.set('_', Date.now());
+          img.src = u.toString();
+        }
+      </script>
+
+    {% else %}
+      <div class="form-row" style="display:flex; gap:16px; align-items:flex-start;">
+        <img id="qr-current" class="qr" alt="QR 2FA" src="{{ url_for('settings.totp_qr') }}">
+        <div class="muted">
+          <br>
+          {{ T("auth.qr.text.7") }}
+          <br>
+          <br>
+          {{ T("auth.qr.text.4") }} “Config Editor - {{ username }}”
+        </div>
+      </div>
+
+      <form method="post" action="/totp-manage" class="form" autocomplete="off" style="margin-top:8px;">
+        <input type="hidden" name="action" value="disable">
+
+        <div class="form-row">
+          <label class="muted">{{ T("auth.current_pass") }}</label>
+          <input class="input" type="password" name="current" placeholder="••••••••" required autocomplete="current-password" autofocus>
+          <small class="hint" id="caps-hint" hidden>{{ T("auth.caps_on") }}</small>
+        </div>
+
+        <div class="form-row">
+          <label class="muted">{{ T("auth.2fa_code") }}</label>
+          <input class="input" name="totp" placeholder="000000" inputmode="numeric" pattern="\d{6}" maxlength="6" required autocomplete="one-time-code">
+        </div>
+
+        <div class="form-row">
+          <button class="btn pill logout" type="submit" style="width:100%; margin:0;">
+            {{ T("btn.2fa_disable") }}
+          </button>
+        </div>
+      </form>
+    {% endif %}
+  </div>
+</div>
+
+<script>
+  // Estado global do CapsLock (null = desconhecido)
+  let capsOn = null;
+
+  // Atualiza estado global a cada tecla
+  function captureCaps(e) {
+    if (e && e.getModifierState) {
+      capsOn = e.getModifierState('CapsLock');
+      // Atualiza o campo focado, se houver
+      const active = document.activeElement;
+      if (active && active.dataset && active.dataset.capsHintId) {
+        const hint = document.getElementById(active.dataset.capsHintId);
+        if (hint) hint.hidden = !(capsOn === true);
+      }
+    }
+  }
+  window.addEventListener('keydown', captureCaps, true);
+  window.addEventListener('keyup',   captureCaps, true);
+
+  // Liga o comportamento de CapsLock em um campo
+  function bindCaps(inputName, hintId) {
+    const input = document.querySelector(`input[name="${inputName}"]`);
+    const hint  = document.getElementById(hintId);
+    if (!input || !hint) return;
+
+    // guarda referência do hint no próprio input
+    input.dataset.capsHintId = hintId;
+
+    // Ao focar: aplica imediatamente o último estado conhecido
+    input.addEventListener('focus', () => {
+      if (capsOn === null) {
+        // ainda não sabemos: mantém oculto até a primeira tecla
+        hint.hidden = true;
+      } else {
+        hint.hidden = !capsOn;
+      }
+    });
+
+    // Teclas no próprio campo também atualizam
+    input.addEventListener('keydown', captureCaps);
+    input.addEventListener('keyup',   captureCaps);
+
+    // Ao perder o foco, esconde a dica
+    input.addEventListener('blur', () => { hint.hidden = true; });
+  }
+
+  const cur = document.getElementById('qr-current');
+  if (cur) {
+    const u = new URL(cur.src, location.origin);
+    u.searchParams.set('_', Date.now());
+    cur.src = u.toString();
+  }
+  const prev = document.getElementById('preview-qr');
+  if (prev) {
+    const u2 = new URL(prev.src, location.origin);
+    u2.searchParams.set('_', Date.now());
+    prev.src = u2.toString();
+  }
+
+  // Ativar no campo correto
+  bindCaps('current', 'caps-hint');
+
+  // 2FA: aceitar só 6 números
+  document.querySelectorAll('input[name="totp"]').forEach(el => {
+    el.addEventListener('input', () => { el.value = el.value.replace(/\D/g,'').slice(0,6); });
+  });
+
+  // Interceptar POST dos dois forms (enable/disable)
+  document.querySelectorAll("form[method='post']").forEach(form => {
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const submitBtn = form.querySelector('button[type="submit"]');
+      submitBtn?.setAttribute('disabled','true');
+
+      const formData = new FormData(form);
+      const payload = new URLSearchParams(formData);
+
+      try {
+        const url = form.getAttribute("action") || "/totp-manage";
+        const res = await fetch(url, {
+          method: "POST",
+          headers: {
+            "Accept": "application/json",
+            "Content-Type": "application/x-www-form-urlencoded"
+          },
+          body: payload
+        });
+
+        let data;
+        try { data = await res.json(); } catch { data = { ok:false, error: "{{ T('errors.unknown') }}" }; }
+
+        if (data.ok) {
+          (window.swalCenter || Swal).fire({
+            icon: "success",
+            title: "{{ T('success.title') }}",
+            text: data.msg || "{{ T('totp.success_generic') }}"
+          }).then(() => window.location.reload());
+        } else {
+          (window.swalCenter || Swal).fire({
+            icon: "error",
+            title: "{{ T('errors.title') }}",
+            text: data.error || "{{ T('errors.unknown') }}"
+          });
+
+          // Zera campos sensíveis
+          const currentInput = form.querySelector('input[name="current"]');
+          if (currentInput) currentInput.value = "";
+          const totpInput = form.querySelector('input[name="totp"]');
+          if (totpInput) totpInput.value = "";
+
+          submitBtn?.removeAttribute('disabled');
+        }
+      } catch (err) {
+        (window.swalCenter || Swal).fire({
+          icon: "error",
+          title: "{{ T('errors.title') }}",
+          text: "{{ T('errors.internal_server_error') }}"
+        });
+        submitBtn?.removeAttribute('disabled');
+      }
+    });
+  });
+</script>
+{% endblock %}

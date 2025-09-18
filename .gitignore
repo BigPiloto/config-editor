@@ -1,0 +1,39 @@
+# ---- Python ----
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.egg-info/
+*.egg
+*.log
+
+# Virtual envs
+.venv/
+env/
+venv/
+
+# ---- Node/Frontend ----
+node_modules/
+dist/
+build/
+*.log
+
+# ---- OS files ----
+.DS_Store
+Thumbs.db
+
+# ---- IDEs ----
+.vscode/
+.idea/
+
+# ---- Projeto ----
+# Pastas e arquivos que não devem ser versionados
+meus_arquivos/
+config/
+.env
+
+# Backups e temporários da aplicação
+.backups/
+.tmp/
+.state/
+.file_containers.json

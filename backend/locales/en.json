@@ -1,0 +1,308 @@
+{
+  "2fa": {
+    "disabled": "2FA Disabled",
+    "enabled": "2FA Enabled",
+    "text": {
+      "enable": "Enable 2FA for added security"
+    },
+    "title": "Two-factor auth (2FA)"
+  },
+  "app": {
+    "btn": {
+      "cancel": "Cancel",
+      "logout": "Log out"
+    },
+    "container": {
+      "set": "Container: {name}",
+      "unset": "No container selected"
+    },
+    "logout": {
+      "question": "Sign out?",
+      "text": "You will be signed out of this session"
+    },
+    "menu": {
+      "2fa": "Two-factor auth",
+      "change_lang": "Change language",
+      "change_pass": "Change password",
+      "change_user": "Change username",
+      "editor": "Editor"
+    },
+    "title": "CONFIG EDITOR",
+    "working_in": "Working in:"
+  },
+  "auth": {
+    "2fa_code": "2FA Code",
+    "caps_on": "Caps Lock on",
+    "confirm_pass": "Confirm password",
+    "current_pass": "Current password",
+    "current_user": "Current username",
+    "invalid_2fa": "Invalid verification code",
+    "invalid_pass": "Incorrect password",
+    "invalid_user": "User not found",
+    "new_pass": "New password",
+    "new_user": "New username",
+    "pass": "Password",
+    "qr": {
+      "text": {
+        "1": "1) Scan the QR code in the authenticator app",
+        "2": "2) Enter the 6-digit code below and activate it",
+        "3": "by clicking on",
+        "4": "The name in the app will appear as",
+        "5": "The QR will be generated automatically on this screen",
+        "6": "(of the new secret)",
+        "7": "Rescan this QR in your app if needed (shows the current secret)"
+      }
+    },
+    "user": "Username"
+  },
+  "btn": {
+    "2fa_disable": "Disable 2FA",
+    "2fa_enable": "Enable 2FA",
+    "back": "Back",
+    "back_editor": "Back to Editor",
+    "change": "Change",
+    "confirm": "Confirm",
+    "enter": "Enter",
+    "ok": "OK",
+    "register": "Register",
+    "update_qr": "Update QR Code"
+  },
+  "choose_lang": {
+    "label": "Select your language",
+    "success": "The language has been updated successfully",
+    "success_title": "Language saved",
+    "title": "Choose your language"
+  },
+  "docker": {
+    "health": {
+      "healthy": "Healthy",
+      "starting": "Starting",
+      "unhealthy": "Unhealthy",
+      "unknown": "Unknown"
+    },
+    "status": {
+      "created": "Created",
+      "dead": "Dead",
+      "exited": "Exited",
+      "restarting": "Restarting",
+      "running": "Running",
+      "unknown": "Unknown"
+    }
+  },
+  "editor": {
+    "placeholder": {
+      "subtitle": "Select a file from the tree on the left",
+      "tip": "Use the filter to quickly locate files",
+      "title": "No file open"
+    }
+  },
+  "errors": {
+    "container_not_found": "No container associated with this file",
+    "dir_already_exists": "Directory already exists",
+    "dir_not_empty": "Directory is not empty",
+    "empty_file_name": "File name cannot be empty",
+    "empty_folder_name": "Folder name cannot be empty",
+    "empty_name": "Name cannot be empty",
+    "file_already_exists": "File already exists",
+    "file_not_found": "File not found",
+    "forbidden": "You do not have permission to access this resource",
+    "http_error": "There was an error processing your request",
+    "internal_error": "Internal server error",
+    "internal_server_error": "Internal server error",
+    "invalid_container": "Invalid container",
+    "invalid_totp_secret": "Invalid TOTP secret",
+    "lang_not_supported": "Selected language is not supported",
+    "method_not_allowed": "HTTP method not allowed for this resource",
+    "missing_path": "Missing path",
+    "no_totp_configured": "2FA is not configured for this user",
+    "not_authenticated": "You must be authenticated to access this resource",
+    "not_dir": "Not a directory",
+    "not_found": "The requested resource was not found",
+    "not_utf8": "File is not UTF-8 encoded",
+    "number": {
+      "401": "Unauthorized",
+      "403": "Forbidden",
+      "404": "Not found",
+      "405": "Method not allowed",
+      "500": "Internal Server Error"
+    },
+    "parent_not_exists": "Parent directory does not exist",
+    "pass_mismatch": "Passwords do not match",
+    "password_required": "Password is required",
+    "password_same_as_current": "The new password cannot be the same as the current password",
+    "path_already_exists": "Destination path already exists",
+    "path_is_directory": "Path is a directory",
+    "path_not_found": "Path not found",
+    "path_outside_workspace": "Path outside workspace",
+    "preview_secret_missing": "No temporary secret for QR preview",
+    "rename_failed": "Rename/move failed",
+    "restart_failed": "Failed to restart container",
+    "restart_not_configured": "Container restart is not configured on the server",
+    "same_name": "The new name is the same as the old one",
+    "static_not_found": "Static directory not found",
+    "title": "Error",
+    "unknown": "Unknown error",
+    "userfile_missing": "User file not found",
+    "username_required": "Please enter a username",
+    "username_same_as_current": "The new username cannot be the same as the current one",
+    "validation_error": "Invalid input"
+  },
+  "flash": {
+    "2fa_already_disabled": "2FA is already disabled",
+    "2fa_disabled": "Two-factor authentication disabled",
+    "2fa_disable_admin": "Two-factor authentication has been disabled by the administrator",
+    "2fa_enabled_success": "Two-factor authentication enabled",
+    "2fa_invalid": "Invalid 2FA code",
+    "2fa_invalid_activation": "Invalid 2FA code for activation",
+    "failed_temp_secret": "Failed to get temporary secret",
+    "invalid_action": "Invalid action",
+    "new_user_diff": "The new username must be different from the current one",
+    "pass_changed_success": "Password changed successfully",
+    "pass_mismatch": "Passwords do not match",
+    "pass_wrong": "Current password is incorrect",
+    "user_changed_success": "Username changed successfully"
+  },
+  "health": {
+    "checking": "Checking…",
+    "docker_unavailable": "Docker unavailable",
+    "error": "Error",
+    "failed": "Failed",
+    "modal": {
+      "close": "Close",
+      "col": {
+        "container": "Container",
+        "health": "Health",
+        "status": "Status"
+      },
+      "empty": "No containers found",
+      "title": "Containers health"
+    },
+    "not_found": "Container not found",
+    "title": {
+      "fmt": "{status} · {health}"
+    },
+    "tooltip": "Click to view container status"
+  },
+  "login": {
+    "invalid_2fa": "Invalid two-factor code",
+    "invalid_credentials": "Invalid username or password",
+    "label": "Login"
+  },
+  "register": {
+    "2fa": {
+      "invalid": "Invalid two-factor code for activation"
+    },
+    "first": "Register user (first access)",
+    "go_login": "Go login",
+    "label": "Register",
+    "success": "User created successfully! You can now log in",
+    "your_user": "YourUser"
+  },
+  "setup": {
+    "password_mismatch": "Password and confirmation do not match"
+  },
+  "success":{
+    "password_changed": "Password changed successfully",
+    "title": "Success",
+    "user_changed": "Username changed successfully"
+  },
+  "totp": {
+    "success_generic": "Operation completed successfully"
+  },
+  "ui": {
+    "actions": "Actions",
+    "apply_backup": "Apply backup",
+    "apply_editor": "Apply editor version",
+    "apply_left": "Apply disk version",
+    "apply_right": "Apply editor version",
+    "assoc_container": "Associate container",
+    "associate_container": "Associate container",
+    "association_removed": "Container association removed",
+    "association_saved": "Container association saved",
+    "back_to_editor": "Back to editor",
+    "backup": "Backup",
+    "backup_created": "Backup created",
+    "backup_deleted": "Backup deleted",
+    "backup_options": "Backup options",
+    "cancel": "Cancel",
+    "confirm_delete": "Confirm deletion",
+    "confirm_delete_backup": "Confirm backup deletion",
+    "container_name": "Container name",
+    "container_not_found": "Container {name} not found",
+    "container_restarted": "Container restarted",
+    "container_stopped_text": "Container {name} is stopped",
+    "container_stopped_title": "Container stopped",
+    "create": "Create",
+    "create_backup": "Create backup",
+    "delete": "Delete",
+    "delete_backup": "Delete backup",
+    "delete_path": "Delete",
+    "diff": "Diff",
+    "disk_file": "Disk file",
+    "download_file": "Download file",
+    "editor": "Editor",
+    "edited_file": "Edited file",
+    "enter_container_name": "Enter container name",
+    "enter_file_name": "Enter file name",
+    "enter_folder_name": "Enter folder name",
+    "enter_new_name": "Enter new name",
+    "error": "Error",
+    "error_load_tree": "Error loading tree",
+    "error_open_file": "Error opening file",
+    "error_open_file_console": "Error in console when opening file",
+    "failed_action": "Failed to execute action",
+    "file_name_placeholder": "File name",
+    "folder_name_placeholder": "Folder name",
+    "go_editor": "Go to editor",
+    "go_login": "Go to login",
+    "http_404": "Resource not found (404)",
+    "http_500": "Internal server error (500)",
+    "http_error": "There was an error processing your request",
+    "manage_backups": "Manage backups",
+    "new_file": "New file",
+    "new_folder": "New folder",
+    "new_name_placeholder": "New name",
+    "no_backup": "No backups available",
+    "no_container": "No container associated",
+    "rename": "Rename",
+    "rename_path": "Rename",
+    "restart_confirm_text": "This will restart container {name}",
+    "restart_confirm_title": "Restart container?",
+    "restart_container": "Restart",
+    "restart_now": "Restart now",
+    "save": "Save",
+    "save_button": "Save file",
+    "search_placeholder": "Search files...",
+    "select": "Select",
+    "select_backup": "Select a backup",
+    "select_file_placeholder": "Select a file",
+    "start_container": "Start container",
+    "start_ok": "Container started",
+    "success": "Success",
+    "success_applied_left": "Applied left successfully",
+    "success_applied_right": "Applied right successfully",
+    "success_deleted": "Deleted successfully",
+    "success_downloaded": "Downloaded successfully",
+    "success_renamed": "Renamed successfully",
+    "success_saved": "Saved successfully",
+    "unsaved_changes": "Unsaved changes",
+    "validate": "Validate",
+    "verify_backup": "Verify backup"
+  },
+  "validate": {
+    "csv_ok": "Valid CSV",
+    "css_ok": "Valid CSS",
+    "empty": "Empty content",
+    "error": "Validation error: {error}",
+    "generic_ok": "File is valid",
+    "html_ok": "Valid HTML",
+    "ini_ok": "Valid INI",
+    "json_ok": "Valid JSON",
+    "md_ok": "Valid Markdown",
+    "not_supported": "Validation not supported for this extension",
+    "python_ok": "Valid Python (syntax)",
+    "toml_ok": "Valid TOML",
+    "xml_ok": "Valid XML",
+    "yaml_ok": "Valid YAML"
+  }
+}

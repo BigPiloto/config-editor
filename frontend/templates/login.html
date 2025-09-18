@@ -1,0 +1,119 @@
+<!-- frontend/templates/login.html -->
+{% extends "base.html" %}
+{% block title %}{{ T("login.label") }} · {{ T("app.title") }}{% endblock %}
+
+{% block content %}
+<div class="login-wrap">
+   <div class="card login-card">
+    <header class="card-head row">
+      <h2>{{ T("login.label") }}</h2>
+        <span class="tag info">{{ T(totp_required and "2fa.enabled" or "2fa.disabled") }}</span>
+    </header>
+
+    <form method="post" class="form" autocomplete="off" action="{{ request.url_for('login_post') }}">
+      <div class="form-row">
+        <label for="user" class="muted">{{ T("auth.user") }}</label>
+        <input id="user" class="input" name="username" placeholder="{{ T("auth.user") }}" autocomplete="username" required autofocus>
+      </div>
+    
+      <div class="form-row">
+        <label for="pass" class="muted">{{ T("auth.pass") }}</label>
+        <input id="pass" class="input" type="password" name="password" placeholder="••••••••" autocomplete="current-password" required>
+        <small class="hint" id="caps-hint" hidden>{{ T("auth.caps_on") }}</small>
+      </div>
+
+      {% if totp_required %}
+      <div class="form-row">
+        <label for="totp" class="muted">{{ T("auth.2fa_code") }}</label>
+        <input id="totp" class="input" name="totp" placeholder="000000" inputmode="numeric" pattern="\d{6}" maxlength="6" autocomplete="one-time-code" required>
+      </div>
+      {% endif %}
+
+      <div class="form-row">
+        <button class="btn primary w-full" id="btn-login" type="submit">{{ T("btn.enter") }}</button>
+      </div>     
+    </form>
+  </div>
+</div>
+
+{% if error_key %}
+<script>
+  swalCenter.fire({
+    icon: 'error',
+    title: '{{ T("errors.title") }}',
+    text: '{{ T(error_key)|e }}',
+    confirmButtonText: 'OK'
+  })
+</script>
+{% endif %}
+
+<!-- JS mínimo da página -->
+<script>
+  // Estado global do CapsLock (null = desconhecido)
+  let capsOn = null;
+
+  // Atualiza estado global a cada tecla
+  function captureCaps(e) {
+    if (e && e.getModifierState) {
+      capsOn = e.getModifierState('CapsLock');
+      // Atualiza o campo focado, se houver
+      const active = document.activeElement;
+      if (active && active.dataset && active.dataset.capsHintId) {
+        const hint = document.getElementById(active.dataset.capsHintId);
+        if (hint) hint.hidden = !(capsOn === true);
+      }
+    }
+  }
+  window.addEventListener('keydown', captureCaps, true);
+  window.addEventListener('keyup',   captureCaps, true);
+
+  // Liga o comportamento de CapsLock em um campo
+  function bindCaps(inputId, hintId) {
+    const input = document.getElementById(inputId);
+    const hint  = document.getElementById(hintId);
+    if (!input || !hint) return;
+
+    // guarda referência do hint no próprio input
+    input.dataset.capsHintId = hintId;
+
+    // Ao focar: aplica imediatamente o último estado conhecido
+    input.addEventListener('focus', () => {
+      if (capsOn === null) {
+        // ainda não sabemos: mantém oculto até a primeira tecla
+        hint.hidden = true;
+      } else {
+        hint.hidden = !capsOn;
+      }
+    });
+
+    // Teclas no próprio campo também atualizam
+    input.addEventListener('keydown', captureCaps);
+    input.addEventListener('keyup',   captureCaps);
+
+    // Ao perder o foco, esconde a dica
+    input.addEventListener('blur', () => { hint.hidden = true; });
+  }
+
+  // Ativar no campo correto
+  bindCaps('pass', 'caps-hint');
+
+  // 2FA: aceitar só 6 números
+  const otp = document.getElementById('totp');
+  if (otp) {
+    otp.addEventListener('input', () => {
+      otp.value = otp.value.replace(/\D/g,'').slice(0,6);
+    });
+  }
+
+  // Evitar duplo submit
+  const form = document.querySelector('form');
+  const btn = document.getElementById('btn-login');
+  let sent = false;
+  form.addEventListener('submit', (e) => {
+    if (sent) { e.preventDefault(); return; }
+    sent = true;
+    btn.disabled = true;
+  });
+
+</script>
+{% endblock %}

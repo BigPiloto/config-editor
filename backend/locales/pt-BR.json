@@ -1,0 +1,308 @@
+{
+  "2fa": {
+    "disabled": "2FA Desativado",
+    "enabled": "2FA Ativado",
+    "text": {
+      "enable": "Ative o 2FA para maior segurança"
+    },
+    "title": "Autenticação de 2 fatores (2FA)"
+  },
+  "app": {
+    "btn": {
+      "cancel": "Cancelar",
+      "logout": "Sair"
+    },
+    "container": {
+      "set": "Container: {name}",
+      "unset": "Nenhum container selecionado"
+    },
+    "logout": {
+      "question": "Sair da sessão?",
+      "text": "Você será desconectado desta sessão"
+    },
+    "menu": {
+      "2fa": "Autenticação em 2 fatores",
+      "change_lang": "Alterar idioma",
+      "change_pass": "Alterar senha",
+      "change_user": "Alterar usuário",
+      "editor": "Editor"
+    },
+    "title": "CONFIG EDITOR",
+    "working_in": "Trabalhando em:"
+  },
+  "auth": {
+    "2fa_code": "Código 2FA",
+    "caps_on": "Caps Lock ligado",
+    "confirm_pass": "Confirmar senha",
+    "current_pass": "Senha atual",
+    "current_user": "Nome de usuário atual",
+    "invalid_2fa": "Código de verificação inválido",
+    "invalid_pass": "Senha incorreta",
+    "invalid_user": "Usuário não encontrado",
+    "new_pass": "Nova senha",
+    "new_user": "Novo nome de usuário",
+    "pass": "Senha",
+    "qr": {
+      "text": {
+        "1": "1) Escaneie o QR no app autenticador",
+        "2": "2) Digite o código de 6 dígitos abaixo e ative",
+        "3": "clicando em",
+        "4": "O nome no app aparecerá como",
+        "5": "O QR será gerado automaticamente nesta tela",
+        "6": "(do novo segredo)",
+        "7": "Reescaneie este QR no seu app, se necessário (mostra o segredo atual)"
+      }
+    },
+    "user": "Nome de usuário"
+  },
+  "btn": {
+    "2fa_disable": "Desativar 2FA",
+    "2fa_enable": "Ativar 2FA",
+    "back": "Voltar",
+    "back_editor": "Voltar ao Editor",
+    "change": "Alterar",
+    "confirm": "Confirma",
+    "enter": "Entrar",
+    "ok": "OK",
+    "register": "Registrar",
+    "update_qr": "Atualizar QR Code"
+  },
+  "choose_lang": {
+    "label": "Selecione o idioma",
+    "success": "O idioma foi atualizado com sucesso",
+    "success_title": "Idioma salvo",
+    "title": "Escolha seu idioma"
+  },
+  "docker": {
+    "health": {
+      "healthy": "Saudável",
+      "starting": "Iniciando",
+      "unhealthy": "Não saudável",
+      "unknown": "Desconhecido"
+    },
+    "status": {
+      "created": "Criado",
+      "dead": "Morto",
+      "exited": "Parado",
+      "restarting": "Reiniciando",
+      "running": "Em execução",
+      "unknown": "Desconhecido"
+    }
+  },
+  "editor": {
+    "placeholder": {
+      "subtitle": "Selecione um arquivo na árvore à esquerda",
+      "tip": "Use o filtro para localizar arquivos rapidamente",
+      "title": "Nenhum arquivo aberto"
+    }
+  },
+  "errors": {
+    "container_not_found": "Nenhum container associado a este arquivo",
+    "dir_already_exists": "A pasta já existe",
+    "empty_file_name": "O nome do arquivo não pode estar vazio",
+    "empty_folder_name": "O nome da pasta não pode estar vazio",
+    "empty_name": "O nome não pode estar vazio",
+    "dir_not_empty": "A pasta não está vazia",
+    "file_already_exists": "O arquivo já existe",
+    "file_not_found": "Arquivo não encontrado",
+    "forbidden": "Você não tem permissão para acessar este recurso",
+    "http_error": "Ocorreu um erro ao processar sua solicitação",
+    "internal_error": "Erro interno do servidor",
+    "internal_server_error": "Erro interno do servidor",
+    "invalid_container": "Container inválido",
+    "invalid_totp_secret": "Segredo TOTP inválido",
+    "lang_not_supported": "O idioma selecionado não é suportado",
+    "method_not_allowed": "Método HTTP não permitido para este recurso",
+    "missing_path": "Caminho ausente",
+    "no_totp_configured": "2FA não está configurado para este usuário",
+    "not_authenticated": "Você precisa estar autenticado para acessar este recurso",
+    "not_dir": "Não é uma pasta",
+    "not_found": "O recurso solicitado não foi encontrado",
+    "not_utf8": "Arquivo não está codificado em UTF-8",
+    "number": {
+      "401":"Não autorizado",
+      "403": "Não autorizado",
+      "404": "Não encontrado",
+      "405": "Método não permitido",
+      "500": "Erro interno do servidor"
+    },
+    "parent_not_exists": "A pasta pai não existe",
+    "pass_mismatch": "As senhas não coincidem",
+    "password_required": "A senha é obrigatória",
+    "password_same_as_current": "A nova senha não pode ser igual à senha atual",
+    "path_already_exists": "O caminho de destino já existe",
+    "path_is_directory": "O caminho é uma pasta",
+    "path_not_found": "Caminho não encontrado",
+    "path_outside_workspace": "Caminho fora da área de trabalho",
+    "preview_secret_missing": "Nenhum segredo temporário para prévia do QR",
+    "rename_failed": "Falha ao renomear/mover",
+    "restart_failed": "Falha ao reiniciar o container",
+    "restart_not_configured": "O reinício de container não está configurado no servidor",
+    "same_name": "O novo nome é igual ao antigo",
+    "static_not_found": "Diretório de estáticos não encontrado",
+    "title": "Erro",
+    "unknown": "Erro desconhecido",
+    "userfile_missing": "Arquivo de usuário não encontrado",
+    "username_required": "Informe um nome de usuário",
+    "username_same_as_current": "O novo usuário não pode ser igual ao atual",
+    "validation_error": "Entrada inválida"
+  },
+  "flash": {
+    "2fa_already_disabled": "2FA já está desativado",
+    "2fa_disabled": "Autenticação em dois fatores desativada",
+    "2fa_disable_admin": "A autenticação em dois fatores foi desativada pelo administrador",
+    "2fa_enabled_success": "Autenticação em dois fatores ativada",
+    "2fa_invalid": "Código 2FA inválido",
+    "2fa_invalid_activation": "Código 2FA inválido para ativação",
+    "failed_temp_secret": "Falha ao obter segredo temporário",
+    "invalid_action": "Ação inválida",
+    "new_user_diff": "O novo usuário deve ser diferente do atual",
+    "pass_changed_success": "Senha alterada com sucesso",
+    "pass_mismatch": "As senhas não coincidem",
+    "pass_wrong": "Senha atual incorreta",
+    "user_changed_success": "Usuário alterado com sucesso"
+  },
+  "health": {
+    "checking": "Verificando…",
+    "docker_unavailable": "Docker indisponível",
+    "error": "Erro",
+    "failed": "Falhou",
+    "modal": {
+      "close": "Fechar",
+      "col": {
+        "container": "Container",
+        "health": "Saúde",
+        "status": "Status"
+      },
+      "empty": "Nenhum container encontrado",
+      "title": "Saúde dos containers"
+    },
+    "not_found": "Container não encontrado",
+    "title": {
+      "fmt": "{status} · {health}"
+    },
+    "tooltip": "Clique para ver o status dos containers"
+  },
+  "login": {
+    "invalid_2fa": "Código de dois fatores inválido",
+    "invalid_credentials": "Usuário ou senha inválidos",
+    "label": "Login"
+  },
+  "register": {
+    "2fa": {
+      "invalid": "Código de dois fatores inválido para ativação"
+    },
+    "first": "Registrar usuário (primeiro acesso)",
+    "go_login": "Ir para o login",
+    "label": "Registrar",
+    "success": "Usuário criado com sucesso! Você já pode entrar",
+    "your_user": "SeuUsuário"
+  },
+  "setup": {
+    "password_mismatch": "Senha e confirmação não conferem"
+  },
+  "success":{
+    "password_changed": "Senha alterada com sucesso",
+    "title": "Sucesso",
+    "user_changed": "Nome de usuário alterado com sucesso"
+  },
+  "totp": {
+    "success_generic": "Operação concluída com sucesso"
+  },
+  "ui": {
+    "actions": "Ações",
+    "apply_backup": "Aplicar backup",
+    "apply_editor": "Aplicar versão do editor",
+    "apply_left": "Aplicar versão em disco",
+    "apply_right": "Aplicar versão do editor",
+    "assoc_container": "Associar container",
+    "associate_container": "Associar container",
+    "association_removed": "Associação com container removida",
+    "association_saved": "Associação com container salva",
+    "back_to_editor": "Voltar ao editor",
+    "backup": "Backup",
+    "backup_created": "Backup criado",
+    "backup_deleted": "Backup excluído",
+    "backup_options": "Opções de backup",
+    "cancel": "Cancelar",
+    "confirm_delete": "Confirmar exclusão",
+    "confirm_delete_backup": "Confirmar exclusão de backup",
+    "container_name": "Nome do container",
+    "container_not_found": "Container {name} não encontrado",
+    "container_restarted": "Container reiniciado",
+    "container_stopped_text": "O container {name} está parado",
+    "container_stopped_title": "Container parado",
+    "create": "Criar",
+    "create_backup": "Criar backup",
+    "delete": "Excluir",
+    "delete_backup": "Excluir backup",
+    "delete_path": "Excluir",
+    "diff": "Diferenças",
+    "disk_file": "Arquivo em disco",
+    "download_file": "Baixar arquivo",
+    "editor": "Editor",
+    "edited_file": "Arquivo editado",
+    "enter_container_name": "Digite o nome do container",
+    "enter_file_name": "Digite o nome do arquivo",
+    "enter_folder_name": "Digite o nome da pasta",
+    "enter_new_name": "Digite o novo nome",
+    "error": "Erro",
+    "error_load_tree": "Erro ao carregar a árvore",
+    "error_open_file": "Erro ao abrir arquivo",
+    "error_open_file_console": "Erro no console ao abrir arquivo",
+    "failed_action": "Falha ao executar ação",
+    "file_name_placeholder": "Nome do arquivo",
+    "folder_name_placeholder": "Nome da pasta",
+    "go_editor": "Ir para o editor",
+    "go_login": "Ir para o login",
+    "http_404": "Recurso não encontrado (404)",
+    "http_500": "Erro interno do servidor (500)",
+    "http_error": "Ocorreu um erro ao processar sua solicitação",
+    "manage_backups": "Gerenciar backups",
+    "new_file": "Novo arquivo",
+    "new_folder": "Nova pasta",
+    "new_name_placeholder": "Novo nome",
+    "no_backup": "Nenhum backup disponível",
+    "no_container": "Nenhum container associado",
+    "rename": "Renomear",
+    "rename_path": "Renomear",
+    "restart_confirm_text": "Isso irá reiniciar o container {name}",
+    "restart_confirm_title": "Reiniciar container?",
+    "restart_container": "Reiniciar",
+    "restart_now": "Reiniciar agora",
+    "save": "Salvar",
+    "save_button": "Salvar arquivo",
+    "search_placeholder": "Buscar arquivos...",
+    "select": "Selecionar",
+    "select_backup": "Selecione um backup",
+    "select_file_placeholder": "Selecione um arquivo",
+    "start_container": "Iniciar container",
+    "start_ok": "Container iniciado",
+    "success": "Sucesso",
+    "success_applied_left": "Aplicado à esquerda com sucesso",
+    "success_applied_right": "Aplicado à direita com sucesso",
+    "success_deleted": "Excluído com sucesso",
+    "success_downloaded": "Download concluído com sucesso",
+    "success_renamed": "Renomeado com sucesso",
+    "success_saved": "Salvo com sucesso",
+    "unsaved_changes": "Alterações não salvas",
+    "validate": "Validar",
+    "verify_backup": "Verificar backup"
+  },
+  "validate": {
+    "csv_ok": "CSV válido",
+    "css_ok": "CSS válido",
+    "empty": "Conteúdo vazio",
+    "error": "Erro de validação: {error}",
+    "generic_ok": "Arquivo válido",
+    "html_ok": "HTML válido",
+    "ini_ok": "INI válido",
+    "json_ok": "JSON válido",
+    "md_ok": "Markdown válido",
+    "not_supported": "Validação não suportada para esta extensão",
+    "python_ok": "Python válido (sintaxe)",
+    "toml_ok": "TOML válido",
+    "xml_ok": "XML válido",
+    "yaml_ok": "YAML válido"
+  }
+}

@@ -1,0 +1,229 @@
+<!-- frontend/templates/setup.html -->
+{% extends "base.html" %}
+
+{% block title %}{{ T("register.label") }} · {{ T("app.title") }}{% endblock %}
+
+{% block content %}
+
+<div class="setup-wrap">
+  <form class="card" method="post" autocomplete="off" action="{{ request.url_for('setup_post') }}" style="width:min(560px,94vw);">
+    <header><h2>{{ T("register.first") }}</h2></header>
+
+    <div class="form-row">
+      <label for="user" class="muted">{{ T("auth.user") }}</label>
+      <input id="user" class="input" name="username" placeholder="{{ T("auth.user") }}" autocomplete="username" required autofocus>
+    </div>
+
+    <div class="form-row">
+      <label for="password" class="muted">{{ T("auth.pass") }}</label>
+      <input id="password" class="input" type="password" name="password" placeholder="••••••••" autocomplete="new-password" required>
+      <small class="hint" id="caps-hint-pass" hidden>{{ T("auth.caps_on") }}</small>
+    </div>
+
+    <div class="form-row">
+      <label for="confirm-pass" class="muted">{{ T("auth.confirm_pass") }}</label>
+      <input id="confirm-pass" class="input" type="password" name="confirm_password" placeholder="••••••••" autocomplete="new-password" required>
+      <small class="hint" id="caps-hint-confirm" hidden>{{ T("auth.caps_on") }}</small>
+    </div>
+
+    {% if totp_enabled %}
+    <div class="form" style="padding:18px; display:flex; flex-direction:column; gap:12px;">
+      {% if show_qr %}
+      <div class="qr-row">
+        <img id="qr" class="qr" alt="QR 2FA" src="">
+        <div class="muted">
+          <br>
+          {{ T("auth.qr.text.1") }}.
+          <br>
+          <br>
+          {{ T("auth.qr.text.2") }} {{ T("auth.qr.text.3") }} <strong>{{ T("btn.register") }}</strong>.
+          <br>
+          <br>
+          <em>{{ T("auth.qr.text.4") }} “Config Editor - {{ T("register.your_user") }}".</em>
+        </div>
+      </div>
+      {% endif %}
+      <label class="muted">{{ T("auth.2fa_code") }}</label>
+      <input id="totp" class="input" name="totp" placeholder="{{ T("auth.2fa_code") }}" inputmode="numeric" pattern="\d{6}" maxlength="6" autocomplete="one-time-code" required>
+    </div>
+    {% endif %}
+
+    <div class="form" style="padding:0 18px 18px">
+      <button class="btn primary w-full" type="submit">{{ T("btn.register") }}</button>
+    </div>
+  </form>
+</div>
+
+{% if error_key %}
+<script>
+  swalCenter.fire({
+    icon: 'error',
+    title: '{{ T("errors.title") }}',
+    text: '{{ T(error_key)|e }}',
+    confirmButtonText: '{{ T("btn.ok") }}'
+  })
+</script>
+{% endif %}
+
+{% if success_key %}
+<script>
+  swalCenter.fire({
+    icon: 'success',
+    title: '{{ T("success.title") }}',
+    text: '{{ T(success_key) }}',
+    confirmButtonText: '{{ T("register.go_login") }}'
+  }).then(() => {
+    window.location.href = "{{ url_for('login') }}";
+  });
+</script>
+{% endif %}
+
+<script>
+  // Estado global do CapsLock (null = desconhecido)
+  let capsOn = null;
+
+  // Atualiza estado global a cada tecla
+  function captureCaps(e) {
+    if (e && e.getModifierState) {
+      capsOn = e.getModifierState('CapsLock');
+      // Atualiza o campo focado, se houver
+      const active = document.activeElement;
+      if (active && active.dataset && active.dataset.capsHintId) {
+        const hint = document.getElementById(active.dataset.capsHintId);
+        if (hint) hint.hidden = !(capsOn === true);
+      }
+    }
+  }
+  window.addEventListener('keydown', captureCaps, true);
+  window.addEventListener('keyup',   captureCaps, true);
+
+  // Liga o comportamento de CapsLock em um campo
+  function bindCaps(inputId, hintId) {
+    const input = document.getElementById(inputId);
+    const hint  = document.getElementById(hintId);
+    if (!input || !hint) return;
+
+    // guarda referência do hint no próprio input
+    input.dataset.capsHintId = hintId;
+
+    // Ao focar: aplica imediatamente o último estado conhecido
+    input.addEventListener('focus', () => {
+      if (capsOn === null) {
+        // ainda não sabemos: mantém oculto até a primeira tecla
+        hint.hidden = true;
+      } else {
+        hint.hidden = !capsOn;
+      }
+    });
+
+    // Teclas no próprio campo também atualizam
+    input.addEventListener('keydown', captureCaps);
+    input.addEventListener('keyup',   captureCaps);
+
+    // Ao perder o foco, esconde a dica
+    input.addEventListener('blur', () => { hint.hidden = true; });
+  }
+
+  // Ativar nos DOIS campos
+  bindCaps('password', 'caps-hint-pass');
+  bindCaps('confirm-pass', 'caps-hint-confirm');
+  
+  // 2FA: limitar a 6 dígitos numéricos, se existir
+  const otp = document.getElementById('totp');
+  if (otp) {
+    otp.addEventListener('input', () => {
+      otp.value = otp.value.replace(/\D/g,'').slice(0,6);
+    });
+  }
+
+  // Atualiza o QR com o username digitado (evita ficar "user")
+  const userEl = document.getElementById('user');
+  const qrEl = document.getElementById('qr');
+
+  function debounce(fn, ms){ let t; return (...a)=>{ clearTimeout(t); t=setTimeout(()=>fn(...a), ms); }; }
+
+  function updateQR() {
+    if (!qrEl) return;
+    const u = encodeURIComponent(userEl.value || 'user');
+    // cache-buster &_=timestamp evita imagem ficar em cache
+    qrEl.src = "{{ url_for('auth.setup_qr') }}" + "?u=" + u + "&_=" + Date.now();
+  }
+
+  if (userEl && qrEl) {
+    const debounced = debounce(updateQR, 200);
+    userEl.addEventListener('input', debounced);
+    userEl.addEventListener('change', updateQR);
+    userEl.addEventListener('blur', updateQR);
+    userEl.addEventListener('compositionend', updateQR);
+    updateQR();
+  }
+
+  // --- Validação cliente ---
+  function validateSetupForm(form) {
+    const username = (form.querySelector('#user')?.value || '').trim();
+    const pass     = form.querySelector('#password')?.value || '';
+    const confirm  = form.querySelector('#confirm-pass')?.value || '';
+    const otpEl    = document.getElementById('totp');
+    const otpVal   = (otpEl?.value || '').trim();
+
+    if (!username) {
+      (window.swalCenter || Swal).fire({
+        icon: 'error',
+        title: '{{ T("errors.title") }}',
+        text: '{{ T("errors.username_required") }}'
+      });
+      return false;
+    }
+
+    if (!pass) {
+      (window.swalCenter || Swal).fire({
+        icon: 'error',
+        title: '{{ T("errors.title") }}',
+        text: '{{ T("errors.password_required") }}'
+      });
+      return false;
+    }
+    if (pass !== confirm) {
+      (window.swalCenter || Swal).fire({
+        icon: 'error',
+        title: '{{ T("errors.title") }}',
+        text: '{{ T("errors.pass_mismatch") }}'
+      });
+      return false;
+    }
+
+    if (otpEl) {
+      if (!/^\d{6}$/.test(otpVal)) {
+        (window.swalCenter || Swal).fire({
+          icon: 'error',
+          title: '{{ T("errors.title") }}',
+          text: '{{ T("flash.2fa_invalid") }}'
+        });
+        return false;
+      }
+    }
+
+    return true;
+  }
+
+  // Evitar duplo submit + validar
+  const form = document.querySelector('form.card[method="post"]');
+  if (form) {
+    let sent = false;
+    form.addEventListener('submit', (e) => {
+      if (sent) { e.preventDefault(); return; }
+
+      // validação
+      if (!validateSetupForm(form)) {
+        e.preventDefault();
+        return;
+      }
+
+      sent = true;
+      form.querySelector('button[type="submit"]')?.setAttribute('disabled', 'true');
+    });
+  }
+
+</script>
+
+{% endblock %}

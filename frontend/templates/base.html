@@ -1,0 +1,537 @@
+<!-- frontend/templates/base.html -->
+<!doctype html>
+<html lang="{{ current_lang|lower }}">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>{% block title %}{{ T("app.title") }}{% endblock %}</title>
+
+  <!-- Ícone e estilos vindos da pasta /frontend/static -->
+  <link rel="icon" href="/static/favicon.ico">
+  <link rel="stylesheet" href="/static/style.css">
+
+  <!-- SweetAlert2 -->
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <script>
+    // Tema central para todos os modais (SweetAlert2)
+    window.swalCenter = Swal.mixin({
+      buttonsStyling: false,
+      heightAuto: false,
+      scrollbarPadding: true,
+      customClass: {
+        popup: 'swal2-dark',
+        confirmButton: 'btn primary',
+        cancelButton: 'btn'
+      },
+      background: '#0f172a',
+      color: '#e6e7ea'
+    });
+  </script>
+
+  <!-- Container padrão exibido quando não há arquivo selecionado -->
+  <script>
+    window.DEFAULT_CONTAINER_KEY   = "{{ default_container or 'config-editor' }}";
+    window.DEFAULT_CONTAINER_LABEL = "{{ container_display_name or default_container }}";
+  </script>
+
+  {% block head %}{% endblock %}
+</head>
+<body>
+<header class="row">
+  <div><h3>{{ T("app.title") }}</h3></div>
+  <div class="right">
+
+    {% if current_user %}
+      <span id="current-container-pill" class="pill">
+        {% if container_name %}
+          {{ T("app.container.set", name=container_name) }}
+        {% else %}
+          {{ T("app.container.unset") }}
+        {% endif %}
+      </span>
+
+      <span id="pill-health" class="pill" style="display:inline-flex;align-items:center;gap:8px;cursor:pointer" title="{{ T('health.tooltip') }}">
+        <span id="pill-health-dot" aria-hidden="true" style="width:10px;height:10px;border-radius:999px;background:#9ca3af;display:inline-block"></span>
+        <span id="pill-health-text" style="font-size:12px;color:#cbd5e1">{{ T('health.checking') }}</span>
+      </span>
+
+      <div class="usermenu" id="usermenu">
+        <button class="btn" id="usermenu-btn" aria-haspopup="true" aria-expanded="false" style="border-radius: 999px;">
+          {{ current_user }} ▾
+        </button>
+        <div class="usermenu-panel" id="usermenu-panel" role="menu" hidden>
+          <a role="menuitem" href="{{ url_for('editor') }}">{{ T("app.menu.editor") }}</a>
+          <div class="sep"></div>
+          <a role="menuitem" href="{{ url_for('settings.change_username') }}">{{ T("app.menu.change_user") }}</a>
+          <a role="menuitem" href="{{ url_for('settings.change_password') }}">{{ T("app.menu.change_pass") }}</a>
+          {% if settings.TOTP_ENABLED %}
+            <a role="menuitem" href="{{ url_for('settings.totp_manage') }}">{{ T("app.menu.2fa") }}</a>
+          {% endif %}
+          <div class="sep"></div>
+          <a role="menuitem" href="{{ url_for('choose_lang') }}">{{ T("app.menu.change_lang") }}</a>
+        </div>
+      </div>
+
+      <a 
+        class="pill logout"
+        id="btn-logout"
+        href="{{ url_for('logout') }}"
+        data-title="{{ T('app.logout.question') }}"
+        data-text="{{ T('app.logout.text') }}"
+        data-ok="{{ T('app.btn.logout') }}"
+        data-cancel="{{ T('app.btn.cancel') }}"
+      >
+        {{ T("app.btn.logout") }}
+      </a>
+    {% endif %}
+  </div>
+</header>
+
+<main>
+  {# Exporta flashes como JSON puro #}
+  {% set flashes = flashes if flashes is defined else [] %}
+  <script id="flash-data" type="application/json">{{ flashes | tojson }}</script>
+
+  {# Exporta dados de health #}
+  <script id="health-data" type="application/json">
+    {{ {
+      "health_url": "/api/health",
+      "container_name": container_name or None,
+      "is_authenticated": is_authenticated
+    } | tojson }}
+  </script>
+
+  {% block content %}{% endblock %}
+</main>
+
+{% if show_footer %}
+<footer id="footer">
+  {{ T("app.working_in") }} <span id="footer-path">{{ settings.DATA_DIR }}</span>
+</footer>
+{% endif %}
+
+<!-- Exporta traduções para JS -->
+<script id="i18n" type="application/json">
+{{ {
+  "app.container.set":          T("app.container.set", name="{{name}}"),
+  "app.container.unset":        T("app.container.unset"),
+  "health.tooltip":             T("health.tooltip"),
+  "health.checking":            T("health.checking"),
+  "health.not_found":           T("health.not_found"),
+  "health.error":               T("health.error"),
+  "health.failed":              T("health.failed"),
+
+  "health.modal.title":         T("health.modal.title"),
+  "health.modal.col.container": T("health.modal.col.container"),
+  "health.modal.col.status":    T("health.modal.col.status"),
+  "health.modal.col.health":    T("health.modal.col.health"),
+  "health.modal.close":         T("health.modal.close"),
+  "health.modal.empty":         T("health.modal.empty"),
+
+  "docker.status.running":      T("docker.status.running"),
+  "docker.status.created":      T("docker.status.created"),
+  "docker.status.restarting":   T("docker.status.restarting"),
+  "docker.status.exited":       T("docker.status.exited"),
+  "docker.status.dead":         T("docker.status.dead"),
+  "docker.status.unknown":      T("docker.status.unknown"),
+
+  "docker.health.healthy":      T("docker.health.healthy"),
+  "docker.health.starting":     T("docker.health.starting"),
+  "docker.health.unhealthy":    T("docker.health.unhealthy"),
+  "docker.health.unknown":      T("docker.health.unknown"),
+
+  "health.title.fmt":           T("health.title.fmt", status="{{status}}", health="{{health}}"),
+
+  "ui.actions":                 T("ui.actions"),
+  "ui.restart_container":       T("ui.restart_container"),
+  "ui.restart_confirm_title":   T("ui.restart_confirm_title"),
+  "ui.restart_confirm_text":    T("ui.restart_confirm_text", name="{{name}}"),
+  "ui.restart_now":             T("ui.restart_now"),
+  "ui.cancel":                  T("ui.cancel"),
+  "ui.container_restarted":     T("ui.container_restarted"),
+  "ui.container_stopped_title": T("ui.container_stopped_title"),
+  "ui.container_stopped_text":  T("ui.container_stopped_text", name="{{name}}"),
+  "ui.start_container":         T("ui.start_container"),
+  "ui.start_ok":                T("ui.start_ok"),
+  "ui.error":                   T("ui.error"),
+  "ui.http_404":                T("ui.http_404"),
+  "ui.http_500":                T("ui.http_500")
+} | tojson }}
+</script>
+
+<script>
+  // Confirmação de logout
+  (function () {
+    const btn = document.getElementById('btn-logout');
+    if (!btn) return;
+    btn.addEventListener('click', function (e) {
+      e.preventDefault();
+      (window.swalCenter || Swal).fire({
+        icon: 'question',
+        title: btn.dataset.title,
+        text: btn.dataset.text,
+        showCancelButton: true,
+        confirmButtonText: btn.dataset.ok,
+        cancelButtonText: btn.dataset.cancel,
+        reverseButtons: true
+      }).then((res) => {
+        if (res.isConfirmed) {
+          window.location.href = btn.getAttribute('href');
+        }
+      });
+    });
+  })();
+
+  // Menu suspenso (usermenu)
+  (function () {
+    const root  = document.getElementById('usermenu');
+    if (!root) return;
+    const btn   = document.getElementById('usermenu-btn');
+    const panel = document.getElementById('usermenu-panel');
+
+    function open()  { panel.hidden = false; btn.setAttribute('aria-expanded','true'); }
+    function close() { panel.hidden = true;  btn.setAttribute('aria-expanded','false'); }
+    function toggle(){ panel.hidden ? open() : close(); }
+
+    btn.addEventListener('click', (e) => { e.preventDefault(); toggle(); });
+    document.addEventListener('click', (e) => { if (!panel.hidden && !root.contains(e.target)) close(); });
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') close(); });
+  })();
+
+  // Health check dos containers
+  (function () {
+    const I18N = (() => {
+      try { return JSON.parse(document.getElementById('i18n')?.textContent || '{}'); }
+      catch { return {}; }
+    })();
+
+    function t(key, vars) {
+      let s = I18N[key] ?? key;
+      if (vars) {
+        s = s.replace(/\{\{(\w+)\}\}/g, (_, k) => (vars[k] ?? ""));
+        s = s.replace(/\{(\w+)\}/g,        (_, k) => (vars[k] ?? ""));
+      }
+      return s;
+    }
+
+    function trStatus(s){ const key=`docker.status.${String(s||'').toLowerCase()}`; const v=t(key); return (v===key)?(s||'—'):v; }
+    function trHealth(s){ const key=`docker.health.${String(s||'').toLowerCase()}`; const v=t(key); return (v===key)?(s||'—'):v; }
+
+    // 🔎 Encontra container por chave, nome, id ou prefixos
+    function findContainer(all, key) {
+      if (!all || !key) return null;
+
+      // normaliza (remove "/" do início e baixa caixa)
+      const norm = (s) => String(s || "").toLowerCase().replace(/^\/*/, "");
+      const wanted = norm(key);
+      
+      // 1) chave direta
+      if (all[key]) return all[key];
+      
+      // 2) varre valores
+      let best = null;
+      let bestScore = -1;
+      const score = (val) => {
+        const v = norm(val);
+        if (!val) return -1;
+        if (v === wanted) return 4;
+        if (v.startsWith(wanted)) return 3;
+        if (v.includes(wanted)) return 2;
+        return -1;
+      };
+
+      for (const [k, v] of Object.entries(all)) {
+        const s = Math.max(
+          score(k),
+          score(v?.name),
+          score(v?.id),
+          score(v?.image || v?.Image)
+        );
+        if (s > bestScore) { best = v; bestScore = s; if (s === 4) break; }
+      }
+      return bestScore >= 0 ? best : null;
+    }
+
+    // helpers de erro (curtos) para o fallback
+    function shortHttpMessage(status, statusText){
+      if (status === 404) return t('ui.http_404') || 'Recurso não encontrado (404)';
+      if (status === 500) return t('ui.http_500') || 'Erro interno do servidor (500)';
+      return statusText ? `${statusText} (HTTP ${status})` : `HTTP ${status}`;
+    }
+
+    // Fallbacks compatíveis com nosso backend:
+    async function fbHealth(){
+      const r = await fetch(`/api/health?ts=${Date.now()}`, {
+        headers:{ 'Accept':'application/json' },
+        credentials:'same-origin',
+        cache: 'no-store'
+      });
+      if (!r.ok){
+        const err = new Error(shortHttpMessage(r.status, r.statusText));
+        err.status = r.status;
+        throw err;
+      }
+      return r.json();
+    }
+
+    async function fbStatus(name){
+      const data = await fbHealth();
+      const all = (data && data.containers) || {};
+      const item = findContainer(all, name);
+      if (!item) {
+        const e = new Error(t('health.not_found'));
+        e.status = 404;
+        throw e;
+      }
+      return item; // { ok, status, health, files:[...] }
+    }
+
+    async function fbRestartByName(nameOrId) {
+      // encontra 1 arquivo associado (health já traz a lista)
+      let st = null;
+      try { st = await fbStatus(nameOrId); } catch (_) {}
+      const ref = (st && (st.id || st.name)) || nameOrId;
+
+      let r = await fetch(`/api/containers/restart?container=${encodeURIComponent(ref)}`, {
+        method: 'POST',
+        headers: { 'Accept': 'application/json' },
+        credentials: 'same-origin'
+      });
+      if (r.ok) return true;
+
+      if ([400, 404, 405, 422].includes(r.status)) {
+        const file = st?.files?.[0];
+        if (!file) {
+          throw new Error(t('health.not_found') || 'Associação de arquivo não encontrada');
+        }
+        r = await fetch(`/api/containers/restart?path=${encodeURIComponent(file)}`, {
+          method: 'POST',
+          headers: { 'Accept': 'application/json' },
+          credentials: 'same-origin'
+        });
+        if (r.ok) return true;
+      }
+
+      throw new Error(shortHttpMessage(r.status, r.statusText));
+    }
+
+    const pillEl = document.getElementById('current-container-pill');
+    const el = document.getElementById('pill-health');
+    if (!el) return;
+
+    const ctxEl = document.getElementById('health-data');
+    let ctx = {};
+    try { ctx = JSON.parse(ctxEl?.textContent || '{}'); } catch {}
+
+    const initialKey   = (ctx.container_name || window.DEFAULT_CONTAINER_KEY || '').trim();
+
+    const initialLabel = (ctx.container_name ? ctx.container_name : (window.DEFAULT_CONTAINER_LABEL || initialKey)).trim();
+
+    // Atualiza o "pill" logo no load
+    (function initContainerPill(){
+      const pill = document.getElementById('current-container-pill');
+      if (!pill) return;
+      const I18N = (() => { try { return JSON.parse(document.getElementById('i18n')?.textContent || '{}'); } catch { return {}; }})();
+      const t = (k,v)=> (I18N[k]||k).replace(/\{\{(\w+)\}\}/g,(_,kk)=>v?.[kk]??'').replace(/\{(\w+)\}/g,(_,kk)=>v?.[kk]??'');
+      pill.textContent = initialLabel ? t('app.container.set', { name: initialLabel }) : t('app.container.unset');
+      pill.classList.toggle('is-empty', !initialLabel);
+    })();
+
+    // Direciona o health para o container alvo inicial
+    let targetName = initialKey;
+    window.__health_setTarget = function(name){
+      targetName = (name || '').trim();
+      fetchHealth();
+    };
+
+    const dot  = document.getElementById('pill-health-dot');
+    const text = document.getElementById('pill-health-text');
+
+    function colorFor(status, health) {
+      const C = { green:'#22c55e', amber:'#f59e0b', red:'#ef4444', gray:'#9ca3af' };
+      const s = (status || '').toLowerCase();
+      const h = (health || '').toLowerCase();
+
+      if (s === 'running') {
+        if (h === 'healthy')   return { color: C.green, label: `${t('docker.status.running')} · ${t('docker.health.healthy')}` };
+        if (h === 'starting')  return { color: C.amber, label: `${t('docker.status.running')} · ${t('docker.health.starting')}` };
+        if (h === 'unhealthy') return { color: C.red,   label: `${t('docker.status.running')} · ${t('docker.health.unhealthy')}` };
+        return { color: C.green, label: t('docker.status.running') };
+      }
+      if (s === 'created' || s === 'restarting') return { color: C.amber, label: trStatus(s) };
+      if (s === 'exited' || s === 'dead')        return { color: C.red,   label: trStatus(s) };
+      return { color: C.gray, label: trStatus('unknown') };
+    }
+
+    async function fetchHealth() {
+      try {
+        const data = await fbHealth();
+
+        let name = (targetName && targetName.trim()) || (window.DEFAULT_CONTAINER_KEY || '').trim();
+
+        const all  = (data && data.containers) || {};
+        const item = findContainer(all, name);
+
+        el.title = t('health.tooltip');
+
+        if (!item) {
+          dot.style.backgroundColor = '#9ca3af';
+          text.textContent = '';
+          return {all};
+        }
+        
+        const { color, label } = colorFor(item.status, item.health);
+        dot.style.backgroundColor = color;
+        text.textContent = label;
+        el.title = t('health.title.fmt', {
+          status: trStatus(item.status),
+          health: trHealth(item.health)
+        });
+        return {all};
+      } catch (e) {
+        dot.style.backgroundColor = '#ef4444';
+        text.textContent = t('health.failed');
+        el.title = t('health.tooltip');
+        return {all:null, error:String(e)};
+      }
+    }
+
+    let lastAll = null;
+    fetchHealth().then(r => { lastAll = r && r.all; });
+
+    const interval = setInterval(async ()=> {
+      const r = await fetchHealth();
+      lastAll = r && r.all;
+    }, 15000);
+
+    el.addEventListener('click', async () => {
+      // pega o estado mais recente ANTES de montar o modal
+      const r = await fetchHealth();
+      lastAll = r && r.all;
+      const all = lastAll || {};
+
+      const hideSet = new Set(
+        [String(window.DEFAULT_CONTAINER_KEY || '').toLowerCase(), 'config-editor']
+          .filter(Boolean)
+      );
+      const visibleEntries = Object.entries(all).filter(
+        ([name]) => !hideSet.has(String(name || '').toLowerCase())
+      );
+
+      const rows = visibleEntries.map(([name, info]) => {
+        const st = trStatus(info?.status);
+        const hl = trHealth(info?.health);
+        const btn = `<button class="btn restart-btn" data-name="${name}">${t('ui.restart_container') || 'Reiniciar'}</button>`;
+        return `<tr>
+          <td style="padding:6px 10px;border-bottom:1px solid #334155;">${name}</td>
+          <td style="padding:6px 10px;border-bottom:1px solid #334155;">${st}</td>
+          <td style="padding:6px 10px;border-bottom:1px solid #334155;">${hl}</td>
+          <td style="padding:6px 10px;border-bottom:1px solid #334155;text-align:right;">${btn}</td>
+        </tr>`;
+      }).join('') || `<tr><td colspan="4" style="padding:6px 10px;text-align:center;color:#cbd5e1;font-style:italic;">${t('health.modal.empty')}</td></tr>`;
+
+      const html = `
+        <div style="text-align:left">
+          <table style="width:100%;border-collapse:collapse">
+            <thead>
+              <tr>
+                <th style="text-align:left;padding:6px 10px;border-bottom:1px solid #475569;">${t('health.modal.col.container')}</th>
+                <th style="text-align:left;padding:6px 10px;border-bottom:1px solid #475569;">${t('health.modal.col.status')}</th>
+                <th style="text-align:left;padding:6px 10px;border-bottom:1px solid #475569;">${t('health.modal.col.health')}</th>
+                <th style="text-align:right;padding:6px 10px;border-bottom:1px solid #475569;">${t('ui.actions') || 'Ações'}</th>
+              </tr>
+            </thead>
+            <tbody>${rows}</tbody>
+          </table>
+        </div>
+      `;
+
+      (window.swalCenter || window.Swal).fire({
+        icon: 'info',
+        title: t('health.modal.title'),
+        html,
+        confirmButtonText: t('health.modal.close'),
+        width: '800px',
+        didOpen: (modalEl) => {
+          modalEl.querySelectorAll('.restart-btn').forEach(btn => {
+            btn.addEventListener('click', async (e) => {
+              e.preventDefault();
+              const cname = btn.dataset.name;
+
+              // Preferir função global do editor, se existir:
+              if (typeof window.restartContainer === 'function') {
+                window.restartContainer(cname);
+                return;
+              }
+
+              // Fallback local (sem despejar HTML em caso de erro)
+              try {
+                const st = await fbStatus(cname);
+                const running = String(st?.status || '').toLowerCase() === 'running';
+
+                const ok = await (window.swalCenter||Swal).fire({
+                  icon: running ? 'warning' : 'info',
+                  title: running ? (t('ui.restart_confirm_title') || 'Reiniciar container?')
+                                 : (t('ui.container_stopped_title') || 'Container parado'),
+                  text:  running ? (t('ui.restart_confirm_text', { name:cname }) || `Isso irá reiniciar o container ${cname}.`)
+                                 : (t('ui.container_stopped_text', { name:cname }) || `O container ${cname} está parado.`),
+                  showCancelButton: true,
+                  confirmButtonText: running ? (t('ui.restart_now') || 'Reiniciar agora')
+                                             : (t('ui.start_container') || 'Ligar container'),
+                  cancelButtonText:  t('ui.cancel') || 'Cancelar',
+                });
+                if (!ok.isConfirmed) return;
+
+                await fbRestartByName(cname);
+
+                await (window.swalCenter||Swal).fire({
+                  icon:'success',
+                  title: running ? (t('ui.container_restarted') || 'Container reiniciado')
+                                 : (t('ui.start_ok') || 'Container iniciado'),
+                  text:cname
+                });
+              } catch (err) {
+                await (window.swalCenter||Swal).fire({
+                  icon:'error',
+                  title: t('ui.error') || 'Erro',
+                  text:  err?.message || 'Falha na ação do container.'
+                });
+              }
+            });
+          });
+        }
+      });
+    });
+
+    window.addEventListener('beforeunload', () => clearInterval(interval));
+  })();
+</script>
+
+{% block scripts %}{% endblock %}
+</body>
+<script>
+  document.addEventListener('app:container-change', (e) => {
+    const detail = (e && e.detail) || {};
+    const evName  = detail.name || detail.container || detail.id || '';
+    const evLabel = detail.label || evName || '';
+
+    const key   = evName  || (window.DEFAULT_CONTAINER_KEY   || '');
+    const label = evLabel || (window.DEFAULT_CONTAINER_LABEL || key);
+    
+    const pill = document.getElementById('current-container-pill');
+    if (pill) {
+      let I18N = {}; try { I18N = JSON.parse(document.getElementById('i18n')?.textContent || '{}'); } catch {}
+      const t = (k,v)=> (I18N[k]||k)
+        .replace(/\{\{(\w+)\}\}/g,(_,kk)=>v?.[kk]??'')
+        .replace(/\{(\w+)\}/g,   (_,kk)=>v?.[kk]??'');
+
+      pill.textContent = label ? t('app.container.set', { name: label }) : t('app.container.unset');
+      pill.classList.toggle('is-empty', !label);
+    }
+
+    if (typeof window.__health_setTarget === 'function') {
+      window.__health_setTarget(key || null);
+    }
+  });
+</script>
+</html>

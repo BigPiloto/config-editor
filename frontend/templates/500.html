@@ -1,0 +1,25 @@
+<!-- frontend/templates/500.html -->
+{% extends "base.html" %}
+
+{% block title %}500 · {{ T("app.title") }}{% endblock %}
+
+{% block content %}
+<div class="login-wrap">
+  <div class="card login-card">
+    <header class="card-head row">
+      <h2>500 - {{ T("errors.number.500") }}</h2>
+    </header>
+
+    <div class="form-row">
+      <p>{{ detail or T("errors.internal_error") }}</p>
+    </div>
+    
+    <div class="form-row">
+      {% set label = T('ui.go_editor') if is_authenticated else T('ui.go_login') %}
+      <button class="btn primary w-full" onclick="window.location.href='/'">
+        {{ label }}
+      </button>
+    </div>
+  </div>
+</div>
+{% endblock %}

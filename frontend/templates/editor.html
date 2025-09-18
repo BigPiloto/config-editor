@@ -1,0 +1,2854 @@
+<!-- frontend/templates/editor.html -->
+{% extends "base.html" %}
+
+{% block title %}{{ T("app.title") }}{% endblock %}
+
+{% block head %}
+<!-- Monaco Editor -->
+<script src="https://cdn.jsdelivr.net/npm/monaco-editor@0.52.0/min/vs/loader.min.js"></script>
+
+<!-- I18n -->
+<script>
+  const I18N_EDITOR = {
+    "editor.placeholder.title":           "{{ T('editor.placeholder.title') }}",
+    "editor.placeholder.subtitle":        "{{ T('editor.placeholder.subtitle') }}",
+    "editor.placeholder.tip":             "{{ T('editor.placeholder.tip') }}",
+
+    "errors.dir_already_exists":          "{{ T('errors.dir_already_exists') }}",
+    "errors.empty_file_name":             "{{ T('errors.empty_file_name') }}",
+    "errors.empty_folder_name":           "{{ T('errors.empty_folder_name') }}",
+    "errors.empty_name":                  "{{ T('errors.empty_name') }}",
+    "errors.file_already_exists":         "{{ T('errors.file_already_exists')}}",
+    "errors.path_already_exists":         "{{ T('errors.path_already_exists') }}",
+    "errors.rename_failed":               "{{ T('errors.rename_failed') }}",
+    "errors.same_name":                   "{{ T('errors.same_name') }}",
+
+    "ui.apply_backup":                    "{{ T('ui.apply_backup') }}",
+    "ui.apply_editor":                    "{{ T('ui.apply_editor') }}",
+    "ui.apply_left":                      "{{ T('ui.apply_left') }}",
+    "ui.apply_right":                     "{{ T('ui.apply_right') }}",
+    "ui.assoc_container":                 "{{ T('ui.assoc_container') }}",
+    "ui.associate_container":             "{{ T('ui.associate_container') }}",
+    "ui.association_removed":             "{{ T('ui.association_removed') }}",
+    "ui.association_saved":               "{{ T('ui.association_saved') }}",
+    "ui.back_to_editor":                  "{{ T('ui.back_to_editor') }}",
+    "ui.backup":                          "{{ T('ui.backup') }}",
+    "ui.backup_created":                  "{{ T('ui.backup_created') }}",
+    "ui.backup_deleted":                  "{{ T('ui.backup_deleted') }}",
+    "ui.backup_options":                  "{{ T('ui.backup_options') }}",
+    "ui.cancel":                          "{{ T('ui.cancel') }}",
+    "ui.confirm_delete":                  "{{ T('ui.confirm_delete') }}",
+    "ui.confirm_delete_backup":           "{{ T('ui.confirm_delete_backup') }}",
+    "ui.container_name":                  "{{ T('ui.container_name')}}",
+    "ui.container_not_found":             "{{ T('ui.container_not_found') }}",
+    "ui.container_restarted":             "{{ T('ui.container_restarted') }}",
+    "ui.container_stopped_text":          "{{ T('ui.container_stopped_text') }}",
+    "ui.container_stopped_title":         "{{ T('ui.container_stopped_title') }}",
+    "ui.create":                          "{{ T('ui.create') }}",
+    "ui.create_backup":                   "{{ T('ui.create_backup') }}",
+    "ui.delete":                          "{{ T('ui.delete') }}",
+    "ui.delete_backup":                   "{{ T('ui.delete_backup') }}",
+    "ui.delete_path":                     "{{ T('ui.delete_path') }}",
+    "ui.diff":                            "{{ T('ui.diff') }}",
+    "ui.disk_file":                       "{{ T('ui.disk_file') }}",
+    "ui.download_file":                   "{{ T('ui.download_file') }}",
+    "ui.edited_file":                     "{{ T('ui.edited_file') }}",
+    "ui.editor":                          "{{ T('ui.editor') }}",
+    "ui.enter_container_name":            "{{ T('ui.enter_container_name') }}",
+    "ui.enter_file_name":                 "{{ T('ui.enter_file_name') }}",
+    "ui.enter_folder_name":               "{{ T('ui.enter_folder_name') }}",
+    "ui.enter_new_name":                  "{{ T('ui.enter_new_name') }}",
+    "ui.error":                           "{{ T('ui.error') }}",
+    "ui.error_load_tree":                 "{{ T('ui.error_load_tree') }}",
+    "ui.error_open_file":                 "{{ T('ui.error_open_file') }}",
+    "ui.error_open_file_console":         "{{ T('ui.error_open_file_console') }}",
+    "ui.failed_action":                   "{{ T('ui.failed_action') }}",
+    "ui.file_name_placeholder":           "{{ T('ui.file_name_placeholder') }}",
+    "ui.folder_name_placeholder":         "{{ T('ui.folder_name_placeholder') }}",
+    "ui.manage_backups":                  "{{ T('ui.manage_backups') }}",
+    "ui.new_file":                        "{{ T('ui.new_file') }}",
+    "ui.new_folder":                      "{{ T('ui.new_folder') }}",
+    "ui.new_name_placeholder":            "{{ T('ui.new_name_placeholder') }}",
+    "ui.no_backup":                       "{{ T('ui.no_backup') }}",
+    "ui.no_container":                    "{{ T('ui.no_container') }}",
+    "ui.rename":                          "{{ T('ui.rename') }}",
+    "ui.rename_path":                     "{{ T('ui.rename_path') }}",
+    "ui.restart_confirm_text":            "{{ T('ui.restart_confirm_text') }}",
+    "ui.restart_confirm_title":           "{{ T('ui.restart_confirm_title') }}",
+    "ui.restart_container":               "{{ T('ui.restart_container') }}",
+    "ui.restart_now":                     "{{ T('ui.restart_now') }}",
+    "ui.save":                            "{{ T('ui.save') }}",
+    "ui.save_button":                     "{{ T('ui.save_button') }}",
+    "ui.search_placeholder":              "{{ T('ui.search_placeholder') }}",
+    "ui.select":                          "{{ T('ui.select') }}",
+    "ui.select_backup":                   "{{ T('ui.select_backup') }}",
+    "ui.select_file_placeholder":         "{{ T('ui.select_file_placeholder') }}",
+    "ui.start_container":                 "{{ T('ui.start_container') }}",
+    "ui.start_ok":                        "{{ T('ui.start_ok') }}",
+    "ui.success":                         "{{ T('ui.success') }}",
+    "ui.success_applied_left":            "{{ T('ui.success_applied_left') }}",
+    "ui.success_applied_right":           "{{ T('ui.success_applied_right') }}",
+    "ui.success_deleted":                 "{{ T('ui.success_deleted') }}",
+    "ui.success_downloaded":              "{{ T('ui.success_downloaded') }}",
+    "ui.success_renamed":                 "{{ T('ui.success_renamed') }}",
+    "ui.success_saved":                   "{{ T('ui.success_saved') }}",
+    "ui.unsaved_changes":                 "{{ T('ui.unsaved_changes') }}",
+    "ui.validate":                        "{{ T('ui.validate') }}",
+    "ui.verify_backup":                   "{{ T('ui.verify_backup') }}",
+
+    "validate.empty":                     "{{ T('validate.empty') }}",
+    "validate.error":                     "{{ T('validate.error') }}",
+    "validate.generic_ok":                "{{ T('validate.generic_ok') }}",
+    "validate.ini_ok":                    "{{ T('validate.ini_ok') }}",
+    "validate.json_ok":                   "{{ T('validate.json_ok') }}",
+    "validate.python_ok":                 "{{ T('validate.python_ok') }}",
+    "validate.yaml_ok":                   "{{ T('validate.yaml_ok') }}"
+
+  };
+
+  function t(key, vars) {
+    let s = I18N_EDITOR[key] ?? key;
+    if (vars) {
+      s = s.replace(/\{\{(\w+)\}\}/g, (_, k) => (vars[k] ?? ""));
+      s = s.replace(/\{(\w+)\}/g, (_, k) => (vars[k] ?? ""));
+    }
+    return s;
+  }
+</script>
+
+<!-- Flags do backend no teu formato -->
+<script>
+  window.DIFF_ALLOW_EDIT = "{{ 'true' if diff_allow_edit else 'false' }}" === "true";
+  window.APP_CFG = { baseDir: "{{ data_dir or '/data' }}" };
+  window.FILE_CONTAINERS = window.FILE_CONTAINERS || {};
+</script>
+
+<!-- Variáveis e constantes globais -->
+<script>
+  let editor;
+  let isEditorLocked = true;
+  let selectionType = 'none';
+  let editorMode    = 'none';
+  let currentFile = "";
+  let currentFolder = "";
+  let currentIsDirty = false;
+  let currentOpenToken = 0;
+  let diffDirtyState = null;
+  let openBuffers = {};
+  let modifiedContent = null;
+  let lastDiffModifiedContent = null;
+  let _lastFilter = "";
+
+  const baseDir     = window.APP_CFG?.baseDir || "/data";
+</script>
+
+<script>
+  function publishState() {
+    window.selectionType  = selectionType;
+    window.editorMode     = editorMode;
+    window.currentFile    = currentFile;
+    window.currentFolder  = currentFolder;
+    window.currentIsDirty = currentIsDirty;
+    window.FILE_CONTAINERS = window.FILE_CONTAINERS || {};
+  }
+</script>
+
+<script>
+function getCurrentAssocName(){
+  const k = window.currentFile ? kpath(window.currentFile) : null;
+  const name = (k && window.FILE_CONTAINERS && window.FILE_CONTAINERS[k]) || "";
+  return String(name || "").trim();
+}
+function announceContainerChange(){
+  const name = getCurrentAssocName();
+  document.dispatchEvent(new CustomEvent('app:container-change', {
+    detail: { name, has: !!name }
+  }));
+}
+</script>
+
+<!-- kill -->
+<script>
+function killSuggest(ed = window.editor) {
+  if (!ed) return;
+  try { ed.trigger('teardown', 'hideSuggestWidget', {}); } catch {}
+  try { ed.updateOptions({ quickSuggestions: false, suggestOnTriggerCharacters: false }); } catch {}
+}
+</script>
+<!-- debounce -->
+<script>
+function debounce(fn, wait = 250) {
+  let timeout;
+  return (...args) => {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => fn.apply(this, args), wait);
+  };
+}
+</script>
+
+<!-- Renderizar overlay -->
+<script>
+  function renderEditorOverlay() {
+    const overlay = document.getElementById('editor-placeholder');
+    if (!overlay) return;
+
+    const q = document.getElementById('tree-search')?.placeholder || t('ui.search_placeholder');
+
+    overlay.innerHTML = `
+      <div class="ph-card">
+        <div class="ph-title">${t('editor.placeholder.title') || 'Nenhum arquivo aberto'}</div>
+        <div class="ph-sub">${t('editor.placeholder.subtitle') || 'Selecione um arquivo na árvore à esquerda.'}</div>
+        <div class="ph-tips">💡 ${(t('editor.placeholder.tip', { q }) || 'Use o filtro para localizar rapidamente') }</div>
+      </div>
+    `;
+  }
+</script>
+
+<!-- Bloqueia Monaco -->
+<script>
+  function lockEditor(on = true, opts = {}) {
+    isEditorLocked = !!on;
+    const root = document.getElementById('editor');
+    if (!root) return;
+
+    root.classList.toggle('is-locked', isEditorLocked);
+
+    if (window.editor) {
+      window.editor.updateOptions({ readOnly: isEditorLocked });
+      if (isEditorLocked) {
+        const msg = opts.message;
+        if (typeof msg === 'string') {
+          // descarta modelo anterior
+          if (window.editor.getModel() && !window.editor.getModel().isDisposed()) {
+            window.editor.getModel().dispose();
+          }
+          // cria modelo novo só para placeholder
+          const placeholderModel = monaco.editor.createModel(msg, "plaintext");
+          window.editor.setModel(placeholderModel);
+        }
+        window.editor.setScrollTop(0);
+      }
+    }
+
+    // overlay
+    if (isEditorLocked) {
+      renderEditorOverlay();
+    } else {
+      const overlay = document.getElementById('editor-placeholder');
+      if (overlay) overlay.innerHTML = '';
+    }
+  }
+</script>
+
+<!-- Desbloqueia Monaco -->
+<script>
+  function unlockEditor() { lockEditor(false); }
+</script>
+
+<!-- Install Guards??? -->
+<script>
+  function installGuards() {
+    const root = document.getElementById('editor');
+    if (!root) return;
+
+    root.addEventListener('pointerdown', (e) => {
+      if (isEditorLocked) { e.preventDefault(); e.stopPropagation(); }
+    }, true);
+
+    if (window.editor) {
+      window.editor.onDidFocusEditorText(() => {
+        if (isEditorLocked) {
+          window.editor.trigger('keyboard', 'cursorUndo', null);
+          root.focus();
+        }
+      });
+    }
+  }
+</script>
+
+<!-- Botões Sidebar -->
+<script>
+  function updateSidebarButtons() {
+    const sel = selectionType;
+
+    // 🔑 trava tudo se estiver em diff
+    const inDiff = editorMode.startsWith("diff");
+
+     // cria
+    const enableCreate = !inDiff && (sel === 'root' || sel === 'folder');
+    if (elNewFolder) elNewFolder.disabled = !enableCreate;
+    if (elNewFile)   elNewFile.disabled   = !enableCreate;
+
+    // deletar
+    const enableDelete = !inDiff && (sel === 'file' || sel === 'folder');
+    if (elDelete) elDelete.disabled = !enableDelete;
+
+    // renomear
+    const enableRename = !inDiff && (sel === 'file' || sel === 'folder');
+    if (elRename) elRename.disabled = !enableRename;
+
+    // filtro
+    const searchInput = document.getElementById("tree-search");
+    if (searchInput) searchInput.disabled = inDiff;
+
+    const clearBtn = document.getElementById("clear-search");
+    if (clearBtn) clearBtn.disabled = inDiff;
+  }
+</script>
+
+<!-- Botões Toolbar -->
+<script>
+  // Esconder todos
+  function hideAllFileOnly() {
+    $$('[data-file-only]').forEach(hide);
+    hide(elSepEdit);
+  }
+
+  // Update
+  function updateToolbar() {
+    hideAllFileOnly();
+    // Considera "arquivo ativo" se selectionType === 'file' OU se há currentFile definido
+    const isFileContext = (selectionType === 'file');
+    if (!isFileContext) return;
+
+    const inDiff = editorMode.startsWith("diff");
+
+    const k = (typeof keyPath === "function") ? keyPath(currentFile) : (currentFile||"").replace(/^\/+/, "");
+    const assoc        = (window.FILE_CONTAINERS || {})[k];
+    const hasContainer = !!(assoc && String(assoc).trim());
+
+    ensureRestartLabel?.();
+
+    if (editorMode === 'none') {
+      // modo normal com arquivo
+      [elDiff, elValidate, elSave, elDownload, elBackup, elBackupMgr, elAssoc].forEach(show);
+      if (hasContainer) show(elRestart); else hide(elRestart);
+
+      hide(elBackEditor);
+      hide(elCancelDiff);
+
+      // só mostra separador se algum botão de ação estiver visível
+      const hasRight = [elSave, elDownload, elBackup, elBackupMgr, elAssoc, hasContainer ? elRestart : null]
+        .some(btn => btn && btn.style.display !== "none");
+      if (hasRight) show(elSepEdit); else hide(elSepEdit);
+
+      return;
+    }
+
+    if (editorMode === 'diff-manual') {
+      // Esquerda
+      show(elBackEditor);
+      hide(elCancelDiff);
+      
+      // Direita
+      elApplyLeft.textContent = t('ui.apply_left');
+      elApplyRight.textContent = t('ui.apply_right');
+      show(elApplyLeft);
+      show(elApplyRight);
+
+      const hasRight = [elAssoc, elRestart]
+        .some(btn => btn && btn.style.display !== "none");
+      if (hasRight) show(elSepEdit); else hide(elSepEdit);
+      
+      return;
+    }
+
+    if (editorMode === 'diff-backup') {
+      // Esquerda
+      hide(elBackEditor);
+      show(elCancelDiff);
+      
+      // Direita
+      elApplyLeft.textContent = t("ui.apply_backup");
+      elApplyRight.textContent = t("ui.apply_editor");
+      show(elApplyLeft);
+      show(elApplyRight);
+
+      const hasRight = [elAssoc, elRestart]
+        .some(btn => btn && btn.style.display !== "none");
+      if (hasRight) show(elSepEdit); else hide(elSepEdit);
+      
+      return;
+    }
+  }
+</script>
+
+<!-- Selecionar tipo -->
+<script>
+  window.setSelectionType = (type) => {
+    selectionType = type;
+    publishState();
+    updateSidebarButtons();
+    updateToolbar();
+  };
+
+  window.setEditorMode = (mode) => {
+    editorMode = mode;
+    publishState();
+    updateToolbar();
+    updateSidebarButtons();
+  };
+</script>
+
+<!-- Resizer -->
+<script>
+(function() {
+  const KEY = 'editor.sidebar.w';
+  const MIN = 248;
+  let MAX = window.innerWidth * 0.25;
+  const DEF = 300;
+
+  let dragging = false;
+  let startX = 0;
+  let startW = 0;
+  
+  const $ = (s, ctx=document) => ctx.querySelector(s);
+  const sidebar = () => $('#sidebar');
+
+  function clamp(n){ return Math.min(MAX, Math.max(MIN, n)); }
+  function setW(px){ document.documentElement.style.setProperty('--sidebar-w', `${Math.round(px)}px`); }
+  function getW(){
+    const saved = parseInt(localStorage.getItem(KEY) || '', 10);
+    if (!isNaN(saved)) return clamp(saved);
+    const cur = getComputedStyle(document.documentElement).getPropertyValue('--sidebar-w');
+    const v = parseInt(cur, 10);
+    return isNaN(v) ? DEF : clamp(v);
+  }
+  function saveW(px){ localStorage.setItem(KEY, String(clamp(px))); }
+
+  // Recalcula o MAX em 25% ao redimensionar a janela
+  window.addEventListener('resize', () => {
+    MAX = window.innerWidth * 0.25;
+    if (getW() > MAX) {
+      setW(MAX);
+      saveW(MAX);
+      if (window.editor?.layout) requestAnimationFrame(() => window.editor.layout());
+    }
+  });
+
+  function setupResizer(){
+    const res = $('#resizer');
+    const sb  = sidebar();
+    if (!res || !sb) return;
+
+    // aplica largura inicial
+    setW(getW());
+
+    res.addEventListener('pointerdown', (e) => {
+      e.preventDefault();
+      dragging = true;
+      startX = e.clientX;
+      startW = sb.getBoundingClientRect().width;
+      res.setPointerCapture(e.pointerId);
+      res.classList.add('is-dragging');
+    });
+
+    window.addEventListener('pointermove', (e) => {
+      if (!dragging) return;
+      const dx = e.clientX - startX;
+      setW(clamp(startW + dx));
+    });
+
+    function endDrag(e){
+      if (!dragging) return;
+      dragging = false;
+      res.classList.remove('is-dragging');
+      const cur = sb.getBoundingClientRect().width;
+      saveW(cur);
+      if (e?.pointerId && res.hasPointerCapture(e.pointerId)) res.releasePointerCapture(e.pointerId);
+      if (window.editor?.layout) requestAnimationFrame(() => window.editor.layout());
+    }
+
+    window.addEventListener('pointerup', endDrag);
+    window.addEventListener('pointercancel', endDrag);
+
+    // duplo-clique: sempre volta para o default
+    res.addEventListener('dblclick', () => {
+      setW(DEF);
+      saveW(DEF);
+      if (window.editor?.layout) {
+        requestAnimationFrame(() => window.editor.layout());
+        }
+    });
+
+    // acessibilidade: ←/→ ajusta 10px (Shift=40), Home=MIN, End=MAX
+    res.tabIndex = 0;
+    res.addEventListener('keydown', (e) => {
+      const step = e.shiftKey ? 40 : 10;
+      if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+        const next = getW() + (e.key === 'ArrowRight' ? step : -step);
+        setW(clamp(next)); saveW(next);
+        if (window.editor?.layout) requestAnimationFrame(() => window.editor.layout());
+        e.preventDefault();
+      }
+      if (e.key === 'Home') { setW(MIN); saveW(MIN); e.preventDefault(); }
+      if (e.key === 'End')  { setW(MAX); saveW(MAX); e.preventDefault(); }
+    });
+  }
+
+  window.addEventListener('DOMContentLoaded', setupResizer);
+})();
+</script>
+
+<!-- renderiza uma pasta -->
+<script>
+function renderFolder(container, item) {
+  const details = document.createElement('details');
+  details.dataset.path = item.path;
+
+  const summary = document.createElement('summary');
+  summary.dataset.path = item.path;
+  summary.innerHTML = `
+    <span class="caret" role="button" tabindex="0" aria-label="Expandir/fechar"></span>
+    <span class="folder-icon"></span>
+    <span class="folder-name">${item.name}</span>
+  `;
+
+  // 1) Clique no BLOCO (summary) exceto a seta → seleciona; se fechado, abre
+  summary.addEventListener('click', async (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+    if (e.target.closest('.caret')) return;
+
+    // 1) primeiro marca como PASTA
+    setSelectionType('folder');
+    markActive(summary);
+    currentFile = "";
+    currentFolder = item.path;
+
+    // 2) só agora desmonta o diff (backToEditor vai enxergar 'folder')
+    closeDiffIfAny();
+
+    // 3) aplica overlay
+    lockEditor(true, { message: "" });
+    renderStatus();
+    renderStatusBar();
+    document.dispatchEvent(new CustomEvent('app:container-change', {
+      detail: { name: '', label: '' }
+    }));
+
+    if (!details.open) {
+      details.open = true;
+      if (!details.dataset.loaded) {
+        details.dataset.loaded = 'true';
+        await loadTree(item.path, details);
+      }
+    }
+  });
+
+  // 2) Clique na SETA → abre/fecha
+  const caret = summary.querySelector('.caret');
+  const toggle = async () => {
+    // 1) já muda a seleção para PASTA
+    setSelectionType('folder');
+    markActive(summary);
+    currentFile = "";
+    currentFolder = item.path;
+    publishState();
+
+    // 2) fecha diff somente depois de marcar como pasta
+    closeDiffIfAny();
+
+    // 3) overlay
+    lockEditor(true, { message: "" });
+    renderStatus();
+    renderStatusBar();
+    document.dispatchEvent(new CustomEvent('app:container-change', {
+      detail: { name: '', label: '' }
+    }));
+
+    if (!details.open) {
+      details.open = true;
+      if (!details.dataset.loaded) {
+        details.dataset.loaded = 'true';
+        await loadTree(item.path, details);
+      }
+    } else {
+      details.open = false;
+    }
+  };
+  caret.addEventListener('click', async (e) => { e.preventDefault(); e.stopPropagation(); await toggle(); });
+  caret.addEventListener('keydown', async (e) => {
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); await toggle(); }
+  });
+
+  details.appendChild(summary);
+  container.appendChild(details);
+}
+</script>
+
+<!-- renderiza um arquivo (div) -->
+<script>
+function renderFile(container, item) {
+  const file = document.createElement('div');
+  file.className = 'item file';
+  file.dataset.path = item.path;
+  if (item.dirty) {
+    file.title = t("ui.unsaved_changes");
+  } else {
+    file.title = "";
+  }
+
+  // span para o nome
+  const nameSpan = document.createElement('span');
+  nameSpan.style.marginRight = 'auto';
+  nameSpan.className = 'file-name';
+  nameSpan.textContent = item.name;
+
+  // span para a bolinha de dirty
+  const dirtySpan = document.createElement('span');
+  dirtySpan.className = 'dirty-dot';
+  dirtySpan.style.display = 'none';
+  dirtySpan.textContent = "●";
+
+  if (item.dirty) {
+    dirtySpan.style.display = 'inline';
+  }
+  
+  // monta o item com spans
+  file.appendChild(nameSpan);
+  file.appendChild(dirtySpan);
+
+  file.addEventListener('click', async () => {
+    setSelectionType('file');
+    markActive(file);
+    await openFile(item.path);
+  });
+
+  container.appendChild(file);
+
+  // guardar referência para poder atualizar depois
+  file._dirtyDot = dirtySpan;
+
+  // 🔄 hidrata associação do backend e desenha o ícone
+  (async () => {
+    try {
+      const assoc = await fetchAssoc(item.path); // usa kpath internamente
+      if (assoc) {
+        FILE_CONTAINERS[kpath(item.path)] = assoc; // guarda pela CHAVE normalizada
+        updateTreeContainerBadge(item.path, assoc); // mostra o 🐳 na árvore
+        if (item.path === currentFile) {
+          renderStatusBar();
+          updateToolbar();
+        }
+      } else {
+        updateTreeContainerBadge(item.path, null);
+        if (item.path === currentFile) {
+          renderStatusBar();
+          updateToolbar();
+        }
+      }
+    } catch {
+      // silencioso
+    }
+  })();
+}
+</script>
+
+<!-- cria um nó “voltar para raiz” -->
+<script>
+function renderRootNode(container) {
+  const rootNode = document.createElement('div');
+  rootNode.className = 'item root';
+  rootNode.textContent = '/..';
+  rootNode.title = '/';
+  rootNode.dataset.path = '/';
+  
+  rootNode.addEventListener('click', async () => {
+    // 1) primeiro marca como ROOT
+    setSelectionType('root');
+    markActive(rootNode);
+    currentFile = "";
+    currentFolder = "/";
+    publishState();
+
+    // 2) só depois desmonta diff
+    closeDiffIfAny();
+
+    // 3) overlay
+    lockEditor(true, { message: "" });
+    renderStatus();
+    renderStatusBar();
+    document.dispatchEvent(new CustomEvent('app:container-change', {
+      detail: { name: '', label: '' }
+    }));
+    clearSearchUI();
+    await loadTree('');
+  });
+
+  container.appendChild(rootNode);
+
+  markActive(rootNode);
+  renderStatus();
+  setSelectionType('root');
+}
+</script>
+
+<!-- Renderizar Status -->
+<script>
+function renderStatus() {
+  const footerPath = document.getElementById("footer-path");
+  if (!footerPath) return;
+
+  let parts = [];
+
+  if (currentFile) {
+    parts = dirname(currentFile).split("/").filter(Boolean);
+  } else if (currentFolder) {
+    parts = currentFolder.split("/").filter(Boolean);
+  }
+
+  if (parts.length > 0) {
+    footerPath.textContent = baseDir.replace(/\/$/, "") + "/" + parts.join("/");
+  } else {
+    footerPath.textContent = baseDir;
+  }
+}
+</script>
+
+<!-- Renderizar barra de Status -->
+<script>
+function renderStatusBar() {
+  const fileEl      = document.getElementById("file");
+  const dirtyEl     = document.getElementById("dirty");
+  const containerEl = document.getElementById("container-info");
+
+  // FILE → só o nome
+  if (fileEl) {
+    fileEl.textContent = currentFile ? basename(currentFile) : "";
+  }
+
+  // DIRTY
+  if (dirtyEl) {
+    if (currentFile) {
+      if (editorMode.startsWith("diff")) {
+        // estamos em diff: usa diffDirtyState
+        if (diffDirtyState && normalizeEmpty(diffDirtyState.tempContent) !== normalizeEmpty(diffDirtyState.diskBaseline)) {
+          dirtyEl.textContent = "● " + t("ui.unsaved_changes");
+        } else {
+          dirtyEl.textContent = "";
+        }
+      } else {
+        // modo normal: usa o flag global já calculado
+        dirtyEl.textContent = currentIsDirty ? "● " + t("ui.unsaved_changes") : "";
+      }
+    } else {
+      dirtyEl.textContent = "";
+    }
+  }
+
+  // CONTAINER
+  if (containerEl) {
+    const k = currentFile ? kpath(currentFile) : null;
+    if (k && FILE_CONTAINERS[k]) {
+      containerEl.textContent = FILE_CONTAINERS[k];
+    } else if (selectionType === "file") {
+      containerEl.textContent = t("ui.no_container");
+    } else {
+      containerEl.textContent = "";
+    }
+  }
+  announceContainerChange();
+}
+</script>
+
+<!-- Abrir arquivo -->
+<script>
+async function openFile(path, restoreState = null) {
+  // 🔑 se estiver em diff, desmonta antes de abrir qualquer arquivo
+  if (editorMode.startsWith("diff")) {
+    backToEditor();
+  }
+
+  const token = ++currentOpenToken;
+  try {
+    let content = null;
+    const safePath = normalizePath(path);
+
+    // tenta pegar versão temporária
+    const resTemp = await fetch(`/api/temp?path=${encodeURIComponent(safePath)}`);
+    if (token !== currentOpenToken) return;
+    if (resTemp.ok) {
+      const temp = await resTemp.json();
+      if (temp.exists && typeof temp.content === "string") {
+        content = temp.content;
+      }
+    }
+
+    // se não achou versão temporária → pega conteúdo real do disco
+    if (content === null) {
+      const resFile = await fetch(`/api/file?path=${encodeURIComponent(safePath)}`);
+      if (!resFile.ok) throw new Error(t("ui.error_open_file"));
+      const data = await resFile.json();
+      content = data.content || "";
+    }
+
+    if (token !== currentOpenToken) return;
+
+    // descarta modelo atual do editor, se houver
+    const oldModel = window.editor.getModel();
+    if (oldModel && !oldModel.isDisposed()) {
+      oldModel.dispose();
+    }
+
+    // cria novo modelo e define no Monaco
+    const uri = monaco.Uri.file(path);
+    const model = getOrCreateModel(uri, content);
+    if (token !== currentOpenToken) {
+      model.dispose();
+      return;
+    }
+
+    window.editor.setModel(model);
+
+    // baseline real do disco (normalizado)
+    const diskBaseline = normalizeEmpty(restoreState?.diskBaseline ?? content);
+
+    currentFile = path;
+    currentFolder = dirname(path);
+    setSelectionType('file');
+    publishState();
+
+    // se veio do diff com conteúdo sujo → restaura esse estado
+    if (restoreState) {
+      if (restoreState.isDirty) {
+        model.setValue(restoreState.tempContent);
+        currentIsDirty = true;
+        const node = document.querySelector(`.item.file[data-path="${CSS.escape(path)}"]`);
+        if (node && node._dirtyDot) {
+          node._dirtyDot.style.display = "inline";
+          node.title = t("ui.unsaved_changes");
+        }
+        renderStatusBar();
+      } else {
+        currentIsDirty = false;
+      }
+    }
+
+    // debounce para salvar versão temporária
+    const saveTemp = debounce(async () => {
+      if (model.isDisposed()) return;
+
+      let now = model.getValue();
+      let diskContent = "";
+
+      try {
+        const resFile = await fetch(`/api/file?path=${encodeURIComponent(path)}`);
+        if (resFile.ok) {
+          const data = await resFile.json();
+          diskContent = data.content || "";
+        }
+      } catch (e) {
+        console.warn("Não consegui verificar disco:", e);
+      }
+
+      // 🔑 só grava no temp se for realmente diferente do disco (normalizado)
+      if (normalizeEmpty(now) !== normalizeEmpty(diskContent)) {
+        await fetch("/api/temp", {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ path, content: now })
+        });
+      } else {
+        // se tiver rota DELETE /api/temp implemente, senão pode ignorar
+        try {
+          await fetch(`/api/temp?path=${encodeURIComponent(path)}`, { method: "DELETE" });
+        } catch (e) {
+          // backend não suporta → apenas ignora
+        }
+      }
+    }, 500);
+
+    // listener para dirty flag (descarta anterior antes de criar novo)
+    if (window._contentListener) {
+      window._contentListener.dispose();
+    }
+    window._contentListener = model.onDidChangeContent(async () => {
+      if (model.isDisposed()) return;
+      const now = model.getValue();
+
+      // compara sempre com o arquivo em disco
+      let isDirty = false;
+      try {
+        const resFile = await fetch(`/api/file?path=${encodeURIComponent(path)}`);
+        if (resFile.ok) {
+          const data = await resFile.json();
+          const diskContent = data.content || "";
+          isDirty = normalizeEmpty(now) !== normalizeEmpty(diskContent);
+        }
+      } catch (e) {
+        console.warn("Não consegui verificar disco:", e);
+      }
+
+      currentIsDirty = isDirty;
+      renderStatusBar();
+
+      const node = document.querySelector(`.item.file[data-path="${CSS.escape(path)}"]`);
+      if (node && node._dirtyDot) {
+        node._dirtyDot.style.display = isDirty ? "inline" : "none";
+        node.title = isDirty ? t("ui.unsaved_changes") : "";
+      }
+
+      saveTemp();
+    });
+
+    // desbloqueia editor + atualiza status
+    if (token === currentOpenToken) {
+      unlockEditor();
+      renderStatus();
+      renderStatusBar();
+      // garante associação carregada para o arquivo aberto e atualiza toolbar
+      try {
+        const assoc = await fetchAssoc(path);
+        if (assoc) FILE_CONTAINERS[kpath(path)] = assoc; else delete FILE_CONTAINERS[kpath(path)];
+      } catch {}
+      updateToolbar();
+      announceContainerChange();
+    }
+  } catch (e) {
+    console.error(t("ui.error_open_file_console"), e);
+  }
+}
+</script>
+
+<!-- Nova pasta -->
+<script>
+async function createFolder(basePath) {
+  const { value: name } = await swalCenter.fire({
+    title: t("ui.new_folder"),
+    input: "text",
+    inputLabel: t("ui.enter_folder_name"),
+    inputPlaceholder: t("ui.folder_name_placeholder"),
+    showCancelButton: true,
+    confirmButtonText: t("ui.create"),
+    cancelButtonText: t("ui.cancel"),
+    inputValidator: (value) => {
+      if (!value) return t("errors.empty_folder_name");
+    }
+  });
+
+  if (!name) return;
+
+  const fullPath = normalizePath((basePath === "/" ? "" : basePath) + "/" + name);
+
+  try {
+    const res = await fetch("/api/mkdir", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ path: fullPath })
+    });
+    if (!res.ok) throw new Error(await res.text());
+
+    // abre a árvore inteira e expande até a nova pasta já destacando
+    const parts = fullPath.split("/").filter(Boolean);
+    const openPaths = parts.map((_, i) => parts.slice(0, i + 1).join("/"));
+    await loadTree("", null, openPaths, fullPath);
+
+  } catch (err) {
+    swalCenter.fire({
+      title: t("ui.error"),
+      text: err.message,
+      icon: "error"
+    });
+  }
+}
+</script> 
+
+<!-- Novo arquivo -->
+<script>
+async function createFile(basePath) {
+  const { value: name } = await swalCenter.fire({
+    title: t("ui.new_file"),
+    input: "text",
+    inputLabel: t("ui.enter_file_name"),
+    inputPlaceholder: t("ui.file_name_placeholder"),
+    showCancelButton: true,
+    confirmButtonText: t("ui.create"),
+    cancelButtonText: t("ui.cancel"),
+    inputValidator: (value) => {
+      if (!value) return t("errors.empty_file_name");
+    }
+  });
+
+  if (!name) return;
+
+  const fullPath = normalizePath((basePath === "/" ? "" : basePath) + "/" + name);
+
+  try {
+    const res = await fetch("/api/file", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ path: fullPath, content: "" }) // arquivo vazio
+    });
+    if (!res.ok) throw new Error(await res.text());
+
+    // abre a árvore inteira e expande até o novo arquivo, já destacando
+    const parts = fullPath.split("/").filter(Boolean);
+    let openPaths = [];
+    for (let i = 1; i <= parts.length; i++) {
+      openPaths.push(parts.slice(0, i).join("/"));
+    }
+    await loadTree("", null, openPaths, fullPath);
+
+    // abre o arquivo no editor
+    await openFile(fullPath);
+
+  } catch (err) {
+    swalCenter.fire({
+      title: t("ui.error"),
+      text: err.message,
+      icon: "error"
+    });
+  }
+}
+</script>
+
+<!-- Deletar -->
+<script>
+async function deletePath(fullPath) {
+  if (!fullPath || fullPath === "/") return;
+
+  const confirm = await swalCenter.fire({
+    title: t("ui.confirm_delete"),
+    text: fullPath,
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonText: t("ui.delete"),
+    cancelButtonText: t("ui.cancel")
+  });
+
+  if (!confirm.isConfirmed) return;
+
+  try {
+    const res = await fetch("/api/file?path=" + encodeURIComponent(fullPath), {
+      method: "DELETE"
+    });
+    if (!res.ok) throw new Error(await res.text());
+
+    // recarrega árvore (abre até o pai do item excluído)
+    const parent = dirname(fullPath);
+    const parts = parent.split("/").filter(Boolean);
+    const openPaths = parts.map((_, i) => parts.slice(0, i + 1).join("/"));
+    await loadTree("", null, openPaths, parent);
+
+    swalCenter.fire({
+      title: t("ui.success"),
+      text: t("ui.success_deleted"),
+      icon: "success"
+    });
+  } catch (err) {
+    swalCenter.fire({
+      title: t("ui.error"),
+      text: err.message,
+      icon: "error"
+    });
+  }
+}
+</script>
+
+<!-- Renomar -->
+<script>
+async function renamePath(fullPath) {
+  if (!fullPath || fullPath === "/" || fullPath === "/..") return;
+
+  const baseName = basename(fullPath);
+  const { value: newName } = await swalCenter.fire({
+    title: t("ui.rename"),
+    input: "text",
+    inputValue: baseName,
+    inputLabel: t("ui.enter_new_name"),
+    inputPlaceholder: t("ui.new_name_placeholder"),
+    showCancelButton: true,
+    confirmButtonText: t("ui.rename"),
+    cancelButtonText: t("ui.cancel"),
+    inputValidator: (value) => {
+      if (!value) return t("errors.empty_name");
+      if (value === baseName) return t("errors.same_name");
+    }
+  });
+
+  if (!newName) return;
+
+  const parent = dirname(fullPath);
+  const newPath = (parent ? parent + "/" : "") + newName;
+
+  try {
+    const res = await fetch("/api/mv", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ src: fullPath, dst: newPath })
+    });
+    if (!res.ok) throw new Error(await res.text());
+
+    // 🔑 sincroniza buffers e estado
+    if (openBuffers[fullPath]) {
+      openBuffers[newPath] = openBuffers[fullPath];
+      delete openBuffers[fullPath];
+    }
+
+    if (currentFile === fullPath) {
+      currentFile = newPath;
+
+      // 🔑 se havia diff em andamento, reatacha ao novo caminho
+      if (diffDirtyState) {
+        diffDirtyState = {
+          ...diffDirtyState,
+          file: newPath
+        };
+      }
+
+      // 🔑 reabrir editor com o novo caminho para atualizar listeners
+      await openFile(newPath, diffDirtyState);
+    }
+
+    // --- MIGRAR ASSOCIAÇÕES (arquivo e/ou pasta) ---
+    const oldKey = kpath(fullPath);
+    const newKey = kpath(newPath);
+
+    const migrations = [];
+    const seen = new Set();
+
+    function addMig(fromK, toK) {
+      if (seen.has(fromK)) return;
+      const c = FILE_CONTAINERS[fromK];
+      if (!c) return;
+      seen.add(fromK);
+      migrations.push([fromK, toK, c]);
+    }
+
+    // chave exata
+    addMig(oldKey, newKey);
+
+    // filhos (se pasta/ caminho mudou)
+    const prefix = oldKey.endsWith("/") ? oldKey : oldKey + "/";
+    Object.keys(FILE_CONTAINERS).forEach(k => {
+      if (k.startsWith(prefix)) {
+        const suffix = k.slice(oldKey.length);
+        addMig(k, newKey + suffix);
+      }
+    });
+
+    // aplica (memória + backend + UI)
+    for (const [fromK, toK, containerName] of migrations) {
+      // memória
+      FILE_CONTAINERS[toK] = containerName;
+      delete FILE_CONTAINERS[fromK];
+
+      // backend
+      try { await fetch(`/api/file/container?path=${encodeURIComponent(fromK)}`, { method:"DELETE" }); } catch {}
+      try {
+        await fetch("/api/file/container", {
+          method:"PUT", headers:{ "Content-Type":"application/json" },
+          body: JSON.stringify({ path: toK, container: containerName })
+        });
+      } catch {}
+
+      // UI
+      updateTreeContainerBadge(fromK, null);
+      updateTreeContainerBadge(toK, containerName);
+    }
+    announceContainerChange();
+
+    
+
+    // abre árvore até o novo caminho
+    const parts = newPath.split("/").filter(Boolean);
+    const openPaths = parts.map((_, i) => parts.slice(0, i + 1).join("/"));
+    await loadTree("", null, openPaths, newPath);
+
+    swalCenter.fire({
+      title: t("ui.success"),
+      text: t("ui.success_renamed"),
+      icon: "success"
+    });
+  } catch (err) {
+    swalCenter.fire({
+      title: t("ui.error"),
+      text: err.message,
+      icon: "error"
+    });
+  }
+}
+</script>
+
+<!-- Menu suspenso -->
+<script>
+function setupContextMenu() {
+  const menu = document.getElementById("context-menu");
+  if (!menu) return;
+
+  // 🔧 torna assíncrono para poder dar await openFile()
+  document.addEventListener("contextmenu", async (e) => {
+    const node = e.target.closest(".item.file, summary, .item.root");
+    if (!node || !document.getElementById("tree").contains(node)) {
+      menu.style.display = "none";
+      return;
+    }
+
+    e.preventDefault();
+    markActive(node);
+
+    if (node.classList.contains("file")) {
+      const path = node.dataset.path;
+      const prev = currentFile;             // guarda o anterior
+
+      setSelectionType("file");
+      currentFile = path;
+      currentFolder = dirname(path);
+
+      // se estava em diff, desmonta antes de abrir
+      closeDiffIfAny();
+
+      // monta o editor se mudou de arquivo ou se está travado (overlay)
+      if (prev !== path || isEditorLocked) {
+        await openFile(path);
+      } else {
+        // garante que não fique travado por algum motivo
+        unlockEditor();
+      }
+
+    } else if (node.matches("summary")) {
+      setSelectionType("folder");
+      currentFile = "";
+      currentFolder = node.dataset.path;
+      closeDiffIfAny();
+      lockEditor(true, { message: "" });
+
+    } else if (node.classList.contains("root")) {
+      setSelectionType("root");
+      currentFile = "";
+      currentFolder = "/";
+      closeDiffIfAny();
+      lockEditor(true, { message: "" });
+    }
+
+    renderStatus();
+    renderStatusBar();
+
+    // posiciona e mostra o menu
+    menu.style.left = e.pageX + "px";
+    menu.style.top  = e.pageY + "px";
+    menu.style.display = "block";
+  });
+
+  // fecha ao clicar fora OU em item da árvore
+  document.addEventListener("click", (e) => {
+    if (!menu.contains(e.target)) {
+      menu.style.display = "none";
+    }
+  });
+
+  // fecha ao clicar em item da árvore
+  document.addEventListener("click", (e) => {
+    if (e.target.closest(".item.file, summary, .item.root")) {
+      menu.style.display = "none";
+    }
+  });
+
+  // fecha ao apertar ESC
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") {
+      menu.style.display = "none";
+    }
+  });
+}
+</script>
+
+<!-- Diff -->
+<script>
+// Abrir Diff
+async function openDiff(path) {
+  try {
+    const safePath = normalizePath(path);
+
+    // pega conteúdo real do disco
+    const res = await fetch("/api/file?path=" + encodeURIComponent(safePath));
+    if (!res.ok) throw new Error(await res.text());
+    const data = await res.json();
+    const diskContent = data.content || "";
+
+    // pega conteúdo do editor (buffer atual)
+    const currentModel = window.editor.getModel();
+    let tempContent = currentModel ? currentModel.getValue() : "";
+
+    // 🔑 salva estado dirty antes do diff
+    const normDisk = normalizeEmpty(diskContent);
+    const normTemp = normalizeEmpty(tempContent);
+
+    diffDirtyState = {
+      tempContent: normTemp,
+      diskBaseline: normDisk,
+      isDirty: normTemp !== normDisk
+    };
+
+    // helper pra evitar modelos duplicados
+    const originalModel = getOrCreateModel(monaco.Uri.file(path + ".orig"), diskContent);
+    const modifiedModel = getOrCreateModel(monaco.Uri.file(path), tempContent);
+
+    // esconde editor normal
+    document.getElementById("editor").style.display = "none";
+
+    // cria container para diff (logo após #editor e antes do #statusbar)
+    let diffContainer = document.getElementById("diff-container");
+    if (!diffContainer) {
+      diffContainer = document.createElement("div");
+      diffContainer.id = "diff-container";
+      diffContainer.style.height = "100%";
+      const editorEl = document.getElementById("editor");
+      editorEl.parentElement.insertBefore(diffContainer, editorEl.nextSibling);
+    }
+
+    // cria barra de status do diff se ainda não existir
+    let diffStatusbar = document.getElementById("diff-statusbar");
+    if (!diffStatusbar) {
+      diffStatusbar = document.createElement("div");
+      diffStatusbar.id = "diff-statusbar";
+      diffStatusbar.innerHTML = `
+        <div class="diff-label left" id="diff-left-label"></div>
+        <div class="diff-label right" id="diff-right-label"></div>
+      `;
+      diffContainer.parentElement.insertBefore(diffStatusbar, diffContainer);
+    }
+    diffStatusbar.style.display = "flex";
+
+    // 🔑 garante labels corretos para diff-manual
+    document.getElementById("diff-left-label").textContent = t("ui.disk_file");
+    document.getElementById("diff-right-label").textContent = t("ui.edited_file");
+
+    diffContainer.innerHTML = "";
+    diffContainer.style.display = "block";
+
+    window.diffEditor = monaco.editor.createDiffEditor(diffContainer, {
+      automaticLayout: true,
+      theme: matchMedia('(prefers-color-scheme: dark)').matches ? 'vs-dark' : 'vs',
+      readOnly: !window.DIFF_ALLOW_EDIT,
+      renderOverviewRuler: false
+    });
+
+    window.diffEditor.setModel({
+      original: originalModel,
+      modified: modifiedModel
+    });
+
+    setEditorMode("diff-manual");
+    renderStatusBar();
+
+    // 🔧 garante que a árvore continue mostrando a bolinha (depois de tudo)
+    const node = document.querySelector(`.item.file[data-path="${CSS.escape(path)}"]`);
+    if (node && node._dirtyDot) {
+      const isDirty = normTemp !== normDisk;
+      node._dirtyDot.style.display = isDirty ? 'inline' : 'none';
+      node.title = isDirty ? t("ui.unsaved_changes") : "";
+    }
+
+  } catch (err) {
+    console.error("Erro ao abrir diff:", err);
+    swalCenter.fire({
+      title: t("ui.error"),
+      text: t("ui.error_open_file"),
+      icon: "error"
+    });
+  }
+}
+
+// Fechar Diff
+function backToEditor(modifiedOverride = null) {
+
+  // 🔑 captura ANTES de destruir
+  if (window.diffEditor) {
+    const mod = window.diffEditor.getModel()?.modified?.getValue() || null;
+    modifiedContent = modifiedOverride ?? mod;
+  }
+
+  if (window.diffEditor) {
+    window.diffEditor.dispose();
+    window.diffEditor = null;
+  }
+
+  const diffContainer = document.getElementById("diff-container");
+  if (diffContainer) diffContainer.style.display = "none";
+
+  const diffStatusbar = document.getElementById("diff-statusbar");
+  if (diffStatusbar) diffStatusbar.style.display = "none"; 
+  
+  document.getElementById("editor").style.display = "block";
+
+  setEditorMode("none");
+  publishState();
+  renderStatusBar();
+
+  // só reabre arquivo se a seleção atual for arquivo
+  if (currentFile && selectionType === "file") {
+    let restoreState = null;
+    let targetFile = currentFile;
+
+    if (modifiedContent != null) {
+      if (diffDirtyState) {
+        diffDirtyState.tempContent = modifiedContent;
+        diffDirtyState.isDirty =
+          normalizeEmpty(modifiedContent) !== normalizeEmpty(diffDirtyState.diskBaseline);
+        restoreState = { ...diffDirtyState };
+        targetFile = diffDirtyState.file || currentFile;
+      } else {
+        restoreState = {
+          tempContent: modifiedContent,
+          diskBaseline: "",
+          isDirty: true,
+        };
+      }
+    }
+
+    openFile(targetFile, restoreState).then(() => {
+      if (restoreState) {
+        const model = window.editor.getModel();
+        if (model && !model.isDisposed()) {
+          if (model.getValue() !== restoreState.tempContent) {
+            model.setValue(restoreState.tempContent);
+          }
+
+          const node = document.querySelector(`.item.file[data-path="${CSS.escape(currentFile)}"]`);
+          if (node && node._dirtyDot) {
+            const isDirty = restoreState.tempContent !== restoreState.diskBaseline;
+            node._dirtyDot.style.display = isDirty ? "inline" : "none";
+            node.title = isDirty ? t("ui.unsaved_changes") : "";
+          }
+
+          renderStatusBar();
+        }
+      }
+      diffDirtyState = null;
+    });
+  } else {
+    // se não for arquivo (pasta ou root), só aplica overlay
+    lockEditor(true, { message: "" });
+    renderEditorOverlay();
+  } 
+}
+</script>
+
+<!-- Normalize -->
+<script>
+function normalizePath(path) {
+  return path.replace(/^\/+/, ""); // remove barras do começo
+}
+</script>
+
+<!-- Normalize vazio -->
+<script>
+function normalizeEmpty(value) {
+  if (value == null) return "";
+  return value.replace(/\s+/g, "").length === 0 ? "" : value;
+}
+</script>
+
+<!-- Salvar arquivo -->
+<script>
+async function saveFile() {
+  if (!currentFile) return;
+
+  try {
+    const model = window.editor.getModel();
+    if (!model || model.isDisposed()) return;
+
+    const content = model.getValue();
+
+    // grava no disco
+    const res = await fetch("/api/file", {
+      method: "PUT",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ path: currentFile, content })
+    });
+
+    if (!res.ok) throw new Error(await res.text());
+
+    // 🔑 limpa o temp
+    try {
+      await fetch(`/api/temp?path=${encodeURIComponent(currentFile)}`, { method: "DELETE" });
+    } catch (e) {}
+
+    // marca como limpo
+    currentIsDirty = false;
+    const node = document.querySelector(`.item.file[data-path="${CSS.escape(currentFile)}"]`);
+    if (node && node._dirtyDot) {
+      node._dirtyDot.style.display = "none";
+      node.title = "";
+    }
+    renderStatusBar();
+
+    swalCenter.fire({
+      title: t("ui.success"),
+      text: t("ui.success_saved"),
+      icon: "success",
+      showConfirmButton: true
+    });
+  } catch (err) {
+    swalCenter.fire({
+      title: t("ui.error"),
+      text: err.message,
+      icon: "error"
+    });
+  }
+}
+</script>
+
+<!-- Aplicar velho -->
+<script>
+async function applyLeft() {
+  if (!currentFile) return;
+
+  if (editorMode === "diff-backup" && window.lastBackupPath) {
+    try {
+      const res = await fetch(`/api/file?path=${encodeURIComponent(window.lastBackupPath)}`);
+      if (!res.ok) throw new Error(await res.text());
+      const data = await res.json();
+      const backupContent = data.content || "";
+
+      // sobrescreve disco com backup
+      await fetch("/api/file", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ path: currentFile, content: backupContent })
+      });
+
+      // 🔑 lê novamente o que ficou gravado no disco
+      const verifyRes = await fetch(`/api/file?path=${encodeURIComponent(currentFile)}`);
+      if (!verifyRes.ok) throw new Error(await verifyRes.text());
+      const verifyData = await verifyRes.json();
+      const diskContent = verifyData.content || "";
+
+      // limpa temp
+      try { await fetch(`/api/temp?path=${encodeURIComponent(currentFile)}`, { method: "DELETE" }); } catch(e){}
+
+      // seta restoreState com base no disco real
+      diffDirtyState = {
+        tempContent: backupContent,
+        diskBaseline: diskContent,
+        isDirty: normalizeEmpty(backupContent) !== normalizeEmpty(diskContent)
+      };
+
+      backToEditor(backupContent);
+
+      swalCenter.fire("OK", t("ui.apply_backup"), "success");
+    } catch (e) {
+      swalCenter.fire("Erro", e.message, "error");
+    }
+    return;
+  }
+
+  // fluxo normal (diff-manual) continua como já está
+  backToEditor();
+  try {
+    await fetch(`/api/temp?path=${encodeURIComponent(currentFile)}`, { method: "DELETE" });
+  } catch(e){}
+  await openFile(currentFile);
+
+  currentIsDirty = false;
+  const node = document.querySelector(`.item.file[data-path="${CSS.escape(currentFile)}"]`);
+  if (node && node._dirtyDot) {
+    node._dirtyDot.style.display = "none";
+    node.title = "";
+  }
+  renderStatusBar();
+
+  swalCenter.fire("OK", t("ui.success_applied_left"), "success");
+}
+</script>
+
+<!-- Aplicar novo -->
+<script>
+async function applyRight() {
+  if (!currentFile || !window.diffEditor) return;
+
+  const modified = window.diffEditor.getModel()?.modified?.getValue() || "";
+
+  if (editorMode === "diff-backup") {
+    try {
+      // sobrescreve disco com o conteúdo do editor (lado direito)
+      await fetch("/api/file", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ path: currentFile, content: modified })
+      });
+
+      // limpa temp
+      try { 
+        await fetch(`/api/temp?path=${encodeURIComponent(currentFile)}`, { method: "DELETE" }); 
+      } catch(e){}
+
+      // 🔑 verifica conteúdo real no disco para baseline correto
+      const verifyRes = await fetch(`/api/file?path=${encodeURIComponent(currentFile)}`);
+      if (!verifyRes.ok) throw new Error(await verifyRes.text());
+      const verifyData = await verifyRes.json();
+      const diskContent = verifyData.content || "";
+
+      // monta estado com base no disco real
+      diffDirtyState = {
+        tempContent: modified,
+        diskBaseline: diskContent,
+        isDirty: normalizeEmpty(modified) !== normalizeEmpty(diskContent)
+      };
+
+      backToEditor(modified);
+      swalCenter.fire("OK", t("ui.apply_editor"), "success");
+
+    } catch (e) {
+      swalCenter.fire("Erro", e.message, "error");
+    }
+    return;
+  }
+
+  // fluxo normal (diff-manual)
+  await fetch("/api/file", {
+    method: "PUT",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ path: currentFile, content: modified })
+  });
+
+  try {
+    await fetch(`/api/temp?path=${encodeURIComponent(currentFile)}`, { method: "DELETE" });
+  } catch(e){}
+
+  backToEditor();
+  await openFile(currentFile);
+
+  currentIsDirty = false;
+  const node = document.querySelector(`.item.file[data-path="${CSS.escape(currentFile)}"]`);
+  if (node && node._dirtyDot) {
+    node._dirtyDot.style.display = "none";
+    node.title = "";
+  }
+  renderStatusBar();
+
+  swalCenter.fire("OK", t("ui.success_applied_right"), "success");
+}
+</script>
+
+<!-- Download -->
+<script>
+async function downloadFile() {
+  if (!currentFile) return;
+
+  try {
+    // busca o conteúdo atual do disco
+    const res = await fetch("/api/file?path=" + encodeURIComponent(currentFile));
+    if (!res.ok) throw new Error(await res.text());
+    const data = await res.json();
+    const content = data.content || "";
+
+    // cria um blob e força o download
+    const blob = new Blob([content], { type: "text/plain;charset=utf-8" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = basename(currentFile);
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+
+    swalCenter.fire({
+      title: t("ui.success"),
+      text: t("ui.success_downloaded"),
+      icon: "success",
+      timer: 2500,
+      showConfirmButton: true
+    });
+  } catch (err) {
+    swalCenter.fire({
+      title: t("ui.error"),
+      text: err.message,
+      icon: "error"
+    });
+  }
+}
+</script>
+
+<!-- Validate -->
+<script>
+async function validateFile() {
+  if (!currentFile) return;
+
+  try {
+    const model = window.editor.getModel();
+    if (!model || model.isDisposed()) return;
+
+    const content = model.getValue();
+
+    const res = await fetch("/api/validate", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ path: currentFile, content })
+    });
+
+    if (!res.ok) throw new Error(await res.text());
+    const data = await res.json();
+
+    swalCenter.fire({
+      title: data.success ? t("ui.success") : t("ui.error"),
+      text: data.message,
+      icon: data.success ? "success" : "error"
+    });
+  } catch (err) {
+    swalCenter.fire({
+      title: t("ui.error"),
+      text: err.message,
+      icon: "error"
+    });
+  }
+}
+</script>
+
+<!-- Criar backup -->
+<script>
+async function createBackup() {
+  if (!currentFile) return;
+  const res = await fetch(`/api/backup?path=${encodeURIComponent(currentFile)}`, {
+    method: "POST"
+  });
+  if (!res.ok) {
+    return swalCenter.fire("Erro", await res.text(), "error");
+  }
+  swalCenter.fire("OK", t("ui.backup_created"), "success");
+}
+</script>
+
+<!-- Selecionar backup -->
+<script>
+async function openBackupSelector() {
+  if (!currentFile) return;
+  const res = await fetch(`/api/backups?path=${encodeURIComponent(currentFile)}`);
+  if (!res.ok) {
+    return swalCenter.fire("Erro", await res.text(), "error");
+  }
+  const data = await res.json();
+  if (!data.items.length) {
+    return swalCenter.fire(t("ui.no_backup"), "", "info");
+  }
+
+  const { value: chosen } = await swalCenter.fire({
+    title: t("ui.select_backup"),
+    input: "select",
+    inputOptions: Object.fromEntries(data.items.map(it => [it.path, it.name])),
+    showCancelButton: true,
+    confirmButtonText: t("ui.select"),
+    cancelButtonText: t("ui.cancel"),
+  });
+
+  if (!chosen) return;
+
+  // Agora mostra opções: excluir ou verificar
+  const action = await swalCenter.fire({
+    title: t("ui.backup_options"),
+    showDenyButton: true,
+    showCancelButton: true,
+    confirmButtonText: t("ui.verify_backup"),
+    denyButtonText: t("ui.delete_backup"),
+    cancelButtonText: t("ui.cancel"),
+  });
+
+  if (action.isConfirmed) {
+    openBackupDiff(chosen);
+  } else if (action.isDenied) {
+    const confirm = await swalCenter.fire({
+      title: t("ui.confirm_delete"),
+      text: chosen,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: t("ui.delete_backup"),
+      cancelButtonText: t("ui.cancel")
+    });
+
+    if (!confirm.isConfirmed) return;
+
+    await fetch(`/api/backup?backup=${encodeURIComponent(chosen)}`, { method: "DELETE" });
+    swalCenter.fire("OK", t("ui.backup_deleted"), "success");
+  }
+}
+</script>
+
+<!-- Diff Backup x Editor -->
+<script>
+async function openBackupDiff(backupPath) {
+  // 🔑 guarda o caminho do backup selecionado
+  window.lastBackupPath = backupPath;
+
+  // pega conteúdo do backup
+  const res = await fetch(`/api/file?path=${encodeURIComponent(backupPath)}`);
+  if (!res.ok) {
+    return swalCenter.fire("Erro", await res.text(), "error");
+  }
+  const backupData = await res.json();
+
+  // conteúdo atual do editor
+  const editorModel = window.editor?.getModel();
+  const editorContent = editorModel ? editorModel.getValue() : "";
+
+  // esconde editor normal
+  document.getElementById("editor").style.display = "none";
+
+  // cria container para diff (logo após #editor e antes do #statusbar)
+  let diffContainer = document.getElementById("diff-container");
+  if (!diffContainer) {
+    diffContainer = document.createElement("div");
+    diffContainer.id = "diff-container";
+    diffContainer.style.height = "100%";
+    const editorEl = document.getElementById("editor");
+    editorEl.parentElement.insertBefore(diffContainer, editorEl.nextSibling);
+  }
+
+  diffContainer.innerHTML = "";
+  diffContainer.style.display = "block";
+
+  // cria diffEditor
+  if (window.diffEditor) {
+    window.diffEditor.dispose();
+  }
+  window.diffEditor = monaco.editor.createDiffEditor(diffContainer, {
+    automaticLayout: true,
+    renderSideBySide: true,
+    theme: matchMedia('(prefers-color-scheme: dark)').matches ? 'vs-dark' : 'vs',
+    readOnly: !window.DIFF_ALLOW_EDIT
+  });
+
+  const originalModel = monaco.editor.createModel(backupData.content || "", undefined);
+  const modifiedModel = monaco.editor.createModel(editorContent, undefined);
+
+  window.diffEditor.setModel({
+    original: originalModel,
+    modified: modifiedModel
+  });
+
+  setEditorMode("diff-backup");
+
+  // Atualiza labels da barra superior
+  const diffStatusbar = document.getElementById("diff-statusbar");
+  if (diffStatusbar) {
+    diffStatusbar.style.display = "flex";
+    document.getElementById("diff-left-label").textContent = t("ui.backup");
+    document.getElementById("diff-right-label").textContent = t("ui.editor");
+  }
+}
+</script>
+
+<!-- restoreFromEditor -->
+<script>
+async function restoreFromEditor(modifiedText) {
+  if (!currentFile) return;
+
+  try {
+    // lê o conteúdo real do disco
+    const res = await fetch(`/api/file?path=${encodeURIComponent(currentFile)}`);
+    if (!res.ok) throw new Error(await res.text());
+    const data = await res.json();
+    const diskContent = data.content || "";
+
+    // monta estado real
+    diffDirtyState = {
+      tempContent: modifiedText,
+      diskBaseline: diskContent,
+      isDirty: normalizeEmpty(modifiedText) !== normalizeEmpty(diskContent)
+    };
+
+    backToEditor(modifiedText);
+  } catch (err) {
+    swalCenter.fire("Erro", err.message, "error");
+    backToEditor();
+  }
+}
+</script>
+
+<!-- restoreFromEditor -->
+<script>
+async function restoreAfterSave(modifiedText) {
+  if (!currentFile) return;
+
+  try {
+    // lê o conteúdo real do disco depois do save
+    const res = await fetch(`/api/file?path=${encodeURIComponent(currentFile)}`);
+    if (!res.ok) throw new Error(await res.text());
+    const data = await res.json();
+    const diskContent = data.content || "";
+
+    diffDirtyState = {
+      tempContent: modifiedText,
+      diskBaseline: diskContent,
+      isDirty: normalizeEmpty(modifiedText) !== normalizeEmpty(diskContent)
+    };
+
+    backToEditor(modifiedText);
+  } catch (err) {
+    swalCenter.fire("Erro", err.message, "error");
+    backToEditor();
+  }
+}
+</script>
+
+<!-- CloseDiff -->
+<script>
+function closeDiffIfAny() {
+  if (editorMode.startsWith("diff")) {
+    backToEditor();
+  }
+}
+</script>
+
+<!-- Container -->
+<script>
+// Utils
+function kpath(p){
+  return (typeof keyPath === "function") 
+    ? keyPath(p)
+    : String(p||"").replace(/^\/+/, "");
+  }
+
+async function fetchAssoc(pathOrKey){
+  const key = kpath(pathOrKey);
+  try{
+    const r = await fetch(`/api/file/container?path=${encodeURIComponent(key)}`);
+    if(!r.ok) return null;
+    const j = await r.json();
+    return j?.container || null;
+  }catch{ return null; }
+}
+
+async function putAssoc(pathOrKey, name){
+  const key = kpath(pathOrKey);
+  const res = await fetch("/api/file/container", {
+    method: "PUT",
+    headers: { 
+      "Content-Type": "application/json",
+      "Accept": "application/json"
+    },
+    credentials: "same-origin",
+    body: JSON.stringify({ path: key, container: name })
+  });
+  if (!res.ok) {
+    console.error("putAssoc", await res.text());
+    return;
+  }
+  (window.FILE_CONTAINERS ||= {})[key] = name;
+  updateTreeContainerBadge(key, name);
+  renderStatusBar?.();
+  updateToolbar?.();
+  announceContainerChange();
+}
+
+async function delAssoc(pathOrKey){
+  const key = kpath(pathOrKey);
+  const res = await fetch(`/api/file/container?path=${encodeURIComponent(key)}`, {
+    method: "DELETE",
+    headers: { "Accept": "application/json" },
+    credentials: "same-origin"
+  });
+  if (!res.ok) {
+    console.error("delAssoc", await res.text());
+    return;
+  }
+  if (window.FILE_CONTAINERS) delete window.FILE_CONTAINERS[key];
+  updateTreeContainerBadge(key, null);
+  renderStatusBar?.();
+  updateToolbar?.();
+  announceContainerChange();
+}
+
+// Inicializa botão da toolbar (#btn-assoc)
+function initAssocButton(){
+  const btn = document.getElementById("btn-assoc");
+  if(!btn) return;
+
+  btn.addEventListener("click", async () => {
+    // resolve o arquivo alvo: currentFile OU nó ativo na árvore
+    const activeNode = document.querySelector('#tree .item.file.active');
+    const filePath = (window.currentFile && String(window.currentFile)) ||
+                    (activeNode && activeNode.dataset && activeNode.dataset.path) ||
+                    "";
+
+    if (!filePath) {
+      return swalCenter.fire({
+        icon: "info",
+        title: t("ui.associate_container"),
+        text: t("ui.select_file_placeholder")
+      });
+    }
+
+    const cur = await fetchAssoc(filePath);
+
+    const res = await swalCenter.fire({
+      title: t("ui.associate_container"),
+      input: "text",
+      inputValue: cur || "",
+      inputLabel: t("ui.enter_container_name"),
+      inputPlaceholder: t("ui.container_name"),
+      showCancelButton: true,
+      showDenyButton: !!cur,
+      denyButtonText: t("ui.delete"),
+      confirmButtonText: t("ui.save") || "Salvar",
+      cancelButtonText: t("ui.cancel")
+    });
+
+    if(res.isDismissed) return;
+
+    if(res.isDenied && cur){
+      await delAssoc(filePath);
+      return swalCenter.fire(t("ui.success"), t("ui.association_removed"), "success");
+    }
+
+    const name = String(res.value||"").trim();
+    if(!name) return;
+    await putAssoc(filePath, name);
+    swalCenter.fire(t("ui.success"), t("ui.association_saved"), "success");
+  });
+}
+
+document.addEventListener("DOMContentLoaded", initAssocButton);
+</script>
+
+<script>
+// carrega o SVG uma única vez
+async function loadDockerSvgOnce() {
+  if (window.__DOCKER_SVG_TEXT__) return window.__DOCKER_SVG_TEXT__;
+  const res = await fetch("/static/docker-svgrepo-com.svg");
+  if (!res.ok) throw new Error("docker-svgrepo-com.svg não encontrado");
+  const txt = await res.text();
+  window.__DOCKER_SVG_TEXT__ = txt;
+  return txt;
+}
+
+// coloca/remove o ícone no item da árvore
+window.updateTreeContainerBadge = async function (filePathOrKey, containerName) {
+  const key  = kpath(filePathOrKey);
+  const node = document.querySelector(
+    `.item.file[data-path="${CSS.escape(key)}"], .item.file[data-path="${CSS.escape(filePathOrKey)}"]`
+  );
+  if (!node) return;
+
+  // remover se vazio
+  if (!containerName || !String(containerName).trim()) {
+    node.querySelector(".docker-icon")?.remove();
+    return;
+  }
+
+  let holder = node.querySelector(".docker-icon");
+  if (!holder) {
+    holder = document.createElement("span");
+    holder.className = "docker-icon";
+    holder.setAttribute("role", "img");
+
+    try { holder.innerHTML = await loadDockerSvgOnce(); }
+    catch { holder.textContent = "🐳"; }
+
+    // 👉 coloca o ícone imediatamente DEPOIS da bolinha de sujo
+    const dirty = node.querySelector(".dirty-dot");
+    if (dirty) dirty.insertAdjacentElement("afterend", holder);
+    else node.appendChild(holder);
+
+    // estilo do svg
+    const svg = holder.querySelector("svg");
+    if (svg) {
+      svg.setAttribute("width", "14");
+      svg.setAttribute("height", "14");
+      svg.style.fill = "currentColor";
+    }
+
+    // não use margin-left:auto aqui (a posição à direita virá do flex do item)
+    holder.style.display = "inline-flex";
+    holder.style.alignItems = "center";
+  }
+
+  const tip = `Container: ${String(containerName).trim()}`;
+  holder.title = tip;
+  holder.setAttribute("aria-label", tip);
+  holder.dataset.container = String(containerName).trim();
+};
+</script>
+
+<script>
+/**
+ * Garante que o botão #btn-restart tenha um texto (caso o i18n não tenha carregado),
+ * evitando que CSS baseado em :empty esconda o botão. Se já tiver texto, não faz nada.
+ */
+function ensureRestartLabel() {
+  try {
+    const btn = window.elRestart || document.getElementById('btn-restart');
+    if (!btn) return;
+
+    const label = (typeof t === 'function' && t('ui.restart_container')) || 'Reiniciar';
+    if (!btn.textContent || !btn.textContent.trim()) {
+      btn.textContent = label;
+    }
+  } catch { /* noop */ }
+}
+</script>
+
+<!-- Reiniciar Container (robusto) -->
+<script>
+async function getAssocNameForPath(path){
+  const key = kpath(path);
+  let name = (window.FILE_CONTAINERS || {})[key];
+  if (!name) name = await fetchAssoc(path);
+  name = (name && String(name).trim()) ? String(name).trim() : null;
+  return name;
+}
+
+async function readHttpError(res){
+  try{
+    const ct = (res.headers.get('content-type') || '').toLowerCase();
+    if (ct.includes('application/json')) {
+      const j = await res.json();
+      return j?.message || j?.error || JSON.stringify(j);
+    }
+    const t = await res.text();
+    return t.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim() || `HTTP ${res.status}`;
+  }catch{
+    return `HTTP ${res.status}`;
+  }
+}
+
+async function apiRestartByPath(path){
+  const key = kpath(path);
+  const assocName = (window.FILE_CONTAINERS?.[key] || '').trim();
+  const r = await fetch(`/api/containers/restart?path=${encodeURIComponent(key)}`, {
+    method:'POST',
+    headers:{ 'Accept':'application/json' },
+    credentials:'same-origin'
+  });
+  if (!r.ok){
+    let msg = '';
+    try {
+      const data = await r.json();
+      msg = data?.detail || data?.message || '';
+    } catch {
+      msg = await r.text();
+    }
+    // mapeia por status se não veio mensagem útil
+    if (!msg) {
+      if (r.status === 404) {
+        msg = (typeof t === 'function')
+            ? (assocName ? t('ui.container_not_found', { name: assocName }) : t('ui.container_not_found'))
+            : (assocName ? `Container ${assocName} não encontrado` : 'Container não encontrado');
+      }
+      else if (r.status === 400) msg = (t?.('ui.associate_container')) || 'Container inválido/ausente';
+      else if (r.status >= 500) msg = (t?.('ui.failed_action')) || 'Falha ao executar ação no container.';
+    }
+    // traduz chaves do backend (quando vierem)
+    if (msg === 'errors.container_not_found') {
+      msg = (typeof t === 'function')
+          ? (assocName ? t('ui.container_not_found', { name: assocName }) : t('ui.container_not_found'))
+          : (assocName ? `Container ${assocName} não encontrado` : 'Container não encontrado');
+    }
+    if (msg === 'errors.invalid_container')   msg = (t?.('ui.associate_container')) || 'Container inválido/ausente';
+
+    const err = new Error(msg || `HTTP ${r.status}`);
+    err.status = r.status;
+    err.detail = msg;
+    throw err;
+  }
+  return r.json();
+}
+
+async function apiRestartByName(name){
+  const r = await fetch(`/api/containers/restart?container=${encodeURIComponent(name)}`, {
+    method:'POST',
+    headers:{ 'Accept':'application/json' },
+    credentials:'same-origin'
+  });
+  if (!r.ok){
+    let msg = '';
+    try {
+      const data = await r.json();
+      msg = data?.detail || data?.message || '';
+    } catch {
+      msg = await r.text();
+    }
+    if (!msg) {
+      if (r.status === 404) {
+        msg = (typeof t === 'function')
+          ? t('ui.container_not_found', { name })
+          : `Container ${name} não encontrado`;
+      } else if (r.status === 400) {
+        msg = (typeof t === 'function')
+          ? t('ui.associate_container')
+          : 'Container inválido/ausente';
+      } else if (r.status >= 500) {
+        msg = (typeof t === 'function')
+          ? t('ui.failed_action')
+          : 'Falha ao executar ação no container.';
+      }
+    }
+    if (msg === 'errors.container_not_found') {
+      msg = (typeof t === 'function')
+        ? t('ui.container_not_found', { name })
+        : `Container ${name} não encontrado`;
+    }
+    if (msg === 'errors.invalid_container') {
+      msg = (typeof t === 'function')
+        ? t('ui.associate_container')
+        : 'Container inválido/ausente';
+    }
+
+    const err = new Error(msg || `HTTP ${r.status}`);
+    err.status = r.status;
+    err.detail = msg;
+   throw err;
+  }
+  return r.json();
+}
+
+window.restartContainer = async function(name){
+  const swal = (window.swalCenter || window.Swal);
+  try{
+    // resolve container associado ao arquivo atual se 'name' não vier
+    const cname = (name && String(name).trim()) ||
+                  (currentFile ? await getAssocNameForPath(currentFile) : null);
+
+    if (!cname){
+      return swal.fire({
+        icon:'info',
+        title: t?.('ui.associate_container') || 'Associar container',
+        text:  t?.('ui.no_container') || 'Nenhum container associado a este arquivo.'
+      });
+    }
+
+    const ok = await swal.fire({
+      icon: 'warning',
+      title: t?.('ui.restart_confirm_title') || 'Reiniciar container?',
+      text:  t?.('ui.restart_confirm_text', { name:cname }) || `Isso irá reiniciar (ou iniciar) o container ${cname}.`,
+      showCancelButton: true,
+      confirmButtonText: t?.('ui.restart_now') || 'Reiniciar agora',
+      cancelButtonText:  t?.('ui.cancel') || 'Cancelar'
+    });
+    if (!ok.isConfirmed) return;
+
+    // preferir por path se houver arquivo atual selecionado
+    if (currentFile) await apiRestartByPath(currentFile);
+    else             await apiRestartByName(cname);
+
+    await swal.fire({
+      icon:'success',
+      title: t?.('ui.container_restarted') || 'Container reiniciado',
+      text: cname
+    });
+
+    renderStatusBar?.();
+  } catch (err){
+    let msg = (typeof err === 'string') ? err
+            : (err?.message || err?.detail || (t?.('ui.failed_action') || 'Falha ao executar ação no container.'));
+    // Se ainda sobrou placeholder, substitui manualmente pelo nome resolvido
+    if (msg && msg.includes('{name}')) {
+      const fallback = (typeof cname === 'string' && cname) || (currentFile ? FILE_CONTAINERS?.[kpath(currentFile)] : '') || '';
+      if (fallback) msg = msg.replace('{name}', fallback).replace('{{name}}', fallback);
+    }
+    (window.swalCenter||Swal).fire({
+      icon:'error',
+      title: t?.('ui.error') || 'Erro',
+      text: msg
+    });
+  }
+};
+
+function initRestartButton(){
+  const btn = document.getElementById('btn-restart');
+  if (!btn) return;
+  ensureRestartLabel?.();
+  btn.addEventListener('click', () => window.restartContainer());
+}
+document.addEventListener('DOMContentLoaded', initRestartButton);
+</script>
+
+{% endblock %}
+
+<!-- Página -->
+{% block content %}
+<div id="app" data-diff-allow-edit="{{ 'true' if diff_allow_edit else 'false' }}">
+  <!-- Sidebar -->
+  <aside id="sidebar">
+
+    <!-- Ações no topo -->
+    <div class="actions">
+      <div class="row">
+        <!-- Habilita quando houver seleção (raiz ou pasta) -->
+        <button id="btn-newfolder" disabled data-requires="selection">{{ T('ui.new_folder') }}</button>
+        <button id="btn-newfile" disabled data-requires="selection">{{ T('ui.new_file') }}</button>
+      </div>
+      <div class="row">
+        <!-- habilita quando seleção for ARQUIVO ou PASTA (NÃO raiz) -->
+        <button id="btn-delete" class="danger" disabled data-requires="selection" data-disallow="root">{{ T('ui.delete_path') }}</button>
+        <button id="btn-rename" disabled data-requires="selection" data-disallow="root">{{ T('ui.rename_path') }}</button>
+      </div>
+    </div>
+
+    <!-- Filtro -->
+    <div class="input-wrap">
+      <input id="tree-search" placeholder="{{ T('ui.search_placeholder') }}"/>
+      <button type="button" class="clear-btn" id="clear-search">×</button>
+    </div>
+    
+    <!-- Árvore -->
+    <nav id="tree" role="tree"></nav>
+  </aside>
+
+  <!-- Separador  -->
+  <div id="resizer" role="separator" tabindex="0"></div>
+
+  <!-- Main -->
+  <section id="main">
+    <div id="toolbar" role="toolbar">
+
+      <!-- Tudo abaixo começa OCULTO e só aparece quando um ARQUIVO estiver selecionado -->
+      <!-- Edição / Segurança -->
+      <button id="btn-diff" style="display:none" data-file-only>{{ T('ui.diff') }}</button>
+      <button id="btn-back-editor" style="display:none;" data-file-only>{{ T('ui.back_to_editor') }}</button>
+      <button id="btn-validate" style="display:none" data-file-only>{{ T('ui.validate') }}</button>
+      <button id="btn-cancel-diff" style="display:none;" data-file-only>{{ T('ui.cancel') }}</button>
+      <button id="btn-save" style="display:none;" data-file-only>{{ T('ui.save_button') }}</button>
+      <button id="btn-apply-left" style="display:none;" data-file-only>{{ T('ui.apply_left') }}</button>
+      <button id="btn-apply-right" style="display:none;" data-file-only>{{ T('ui.apply_right') }}</button>
+      <button id="btn-download" style="display:none;" data-file-only>{{ T('ui.download_file') }}</button>
+      <button id="btn-backup" style="display:none;" data-file-only>{{ T('ui.create_backup') }}</button>
+      <button id="btn-backup-manage" style="display:none;" data-file-only>{{ T('ui.manage_backups') }}</button>
+
+      <div class="toolbar-separator" id="sep-edit" style="display:none"></div>
+
+      <!-- Integração com container -->
+      <button id="btn-assoc" style="display:none;" data-file-only>{{ T('ui.assoc_container') }}</button>
+      <button id="btn-restart" style="display:none;" data-file-only>{{ T('ui.restart_container') }}</button>
+    </div>
+
+    <!-- Barra de status do Diff -->
+    <div id="diff-statusbar" style="display:none">
+      <div class="diff-label left" id="diff-left-label"></div>
+      <div class="diff-label right" id="diff-right-label"></div>
+    </div>
+    
+    <!-- Editor -->
+    <div id="editor">
+      <div id="editor-placeholder"></div>
+    </div>
+    
+    <div id="statusbar">
+      <div class="left">
+        <span id="file"></span>  
+      </div>
+      <div class="center">
+        <span id="dirty"></span>
+      </div>
+      <div class="right">
+        <span id="container-info" class="muted" style="margin-left:auto;"></span>
+      </div>
+    </div>
+  </section>
+</div>
+
+<!-- Menu suspenso -->
+<div id="context-menu">
+  <ul>
+    <li data-action="rename">Renomear</li>
+    <li data-action="delete">Excluir</li>
+    <li data-action="download">Download</li>
+    <li class="separator"></li>
+    <li data-action="new-file">Novo arquivo</li>
+    <li data-action="new-folder">Nova pasta</li>
+  </ul>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<!-- Monaco Editor (Iniciador JS) -->
+<script>
+  window.addEventListener("DOMContentLoaded", () => {
+    require.config({ paths: { 'vs': 'https://cdn.jsdelivr.net/npm/monaco-editor@0.52.0/min/vs' }});
+    require(['vs/editor/editor.main'], function() {
+      window.editor = monaco.editor.create(document.getElementById('editor'), {
+        value: "",
+        language: "plaintext",
+        automaticLayout: true,
+        theme: matchMedia('(prefers-color-scheme: dark)').matches ? 'vs-dark' : 'vs',
+        minimap: { enabled: true },
+        readOnly: true
+      });
+
+      installGuards();
+
+      // começa bloqueado (mostra overlay + readOnly)
+      lockEditor(true, { message: "" });
+
+      // ganchos (se quiser disparar eventos em outro ponto do app)
+      document.addEventListener('app:file-opened', () => unlockEditor());
+      document.addEventListener('app:file-closed',  () => lockEditor(true, {
+        message: ""
+      }));
+    });
+  });
+
+  // expõe pra usar de outras funções (openFile/closeFile)
+  window.lockEditor = lockEditor;
+  window.unlockEditor = unlockEditor;
+</script>
+
+<!-- utils -->
+<script>
+  const $  = (s, ctx=document) => ctx.querySelector(s);
+  const $$ = (s, ctx=document) => Array.from(ctx.querySelectorAll(s));
+  const show = el => el && (el.style.display = 'inline-block');
+  const hide = el => el && (el.style.display = 'none');
+  const basename = (p='') => p.split('/').pop() || '';
+  const dirname  = (p='') => p.split('/').slice(0,-1).join('/') || '';
+
+  function getOrCreateModel(uri, value, language = undefined) {
+    let model = monaco.editor.getModel(uri);
+    if (model) {
+      model.setValue(value);
+      return model;
+    }
+    return monaco.editor.createModel(value, language, uri);
+  }
+
+  function markActive(el) {
+    document.querySelectorAll('#tree .active').forEach(s => s.classList.remove('active'));
+    if (el) el.classList.add('active');
+  }
+</script>
+
+<!-- Filtro -->
+<script>
+  // --- helpers de filtro ---
+  function _norm(s){ return (s||"").toLowerCase().normalize("NFD").replace(/\p{Diacritic}/gu,""); }
+  function _ancestors(path){
+    const parts = path.split("/").filter(Boolean);
+    const acc = [];
+    for (let i=1;i<=parts.length;i++){ acc.push(parts.slice(0,i).join("/")); }
+    return acc;
+  }
+
+  function clearSearchUI(){
+    const input = document.getElementById("tree-search");
+    const clearBtn = document.getElementById("clear-search");
+  }
+
+  // Busca recursiva no backend montando lista de matches e caminhos a abrir
+  async function _searchTreeRemote(rootPath, term){
+    const keep = new Set();      // caminhos que ficam (matches + ancestrais)
+    const openPaths = new Set(); // detalhes a abrir
+    const matches = [];
+
+    async function walk(path){
+      const url = `/api/tree?path=${encodeURIComponent(path)}`;
+      const res = await fetch(url, { credentials: 'same-origin' });
+      if (!res.ok) return;
+      const data = await res.json();
+      for (const it of (data.items||[])){
+        const full = it.path;                    // já vem relativo ao /data
+        const nameN = _norm(it.name);
+        if (nameN.includes(term)){
+          matches.push(full);
+          _ancestors(full).forEach(p=>keep.add(p));
+        }
+        if ([".backups", ".tmp"].includes(it.name) || it.name === ".file_containers.json") {
+          continue;
+        }
+        if (it.is_dir){
+          // pula pastas ocultas (.backups, .tmp, etc.)
+          if (it.name.startsWith(".")) continue;
+
+          // só desce se: já tem algum prefixo parecido OU não tem nada ainda (primeira varredura)
+          // na prática, desce sempre para garantir match real
+          await walk(it.path);
+          // se o diretório ou filhos foram mantidos, precisamos abri-lo
+          if ([...keep].some(p => p === it.path || p.startsWith(it.path + "/"))){
+            openPaths.add(it.path);
+          }
+        } else {
+          if (nameN.includes(term)){
+            // já tratado acima; garantimos pai aberto
+            _ancestors(full).slice(0,-1).forEach(p=>openPaths.add(p));
+          }
+        }
+      }
+    }
+
+    await walk(rootPath || "");
+    return { keep, openPaths, matches };
+  }
+
+  // Aplica filtro: carrega só o necessário, expande ancestrais e esconde o resto
+  async function applyTreeFilter(q){
+    const tree = document.getElementById("tree");
+    if (!tree) return;
+
+    const term = _norm(q);
+    // UI do botão X
+    const clearBtn = document.getElementById("clear-search");
+    if (clearBtn) clearBtn.style.visibility = term ? "visible" : "hidden";
+
+    if (!term){
+      await clearTreeFilter();
+      return;
+    }
+
+    // 1) procura recursivamente no backend
+    const { keep, openPaths } = await _searchTreeRemote("", term);
+
+    // 2) re-render da árvore expandindo só os caminhos necessários
+    await loadTree("", null, Array.from(openPaths));
+
+    // 3) show/hide dos nós existentes
+    const allFolders = Array.from(document.querySelectorAll("#tree details"));
+    const allSummaries = Array.from(document.querySelectorAll("#tree summary"));
+    const allFiles = Array.from(document.querySelectorAll("#tree .item.file"));
+
+    // mostra se está em "keep" (ou é ancestral de algo que está)
+    function shouldKeepPath(p){
+      if (!p) return true;
+      if (keep.has(p)) return true;
+      // mantém se algum keep estiver abaixo
+      for (const k of keep){ if (k.startsWith(p + "/")) return true; }
+      return false;
+    }
+
+    allSummaries.forEach(sm => {
+      const p = sm.dataset.path || "";
+      sm.parentElement.style.display = shouldKeepPath(p) ? "" : "none";
+    });
+
+    allFiles.forEach(f => {
+      const p = f.dataset.path || "";
+      f.style.display = keep.has(p) ? "" : "none";
+    });
+
+    // 4) realça matches no texto — diacrítico/maiúscula-insensível e todas as ocorrências
+
+    // limpa marcações antigas
+    document.querySelectorAll("#tree mark.__hit").forEach(m => {
+      const tx = document.createTextNode(m.textContent);
+      m.replaceWith(tx);
+    });
+
+    const termN = _norm(q);
+    if (!termN) return;
+
+    // labels: arquivos (span do nome, exceto .dirty-dot) + pastas (.folder-name)
+    const labels = [
+      ...document.querySelectorAll("#tree .item.file span:not(.dirty-dot)"),
+      ...document.querySelectorAll("#tree summary .folder-name")
+    ];
+
+    // marca todas as ocorrências preservando o texto original
+    function markAllInsensitive(el, needleN){
+      const raw = el.textContent || "";
+      const rawN = _norm(raw);
+
+      let fromN = 0;   // índice na string normalizada
+      let fromR = 0;   // índice na string original
+      let html  = "";
+
+      while (true) {
+        const k = rawN.indexOf(needleN, fromN);
+        if (k === -1) {
+          html += raw.slice(fromR);
+          break;
+        }
+        // copia trecho antes do hit
+        html += raw.slice(fromR, k);
+        // trecho do hit com mesmo comprimento de needleN
+        const hit = raw.slice(k, k + needleN.length);
+        html += `<mark class="__hit">${hit}</mark>`;
+
+        fromN = k + needleN.length;
+        fromR = k + needleN.length;
+      }
+
+      el.innerHTML = html;
+    }
+
+    labels.forEach(el => markAllInsensitive(el, termN));
+  }
+
+  async function clearTreeFilter(){
+    const tree = document.getElementById("tree");
+    if (!tree) return;
+
+    clearSearchUI();
+    // volta UI
+    const input = document.getElementById("tree-search");
+    const clearBtn = document.getElementById("clear-search");
+    if (input) input.value = "";
+    if (clearBtn) clearBtn.style.visibility = "hidden";
+
+    // recarrega raiz mantendo seleção atual (se houver)
+    const selNode = document.querySelector("#tree .active");
+    const highlight = selNode?.dataset?.path || null;
+    // abre até o highlight para manter UX
+    let openPaths = [];
+    if (highlight){
+      openPaths = _ancestors(highlight);
+      openPaths.pop(); // não precisa incluir o próprio arquivo
+    }
+    await loadTree("", null, openPaths, highlight);
+  }
+
+  // inicializa handlers do filtro (chamar uma vez no DOMContentLoaded)
+  function initTreeFilterHandlers(){
+    const searchInput = document.getElementById("tree-search");
+    const clearBtn    = document.getElementById("clear-search");
+
+    if (searchInput){
+      const runFilter = debounce(() => applyTreeFilter(searchInput.value), 150);
+      searchInput.addEventListener("input", runFilter);
+      searchInput.addEventListener("keydown", (e) => {
+        if (e.key === "Escape"){
+          clearTreeFilter();
+          applyTreeFilter(""); // redundância segura
+        }
+      });
+      // estado inicial do X
+      const has = !!searchInput.value;
+      if (clearBtn) clearBtn.style.visibility = has ? "visible" : "hidden";
+    }
+    if (clearBtn){
+      clearBtn.addEventListener("click", () => {
+        clearTreeFilter();
+        const input = document.getElementById("tree-search");
+        if (input){ input.focus(); }
+      });
+    }
+  }
+</script>
+
+<!-- carrega a árvore via API e preenche dentro de containerEl (ou #tree) -->
+<script>
+async function loadTree(rootPath = '', containerEl = null, openPaths = [], highlightPath = null) {
+  const treeEl = containerEl || document.getElementById('tree');
+  if (!treeEl) return;
+
+  // quando não recebo container (ou seja, estou na raiz), eu limpo e coloco o /..
+  if (!containerEl) {
+    treeEl.innerHTML = '';
+    renderRootNode(treeEl);
+  }
+
+  // busca
+  const url = `/api/tree?path=${encodeURIComponent(rootPath)}`;
+  let data;
+  try {
+    const res = await fetch(url, { credentials: 'same-origin' });
+    if (!res.ok) throw new Error('HTTP ' + res.status);
+    data = await res.json();
+  } catch (e) {
+    console.error(t("ui.error_load_tree"), e);
+    return;
+  }
+
+  // decide onde renderizar
+  const target = containerEl || treeEl;
+
+  // se for folder expandida (details), garante que não replique filhos
+  if (containerEl) {
+    // remove filhos anteriores mantendo o summary
+    [...target.children].forEach((child, idx) => {
+      if (idx > 0) target.removeChild(child);
+    });
+  }
+
+
+  // adiciona nós
+  for (const it of (data.items || [])) {
+    if ([".backups", ".tmp"].includes(it.name) || it.name === ".file_containers.json") {
+      continue;
+    }
+    
+    if (it.is_dir) {
+      renderFolder(target, it);
+
+      // se essa pasta está na lista de "openPaths", abre automaticamente
+      if (openPaths.includes(it.path)) {
+        const sel = `details[data-path="${CSS.escape(it.path)}"]`;
+        const details = target.querySelector(sel);
+        if (details) {
+          if (!details.open) details.open = true;
+          // 🔑 aguarda carregar os filhos antes de seguir
+          await loadTree(it.path, details, openPaths, highlightPath);
+        }
+      }
+    } else {
+      renderFile(target, it);
+    }
+  }
+
+  // só depois de renderizar, destaca
+  if (highlightPath) {
+    let node = document.querySelector(
+      `.item.file[data-path="${CSS.escape(highlightPath)}"], 
+      summary[data-path="${CSS.escape(highlightPath)}"]`
+    );
+
+    // fallback extra: se for pasta/arquivo no nível raiz
+    if (!node) {
+      node = document.querySelector(
+        `#tree > .item.file[data-path="${CSS.escape(highlightPath)}"], 
+        #tree > details[data-path="${CSS.escape(highlightPath)}"] > summary`
+      );
+    }
+
+    if (node) {
+      markActive(node);
+
+      if (node.classList.contains("file")) {
+        setSelectionType("file");
+        currentFile = highlightPath;
+        currentFolder = dirname(highlightPath);
+      } else {
+        setSelectionType("folder");
+        currentFile = "";
+        currentFolder = highlightPath;
+      }
+
+      renderStatus();
+      renderStatusBar();
+      node.scrollIntoView({ block: "nearest" });
+    }
+  }
+}
+</script>
+
+<!-- Estado Inicial -->
+<script>
+window.addEventListener('DOMContentLoaded', () => {
+  // cache seguro
+  window.elNewFolder   = $('#btn-newfolder');
+  window.elNewFile     = $('#btn-newfile');
+  window.elDelete      = $('#btn-delete');
+  window.elSepEdit     = $('#sep-edit');
+  window.elDiff        = $('#btn-diff');
+  window.elBackEditor  = $('#btn-back-editor');
+  window.elValidate    = $('#btn-validate');
+  window.elCancelDiff  = $('#btn-cancel-diff');
+  window.elSave        = $('#btn-save');
+  window.elDownload    = $('#btn-download');
+  window.elBackup      = $('#btn-backup');
+  window.elBackupMgr   = $('#btn-backup-manage');
+  window.elAssoc       = $('#btn-assoc');
+  window.elRestart     = $('#btn-restart');
+  window.elRename      = $('#btn-rename');
+  window.elApplyLeft   = $('#btn-apply-left');
+  window.elApplyRight  = $('#btn-apply-right');
+
+
+  // estado inicial
+  setSelectionType('none');
+  setEditorMode('none');
+
+  // inicializa a árvore ao carregar a página
+  loadTree('');
+
+  announceContainerChange();
+
+  // Inicializa menu de contexto
+  setupContextMenu();
+
+  // Filtro da árvore
+  initTreeFilterHandlers();
+
+  // Botões laterais
+  elNewFolder.addEventListener("click", () => {
+    const base = currentFolder || "/";
+    createFolder(base);
+  });
+
+  elNewFile.addEventListener("click", () => {
+    const base = currentFolder || "/";
+    createFile(base);
+  });
+
+  elDelete.addEventListener("click", () => {
+    const target = document.querySelector("#tree .active");
+    if (!target) return;
+    deletePath(target.dataset.path);
+  });
+
+  elRename.addEventListener("click", () => {
+    const target = document.querySelector("#tree .active");
+    if (!target) return;
+    renamePath(target.dataset.path);
+  });
+
+  elDiff.addEventListener("click", () => {
+    if (currentFile) {
+      openDiff(currentFile);
+    }
+  });
+
+  elBackEditor.addEventListener("click", () => {
+    backToEditor();
+  });
+
+  elApplyLeft.addEventListener("click", applyLeft);
+
+  elApplyRight.addEventListener("click", applyRight);
+
+  elSave.addEventListener("click", () => {
+    saveFile();
+  });
+
+  elDownload.addEventListener("click", () => {
+    downloadFile();
+  });
+
+  elValidate.addEventListener("click", () => {
+    validateFile();
+  });
+
+  elBackup.addEventListener("click", () => {
+    createBackup();
+  });
+
+  elBackupMgr.addEventListener("click", () => {
+    openBackupSelector();
+  });
+
+  elCancelDiff.addEventListener("click", () => {
+    if (editorMode === "diff-backup") {
+      const modified = window.diffEditor?.getModel()?.modified?.getValue() || "";
+      restoreFromEditor(modified);
+    } else {
+      backToEditor();
+    }
+  });
+
+
+  // Menu de contexto
+  document.querySelector('#context-menu [data-action="new-folder"]')
+    .addEventListener("click", () => {
+      const base = currentFolder || "/";
+      createFolder(base);
+    });
+
+  document.querySelector('#context-menu [data-action="new-file"]')
+    .addEventListener("click", () => {
+      const base = currentFolder || "/";
+      createFile(base);
+    });
+
+  document.querySelector('#context-menu [data-action="delete"]')
+    .addEventListener("click", () => {
+      const target = document.querySelector("#tree .active");
+      if (!target) return;
+      deletePath(target.dataset.path);
+    });
+
+  document.querySelector('#context-menu [data-action="rename"]')
+    .addEventListener("click", () => {
+      const target = document.querySelector("#tree .active");
+      if (!target) return;
+      renamePath(target.dataset.path);
+    });
+
+  document.querySelector('#context-menu [data-action="download"]')
+    .addEventListener("click", () => {
+      if (currentFile) {
+        // 🔑 aciona o mesmo handler do botão da toolbar
+        elDownload.click();
+      }
+    });
+});
+</script>
+{% endblock %}

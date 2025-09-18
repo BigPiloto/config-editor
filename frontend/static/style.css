@@ -1,0 +1,887 @@
+/* ===== Tema base ===== */
+:root {
+  color-scheme: dark;
+
+  --panel: #0f172a;
+  --border: #334155;
+  --text: #e6e7ea;
+  --muted: #94a3b8;
+  --bg: #0b0f1a;
+  --field: #0b1220;
+  --primary: #2563eb;
+  --primary-border: #1d4ed8;
+  --danger: #ef4444;
+  --sidebar-w: 300px;
+  --swal-placeholder: #9CA3AF;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  margin:0;
+  font:14px system-ui, Segoe UI, Roboto, sans-serif;
+  background:var(--bg);
+  color:var(--text);
+}
+
+/* ===== Header global ===== */
+header, footer {
+  padding:12px 16px;
+  background:var(--panel);
+  color:var(--text);
+  border-bottom:1px solid rgba(255,255,255,0.04);
+}
+
+header .right {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+footer {
+  border-top:1px solid rgba(255,255,255,0.04);
+  border-bottom:none;
+  font-family: monospace;
+}
+
+main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  min-height: 0;
+}
+
+header h1, header h2, header h3 {
+  margin: 0;
+  line-height: 1.2;
+}
+
+header h3 {
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: .08em;
+}
+
+/* ===== UI comuns ===== */
+.pill {
+  display: inline-block;
+  padding: 4px 10px;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  margin-right:6px;
+}
+
+.pill.logout {
+  background-color: #dc2626;
+  color: #fff;
+  text-decoration: none;
+  border: 1px solid #dc2626;
+  margin-left: 12px;
+}
+
+.pill.logout:hover {
+  background-color: #b91c1c;
+  border-color: #b91c1c;
+  cursor: pointer;
+}
+
+button, .btn {
+  padding: 8px 12px;
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  background: var(--field);
+  color: var(--text);
+  cursor: pointer;
+  font-weight: 600;
+  text-decoration: none;
+}
+
+button:hover, .btn:hover {
+  background: var(--border);
+}
+
+.btn.primary {
+  background: var(--primary);
+  border-color: var(--primary-border);
+}
+
+.btn.w, .btn.w-full {
+  width:100%;
+}
+
+.row {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.right {
+  margin-left: auto;
+}
+
+select, input, .input, textarea {
+  background:var(--field);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius:8px;
+  padding:6px 8px;
+  outline:none;
+}
+
+.input, textarea {
+  padding:12px;
+  border-radius:10px;
+}
+
+.input:focus, input:focus, select:focus, textarea:focus {
+  border-color:var(--primary-border);
+  box-shadow:0 0 0 3px rgba(37,99,235,.25);
+}
+
+/* Cartões genéricos (login/setup) */
+.card {
+  background: var(--panel);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0,0,0,.35);
+  overflow: hidden;
+}
+
+.card header {
+  padding:16px 18px;
+  border-bottom:1px solid #1f2937;
+}
+
+.login-wrap, .setup-wrap {
+  min-height: 100%;
+  display:grid;
+  place-items:center;
+}
+
+.qr-row {
+  display:flex;
+  gap:14px;
+  align-items:flex-start;
+}
+
+.qr-row img, .qr {
+  border-radius:10px;
+  border:1px solid var(--border);
+  width:160px;
+  height:160px;
+}
+
+.muted {
+  color:var(--muted);
+  font-size:12px;
+}
+
+/* ===== SweetAlert2 no tema ===== */
+.swal2-popup.swal2-dark {
+  background:var(--panel) !important;
+  color:var(--text) !important;
+  border:1px solid var(--border);
+  border-radius:12px;
+}
+
+.swal2-title {
+  color:var(--text) !important;
+}
+
+.swal2-html-container {
+  color:#cbd5e1 !important;
+}
+
+.swal2-actions {
+  gap:10px !important;
+  justify-content:center !important;
+}
+
+/* ==== Fix pulo de layout com SweetAlert2 (sem gutter) ==== */
+
+.swal2-container {
+  overscroll-behavior: contain;
+}
+
+/* ===== Estilo do SELECT no tema dark ===== */
+.swal2-popup .swal2-select {
+  background-color: #1e293b !important;   /* fundo escuro */
+  color: #f1f5f9 !important;              /* texto claro */
+  border: 1px solid #334155 !important;   /* borda */
+  border-radius: 6px !important;
+  padding: 6px 10px !important;
+  font-size: 14px !important;
+}
+
+.swal2-popup .swal2-select option {
+  background-color: #1e293b !important;
+  color: #f1f5f9 !important;
+}
+.swal2-popup .swal2-select option:hover {
+  background-color: #334155 !important;
+}
+
+.swal2-popup .swal2-input::placeholder { 
+  color: var(--swal-placeholder);
+  opacity: 1;
+  font-style: italic;
+}
+
+.swal2-popup .swal2-input:focus::placeholder {
+  color: color-mix(in srgb, var(--swal-placeholder) 75%, transparent);
+}
+
+/* ===== Login refinado ===== */
+.login-card {
+  width: min(720px, 92vw);
+  margin: 10vh auto;
+}
+
+.card-head {
+  padding:16px 18px;
+  border-bottom:1px solid #1f2937;
+}
+
+.form-row {
+  display: grid;
+  gap: 6px;
+  margin: 12px 18px;
+}
+
+.form-row.has-addon {
+  position: relative;
+}
+
+.form-row .hint {
+  font-size: 12px;
+  color: var(--muted);
+  margin-top: 2px;
+}
+
+.addon {
+  position: absolute;
+  right: 26px;
+  top: 38px;
+  height: 32px;
+  width: 36px;
+  border-radius: 8px;
+  border:1px solid var(--border);
+  background:#111827;
+  color:#9fb0ff;
+  cursor:pointer;
+}
+
+.alert.error {
+  margin: 8px 18px 0;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background:#2a1420;
+  color:#ffd2de;
+  border:1px solid #5a2a3c;
+}
+
+.tag.info {
+  display:inline-block;
+  padding:3px 10px;
+  border-radius:999px;
+  background:#14263a;
+  border:1px solid #1f3d66;
+  color:#a9c3ff;
+  font-size:12px;
+}
+
+/* Caps Lock hint */
+#caps-hint,
+#caps-hint-current,
+#caps-hint-new,
+#caps-hint-confirm,
+#caps-hint-pass {
+  margin-top: 4px;
+  color: var(--danger);
+  font-size: 12px;
+}
+
+.is-disabled {
+  opacity: .2;
+  pointer-events: none;
+}
+
+.usermenu {
+  position: relative;
+  display: inline-block;
+}
+
+.usermenu .btn {
+  display:flex;
+  align-items:center;
+  gap:.4rem;
+}
+
+.usermenu-panel{
+  position:absolute;
+  right:0;
+  top:calc(100% + 6px);
+  min-width:200px;
+  background:#111826;
+  border:1px solid #2b3240;
+  border-radius:12px;
+  box-shadow:0 10px 24px rgba(0,0,0,.35);
+  padding:8px;
+  z-index:1000;
+}
+
+.usermenu-panel a{
+  display:block;
+  padding:10px 12px;
+  border-radius:8px;
+  text-decoration:none;
+  color:#dbe2f7;
+}
+
+.usermenu-panel a:hover{
+  background:#1a2233;
+}
+
+.usermenu-panel a.active {
+  background: rgba(255,255,255,.12);
+  font-weight: 600;
+  outline: 1px solid rgba(255,255,255,.06);
+}
+
+.usermenu-panel .sep{
+  height:1px;
+  background:#2b3240;
+  margin:6px 4px;
+}
+
+/* ===========================
+   Editor Layout principal
+=========================== */
+#app {
+  height: 100%;
+  display: flex;
+  min-height: 100%;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+} 
+
+#main {
+  flex: 1 1 auto;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  min-height: 0;
+}
+
+/* ===========================
+   Sidebar
+=========================== */
+#sidebar {
+  flex: 0 0 var(--sidebar-w, 300px);
+  width: auto;
+  min-width: 248px;
+  max-width: 25vw;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 8px;
+  border-right: 1px solid var(--border); 
+  background: var(--panel);
+  overflow-y: auto;
+}
+
+#sidebar input {
+  width: 100%;
+  padding: 6px 8px;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: var(--field);
+  color: var(--text);
+}
+
+#sidebar .actions .row {
+  display: flex;
+  gap: 8px;
+  flex-wrap: nowrap;
+}
+
+#sidebar .actions .row > button {
+  flex: 1 1 0;
+  min-width: 0 !important;
+}
+
+/* ===========================
+   Árvore de arquivos
+=========================== */
+#tree {
+  flex: 1;
+  overflow: auto;
+  min-height: 0;
+  border-radius: 6px;
+  font-family: monospace;
+  font-size: 14px;
+  line-height: 1.4;
+  margin-top: 8px;
+}
+
+/* Estado ativo */
+#tree .active {
+  background: #1e293b;
+  border-radius: 4px;
+  font-weight: bold;
+}
+
+/* Item genérico */
+#tree .item {
+  cursor: pointer;
+  padding: 4px 6px;
+  border-radius: 4px;
+}
+
+#tree .item:hover {
+  background: #334155;
+}
+
+#tree .item.root {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  line-height: 1.6;
+  font-style: italic;
+  color: var(--muted);
+}
+
+#tree .item.root.active {
+  background: #1e293b;
+  color: var(--text);
+  font-weight: bold;
+}
+
+#tree summary.active {
+  background: #1e293b;
+  border-radius: 4px;
+  font-weight: bold;
+}
+
+#tree summary:hover {
+  background: #334155;
+}
+
+#tree-search {
+  width: 100%;
+  box-sizing: border-box;
+  padding-right: 28px;
+}
+
+/* ===========================
+   Arquivos
+=========================== */
+#tree .item.file {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  line-height: 1.6;
+}
+
+#tree .item.file::before {
+  content: "🗐";
+}
+
+/* Indentação progressiva dos filhos dentro das pastas */
+#tree details > .item,
+#tree details > details {
+  margin-left: 20px;
+}
+
+#tree .item.file .docker-icon { display:inline-flex; align-items:center; }
+
+#tree .item.file .file-name { flex: 1 1 auto; }
+
+/* ===========================
+   Pastas
+=========================== */
+#tree summary {
+  cursor: pointer;
+  padding: 4px 6px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  line-height: 1.6;
+}
+
+/* Remove seta nativa */
+#tree summary::-webkit-details-marker {
+  display: none;
+}
+
+/* Seta personalizada */
+#tree summary .caret::before {
+  content: "▶";
+  font-size: 12px;
+  color: #cbd5e1;
+  transition: transform 0.2s;
+  display: inline-block;
+  width: 12px;
+}
+
+/* Girar seta quando aberto */
+#tree details[open] > summary .caret::before {
+  transform: rotate(90deg);
+}
+
+/* Ícones de pasta */
+#tree summary .folder-icon::before {
+  content: "🗀";
+}
+#tree details[open] > summary .folder-icon::before {
+  content: "🗁";
+}
+
+/* ===========================
+   Toolbar / Statusbar
+=========================== */
+#toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  padding: 8px 12px;
+  border-bottom: 1px solid var(--border);
+  background: var(--panel);
+  min-height: 50px;
+}
+
+.toolbar-separator {
+  width: 1px;
+  background-color: #666;
+  margin: 0 4px;
+}
+
+#toolbar button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+  pointer-events: block;
+}
+
+#editor {
+  position: relative;
+  flex: 1;
+  min-height:300px;
+}
+
+#statusbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px;
+  padding: 4px 8px;
+  border-top: 1px solid var(--border);
+  background: var(--panel);
+  font-size: 13px;
+  color: var(--muted);
+  height: 28px;
+}
+
+#statusbar .left,
+#statusbar .center,
+#statusbar .right {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+}
+
+#statusbar .left   { justify-content: flex-start; }
+#statusbar .right  { justify-content: flex-end; }
+
+
+
+.input-wrap {
+  position: relative;
+}
+
+.input-wrap input {
+  width: 100%;
+  padding: 6px 28px 6px 8px; /* espaço extra à direita para o X */
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: var(--field);
+  color: var(--text);
+}
+
+.clear-btn {
+  position: absolute;
+  right: 6px;
+  top: 50%;
+  transform: translateY(-50%);
+
+  width: 16px;
+  height: 16px;
+  line-height: 16px;
+  text-align: center;
+
+  background: transparent;
+  border: none;
+  color: var(--muted);
+  font-size: 14px;
+  cursor: pointer;
+  border-radius: 50%;
+  padding: 0;
+  display: inline-block;
+  visibility: hidden;
+}
+
+.clear-btn:hover {
+  background: rgba(255,255,255,0.1);
+  color: var(--text);
+}
+
+.clear-btn:focus-visible {
+  outline: 2px solid rgba(37,99,235,.6);
+  outline-offset: 2px;
+}
+
+#resizer {
+  width: 4px;
+  cursor: col-resize;
+  background: var(--panel);
+}
+
+#resizer:hover {
+  background: rgba(255,255,255,0.1);
+}
+
+#context-menu {
+  position: absolute;
+  display: none;
+  background: #1e293b;
+  color: #fff;
+  border: 1px solid #334155;
+  border-radius: 6px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+  z-index: 1000;
+}
+#context-menu ul {
+  list-style: none;
+  margin: 0;
+  padding: 4px 0;
+}
+#context-menu li {
+  padding: 6px 12px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+#context-menu li:hover {
+  background: #475569;
+}
+
+#context-menu li.separator {
+  border-top: 1px solid #444;
+  margin: 4px 0;
+  padding: 0;
+  height: 0;
+  line-height: 0;
+  pointer-events: none;
+}
+
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.actions .row {
+  display: flex;
+  gap: 8px;
+}
+
+#btn-delete {
+  width: 100%;
+}
+
+button[disabled] {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+
+
+#editor-placeholder {
+  position: absolute;
+  inset: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  z-index: 50;
+}
+
+#editor-placeholder .ph-card {
+  max-width: 520px;
+  padding: 16px 18px;
+  border-radius: 12px;
+  border: 1px dashed var(--border);
+  background: linear-gradient(180deg, rgba(255,255,255,.03), rgba(255,255,255,.02));
+  text-align: center;
+  color: var(--muted);
+  box-shadow: 0 10px 30px rgba(0,0,0,.25);
+  position: relative;
+  z-index: 1;
+}
+
+#editor-placeholder .ph-title {
+  font-weight: 700;
+  font-size: 16px;
+  color: var(--text);
+  margin-bottom: 6px;
+}
+
+#editor-placeholder .ph-sub {
+  font-size: 13px;
+  margin-bottom: 10px;
+  opacity: .9;
+}
+
+#editor-placeholder .ph-tips {
+  font-size: 12px;
+  opacity: .8;
+}
+
+#editor.is-locked {
+  cursor: not-allowed !important;
+}
+
+#editor.is-locked * {
+  cursor: not-allowed !important;
+}
+
+#editor.is-locked #editor-placeholder {
+  display: flex;
+  pointer-events: auto;
+}
+
+#editor .monaco-editor {
+  position: relative;
+  z-index: 1;
+}
+
+#editor.is-locked #editor-placeholder::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  backdrop-filter: blur(2px);
+  background: rgba(0,0,0,.15);
+  z-index: 0;
+  pointer-events: none;
+}
+
+.dirty-dot {
+  margin-left: 6px;
+  color: white;
+  font-size: 12px;
+}
+
+#diff-statusbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--panel);
+  color: var(--muted);
+  font-size: 13px;
+  padding: 4px 8px;
+  border-bottom: 1px solid var(--border);
+}
+
+#diff-statusbar .diff-label.left {
+  text-align: left;
+}
+
+#diff-statusbar .diff-label.right {
+  text-align: right;
+}
+
+#status-container .badge {
+  display: inline-block;
+  padding: 2px 6px;
+  border-radius: 999px;
+  background: #0f766e; /* teal */
+  color: #fff;
+  font-size: 12px;
+}
+#status-container .link {
+  text-decoration: underline;
+  cursor: pointer;
+  margin-left: 6px;
+  font-size: 12px;
+}
+
+/* ===== Container & Docker badge (consolidado) ===== */
+.container-badge {
+  display:inline-block;
+  margin-left:6px;
+  font-size:11px;
+  padding:0 6px;
+  border-radius:10px;
+  background:#0ea5e9;   /* azul */
+  color:#0b1220;        /* texto escuro/dark theme */
+  vertical-align:middle;
+}
+
+/* bolinha de estado ao lado do nome/dirty-dot */
+.container-dot {
+  display:inline-block;
+  width:8px; height:8px;
+  margin-left:6px;
+  border-radius:50%;
+  vertical-align:middle;
+  box-shadow:0 0 0 2px rgba(34,211,238,.12);
+}
+.container-dot.is-healthy { background:#2496ED; }  /* Docker blue */
+.container-dot.is-warn    { background:#f59e0b; }  /* amarelo */
+.container-dot.is-error   { background:#ef4444; }  /* vermelho */
+.container-dot.is-unknown { background:#94a3b8; }  /* cinza */
+
+/* ícone docker inline, logo após a dirty-dot (NÃO empurrar pro fim) */
+.docker-icon{
+  display:inline-flex;
+  align-items:center;
+  margin-left:6px;      /* espaço após a dirty-dot */
+  vertical-align:middle;
+  color:#2496ED;        /* cor padrão; pode ser sobrescrita pelos estados */
+}
+.docker-icon svg{
+  width:14px;
+  height:14px;
+  display:block;        /* evita subir por baseline */
+  fill:currentColor;
+}
+
+/* estados opcionais por classe, caso queira colorir pelo status */
+.docker-icon.is-healthy { color:#2496ED; }
+.docker-icon.is-warn    { color:#f59e0b; }
+.docker-icon.is-error   { color:#ef4444; }
+.docker-icon.is-unknown { color:#94a3b8; }
+
+/* garante alinhamento do item */
+#tree .item.file .dirty-dot { margin: 0 6px 0 0; }
+#tree .item.file .file-name { flex: 1 1 auto; }
+
+#tree mark.__hit {
+  background: rgba(37, 99, 235, .28); /* azul translúcido */
+  color: inherit;
+  padding: 0 1px;
+  border-radius: 2px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * { transition: none !important; animation: none !important; }
+  #tree summary .caret::before { transition: none !important; }
+}

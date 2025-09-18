@@ -1,0 +1,43 @@
+version: "3.9"
+services:
+  config-editor:
+    container_name: config-editor
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: bigpiloto/config-editor-v2:latest
+
+    environment:
+      PORT: 8000
+      DATA_DIR: /data
+      TOTP_ENABLED: "true"
+      SESSION_SECRET: uma-chave-bem-secreta
+      HTTPS_ONLY: "false"
+      TZ: America/Sao_Paulo
+      DIFF_ALLOW_EDIT: "true"
+      DISABLE_DOCKER_CHECKS: "false"
+      DEFAULT_CONTAINER: "config-editor"
+      CONTAINER_ALIAS: "Config V2"
+
+    volumes:
+      - ./meus_arquivos:/data
+      - ./config:/app/config
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+    
+    ports:
+      - "8000:8000"
+    restart: unless-stopped
+
+    healthcheck:
+      test: ["CMD-SHELL", "curl -fsS http://127.0.0.1:8000/api/readyz || exit 1"]
+      interval: 60s
+      timeout: 10s
+      retries: 5
+      start_period: 20s
+
+    networks:
+      - cfgnet
+
+networks:
+  cfgnet:
+    driver: bridge

@@ -1,0 +1,242 @@
+<!-- frontend/templates/change_username.html -->
+{% extends "base.html" %}
+
+{% block title %}{{ T("app.menu.change_user") }} · {{ T("app.title") }}{% endblock %}
+
+{% block content %}
+<div class="login-wrap">
+  <div class="card login-card">
+    <header class="card-head row" style="justify-content: space-between; align-items: center;">
+      <div class="row" style="gap:10px; align-items:center;">
+        <h2>{{ T("app.menu.change_user") }}</h2>
+        <span class="tag info">{{ T(totp_required and "2fa.enabled" or "2fa.disabled") }}</span>
+      </div>
+      <a href="/editor" class="btn">{{ T("btn.back") }}</a>
+    </header>
+
+    <form id="form-change-user" method="post" action="/change-username" class="form" autocomplete="off">
+      <div class="form-row">
+        <label class="muted">{{ T("auth.current_user") }}</label>
+        <div class="input" style="background:#1e293b; cursor:default;">
+          {{ current_username }}
+        </div>
+      </div>
+
+      <div class="form-row">
+        <label for="username" class="muted">{{ T("auth.new_user") }}</label>
+        <input id="username" class="input" name="username" placeholder="{{ T("auth.user") }}" required autocomplete="username" autofocus>
+      </div>
+
+      <div class="form-row">
+        <label for="current-pass" class="muted">{{ T("auth.current_pass") }}</label>
+        <input id="current-pass" class="input" type="password" name="current" placeholder="••••••••" autocomplete="current-password" required>
+        <small class="hint" id="caps-hint-current" hidden>{{ T("auth.caps_on") }}</small>
+      </div>
+
+      {% if totp_required %}
+      <div class="form-row">
+        <label for="totp" class="muted">{{ T("auth.2fa_code") }}</label>
+        <input id="totp" class="input" name="totp" placeholder="000000" inputmode="numeric" pattern="\d{6}" maxlength="6" autocomplete="one-time-code" required>
+      </div>
+      {% endif %}
+
+      <div class="form-row">
+        <button id="btn-change-user" class="btn primary w-full" type="submit">{{ T("btn.change") }}</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+  // --- Helpers de limpeza/foco ---
+  function clearAllFields(form) {
+    const userEl = form.querySelector('#username');
+    if (userEl) userEl.value = '';
+
+    const passEl = form.querySelector('#current-pass');
+    if (passEl) passEl.value = '';
+
+    const otpEl = document.getElementById('totp');
+    if (otpEl) otpEl.value = '';
+  }
+  
+  function focusUsername(form) {
+    const userEl = form.querySelector('#username');
+    if (userEl) userEl.focus();
+  }
+
+  // --- Vars do servidor (seguras) ---
+  const TOTPR = JSON.parse('{{ totp_required|tojson }}');
+  const CURRENT_USERNAME = JSON.parse('{{ (current_username or "")|tojson }}');
+
+  // --- CapsLock hint ---
+  let capsOn = null;
+  function captureCaps(e) {
+    if (e && e.getModifierState) {
+      capsOn = e.getModifierState('CapsLock');
+      const active = document.activeElement;
+      if (active && active.dataset && active.dataset.capsHintId) {
+        const hint = document.getElementById(active.dataset.capsHintId);
+        if (hint) hint.hidden = !(capsOn === true);
+      }
+    }
+  }
+  window.addEventListener('keydown', captureCaps, true);
+  window.addEventListener('keyup',   captureCaps, true);
+  function bindCaps(inputId, hintId) {
+    const input = document.getElementById(inputId);
+    const hint  = document.getElementById(hintId);
+    if (!input || !hint) return;
+    input.dataset.capsHintId = hintId;
+    input.addEventListener('focus', () => { hint.hidden = !capsOn; });
+    input.addEventListener('keydown', captureCaps);
+    input.addEventListener('keyup',   captureCaps);
+    input.addEventListener('blur', () => { hint.hidden = true; });
+  }
+  bindCaps('current-pass', 'caps-hint-current');
+
+  // --- OTP só números ---
+  const otp = document.getElementById('totp');
+  if (otp) {
+    otp.addEventListener('input', () => {
+      otp.value = otp.value.replace(/\D/g,'').slice(0,6);
+    });
+  }
+
+  // --- Validação cliente ---
+  function validateUsername(form) {
+    const usernameEl = form.querySelector('#username');
+    const u = (usernameEl?.value || '').trim();
+
+    if (!u) {
+      (window.swalCenter || Swal).fire({
+        icon: 'error',
+        title: "{{ T('errors.title') }}",
+        text: "{{ T('errors.username_required') }}"
+      }).then(() => {
+        clearAllFields(form);
+        focusUsername(form);
+      });
+      // fallback se o usuário fechar o alerta instantaneamente
+      clearAllFields(form);
+      return false;
+    }
+
+    if (CURRENT_USERNAME && u === CURRENT_USERNAME) {
+      (window.swalCenter || Swal).fire({
+        icon: 'error',
+        title: "{{ T('errors.title') }}",
+        text: "{{ T('errors.username_same_as_current') }}"
+      }).then(() => {
+        clearAllFields(form);
+        focusUsername(form);
+      });
+      clearAllFields(form);
+      return false;
+    }
+
+    return true;
+  }
+
+  // --- Interceptar submit (robusto) ---
+  (function () {
+    function bindForm() {
+      const form = document.getElementById('form-change-user');
+      if (!form) return;
+      if (form.dataset.jsBound === '1') return;
+      form.dataset.jsBound = '1';
+
+      form.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+
+        const submitBtn = e.submitter || form.querySelector('button[type="submit"]');
+        if (submitBtn) submitBtn.disabled = true;
+
+        // Validação cliente (limpa tudo nos casos inválidos)
+        if (!validateUsername(form)) {
+          if (submitBtn) submitBtn.disabled = false;
+          return false;
+        }
+
+        try {
+          const url = form.getAttribute('action') || '/change-username';
+          const formData = new FormData(form);
+          const payload  = new URLSearchParams(formData);
+
+          const res = await fetch(url, {
+            method: 'POST',
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/x-www-form-urlencoded'
+            },
+            body: payload
+          });
+
+          let data;
+          try { data = await res.json(); } catch { data = { ok:false, error: "{{ T('errors.unknown') }}" }; }
+
+          if (data && data.ok) {
+            // Sucesso
+            if (TOTPR === true) {
+              (window.swalCenter || Swal).fire({
+                icon: 'success',
+                title: "{{ T('success.title') }}",
+                text: (data.msg || "{{ T('success.user_changed') }}"),
+                showDenyButton: true,
+                confirmButtonText: "{{ T('btn.update_qr') }}",
+                denyButtonText: "{{ T('btn.back_editor') }}",
+                reverseButtons: true
+              }).then((result) => {
+                if (result.isConfirmed) {
+                  window.location.href = '/totp-manage';
+                } else {
+                  window.location.href = '/editor';
+                }
+              });
+            } else {
+              (window.swalCenter || Swal).fire({
+                icon: 'success',
+                title: "{{ T('success.title') }}",
+                text: (data.msg || "{{ T('success.user_changed') }}"),
+                confirmButtonText: "{{ T('btn.back_editor') }}"
+              }).then(() => window.location.href = '/editor');
+            }
+          } else {
+            // Erro vindo do backend (senha errada, 2FA inválido, username inválido, etc.)
+            (window.swalCenter || Swal).fire({
+              icon: 'error',
+              title: "{{ T('errors.title') }}",
+              text: (data && data.error) ? data.error : "{{ T('errors.unknown') }}"
+            }).then(() => {
+              clearAllFields(form);
+              focusUsername(form);
+            });
+            clearAllFields(form);
+          }
+        } catch (err) {
+          // Erro de rede/servidor
+          (window.swalCenter || Swal).fire({
+            icon: 'error',
+            title: "{{ T('errors.title') }}",
+            text: "{{ T('errors.internal_server_error') }}"
+          }).then(() => {
+            clearAllFields(form);
+            focusUsername(form);
+          });
+          clearAllFields(form);
+        } finally {
+          if (submitBtn) submitBtn.disabled = false;
+        }
+
+        return false;
+      });
+    }
+    if (document.readyState === 'loading') {
+      document.addEventListener('DOMContentLoaded', bindForm);
+    } else {
+      bindForm();
+    }
+  })();
+</script>
+{% endblock %}

@@ -1,0 +1,30 @@
+# Git / VCS
+.git
+.gitignore
+
+# Secrets
+.env
+
+# Python
+.venv/
+__pycache__/
+*.py[cod]
+
+# Node / Frontend
+node_modules/
+.dist/
+build/
+
+# Tests / Coverage / Cache
+coverage/
+.cache/
+
+# App temporários / backups
+.tmp/
+.backups/
+*.log
+.file_containers.json
+
+# 🔒 nada de configs/dados sensíveis no build
+config/
+meus_arquivos/
