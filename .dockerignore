@@ -28,3 +28,4 @@ coverage/
 # 🔒 nada de configs/dados sensíveis no build
 config/
 meus_arquivos/
+documentation/
