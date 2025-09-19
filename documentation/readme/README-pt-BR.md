@@ -115,7 +115,7 @@ networks:
     1. Não é permitido mapear pastas diferentes para o mesmo destino /data se não sobreescreve
     2. Se precisar de mais arquivos, monte em subpastas
     3. ⚠️ Obrigatório: sempre defina um volume do host para /data mesmo se não tiver arquivos
-        1. É em /data que ficam salvos:
+        - É em /data que ficam salvos:
            - Arquivos de configuração editados
            - Backups automáticos (/data/.backups)
            - Se não mapear, todas essas informações serão perdidas quando o container for removido ou reiniciado

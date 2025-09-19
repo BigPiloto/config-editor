@@ -130,7 +130,7 @@ DEFAULT_CONTAINER: Container padrão para visualizar na barra superior quando n�
 CONTAINER_ALIAS: Nome amigável para essa visualização (não precisa ser igual ao default_container)
 ```
 
-### DATA_DIR
+### Volumes
 
 Pasta usada dentro do container para leitura e escrita dos arquivos de configuração.
 
@@ -140,6 +140,12 @@ Exemplo de volume para montar a pasta completa:
 ```
 -  ⚠️ Atenção: não use nomes duplicados em /data, pois haverá conflito.
 -  ❌ Não é permitido mapear pastas diferentes para o mesmo destino /data para isso utilize subpastas
+- Se foi alterado em DATA_DIR aqui tambem deve ser alterado
+Exemplo alterando para outro diretório:
+```yaml
+volumes:
+  - /srv/config-editor/data:/diretorio
+```
 
 Exemplo de volume para montar a subpasta completa:
 ```yaml
@@ -181,6 +187,16 @@ Exemplo:
 ### Docker.sock
 
 O volume do Docker socket (`/var/run/docker.sock`) permite que o Config Editor se conecte diretamente ao Docker Engine do host
+
+Necessário para:
+- Exibir status dos containers associados
+- Permitir o uso do botão Reiniciar
+
+⚠️ Se não montar, o Config Editor funcionará apenas como editor de arquivos
+Nesse caso, use também:
+```yaml
+DISABLE_DOCKER_CHECKS: "true"
+```
 
 ### Test
 
