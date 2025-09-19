@@ -76,3 +76,5 @@ Após o login, irá abrir o editor, para entender todas as funcionalidades, siga
 [Menu](/documentation/readme/pt-br/menu.md)
 
 [Árvore de arquivos](/documentation/readme/pt-br/arvore_de_arquivos.md)
+
+[Editor](/documentation/readme/pt-br/editor.md)

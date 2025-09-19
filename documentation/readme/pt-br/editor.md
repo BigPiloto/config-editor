@@ -166,3 +166,19 @@ Ao clicar, um pop-up solicita **confirmação** do reinício
 
 > [!NOTE]  
 > O botão **Reiniciar** só fica disponível quando há um **container associado** ao arquivo
+
+# Tutoriais relacionados
+
+[LEIA ME](/documentation/readme/README-pt-BR.md)
+
+[Primeiros passos](/documentation/readme/pt-br/primeiros_passos.md)
+
+[Após subir o container](/documentation/readme/pt-br/container_criado.md)
+
+[Barra Superior](/documentation/readme/pt-br/barra_superior.md)
+
+[Menu](/documentation/readme/pt-br/menu.md)
+
+[Árvore de arquivos](/documentation/readme/pt-br/arvore_de_arquivos.md)
+
+→ [Editor](/documentation/readme/pt-br/editor.md)

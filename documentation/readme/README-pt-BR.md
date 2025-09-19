@@ -175,6 +175,8 @@ Conforme **Dockerfile** na raiz do projeto, é possível rodar a aplicação com
 
 [Árvore de arquivos](/documentation/readme/pt-br/arvore_de_arquivos.md)
 
+[Editor](/documentation/readme/pt-br/editor.md)
+
 ## Capturas de Tela
 
 ### Interface Editor Web
