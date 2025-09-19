@@ -768,9 +768,13 @@ async function openFile(path, restoreState = null) {
   try {
     let content = null;
     const safePath = normalizePath(path);
+    const tempKey  = safePath;
 
     // tenta pegar versão temporária
-    const resTemp = await fetch(`/api/temp?path=${encodeURIComponent(safePath)}`);
+    const resTemp = await fetch(`/api/temp?path=${encodeURIComponent(tempKey)}`, {
+      credentials: "same-origin",
+      cache: "no-store"
+    });
     if (token !== currentOpenToken) return;
     if (resTemp.ok) {
       const temp = await resTemp.json();
@@ -781,7 +785,10 @@ async function openFile(path, restoreState = null) {
 
     // se não achou versão temporária → pega conteúdo real do disco
     if (content === null) {
-      const resFile = await fetch(`/api/file?path=${encodeURIComponent(safePath)}`);
+      const resFile = await fetch(`/api/file?path=${encodeURIComponent(tempKey)}`, {
+        credentials: "same-origin",
+        cache: "no-store"
+      });
       if (!resFile.ok) throw new Error(t("ui.error_open_file"));
       const data = await resFile.json();
       content = data.content || "";
@@ -837,7 +844,10 @@ async function openFile(path, restoreState = null) {
       let diskContent = "";
 
       try {
-        const resFile = await fetch(`/api/file?path=${encodeURIComponent(path)}`);
+        const resFile = await fetch(`/api/file?path=${encodeURIComponent(tempKey)}`, {
+          credentials: "same-origin",
+          cache: "no-store"
+        });
         if (resFile.ok) {
           const data = await resFile.json();
           diskContent = data.content || "";
@@ -851,17 +861,18 @@ async function openFile(path, restoreState = null) {
         await fetch("/api/temp", {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ path, content: now })
+          credentials: "same-origin",
+          body: JSON.stringify({ path: tempKey, content: now })
         });
       } else {
         // se tiver rota DELETE /api/temp implemente, senão pode ignorar
         try {
-          await fetch(`/api/temp?path=${encodeURIComponent(path)}`, { method: "DELETE" });
+          await fetch(`/api/temp?path=${encodeURIComponent(tempKey)}`, { method: "DELETE", credentials: "same-origin" });
         } catch (e) {
           // backend não suporta → apenas ignora
         }
       }
-    }, 500);
+    }, 200);
 
     // listener para dirty flag (descarta anterior antes de criar novo)
     if (window._contentListener) {
@@ -874,7 +885,10 @@ async function openFile(path, restoreState = null) {
       // compara sempre com o arquivo em disco
       let isDirty = false;
       try {
-        const resFile = await fetch(`/api/file?path=${encodeURIComponent(path)}`);
+        const resFile = await fetch(`/api/file?path=${encodeURIComponent(tempKey)}`, {
+          credentials: "same-origin",
+           cache: "no-store"
+        });
         if (resFile.ok) {
           const data = await resFile.json();
           const diskContent = data.content || "";
@@ -1572,7 +1586,7 @@ async function saveFile() {
 
     // 🔑 limpa o temp
     try {
-      await fetch(`/api/temp?path=${encodeURIComponent(currentFile)}`, { method: "DELETE" });
+      await fetch(`/api/temp?path=${encodeURIComponent(normalizePath(currentFile))}`, { method: "DELETE", credentials: "same-origin" });
     } catch (e) {}
 
     // marca como limpo
@@ -1626,7 +1640,7 @@ async function applyLeft() {
       const diskContent = verifyData.content || "";
 
       // limpa temp
-      try { await fetch(`/api/temp?path=${encodeURIComponent(currentFile)}`, { method: "DELETE" }); } catch(e){}
+      try { await fetch(`/api/temp?path=${encodeURIComponent(normalizePath(currentFile))}`, { method: "DELETE", credentials: "same-origin" });} catch(e){}
 
       // seta restoreState com base no disco real
       diffDirtyState = {
@@ -1647,7 +1661,7 @@ async function applyLeft() {
   // fluxo normal (diff-manual) continua como já está
   backToEditor();
   try {
-    await fetch(`/api/temp?path=${encodeURIComponent(currentFile)}`, { method: "DELETE" });
+    await fetch(`/api/temp?path=${encodeURIComponent(normalizePath(currentFile))}`, { method: "DELETE", credentials: "same-origin" });
   } catch(e){}
   await openFile(currentFile);
 
@@ -1681,7 +1695,7 @@ async function applyRight() {
 
       // limpa temp
       try { 
-        await fetch(`/api/temp?path=${encodeURIComponent(currentFile)}`, { method: "DELETE" }); 
+        await fetch(`/api/temp?path=${encodeURIComponent(normalizePath(currentFile))}`, { method: "DELETE", credentials: "same-origin" });
       } catch(e){}
 
       // 🔑 verifica conteúdo real no disco para baseline correto
@@ -1714,7 +1728,7 @@ async function applyRight() {
   });
 
   try {
-    await fetch(`/api/temp?path=${encodeURIComponent(currentFile)}`, { method: "DELETE" });
+    await fetch(`/api/temp?path=${encodeURIComponent(normalizePath(currentFile))}`, { method: "DELETE", credentials: "same-origin" });
   } catch(e){}
 
   backToEditor();

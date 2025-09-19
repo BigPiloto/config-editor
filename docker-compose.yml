@@ -5,7 +5,7 @@ services:
     build:
       context: .
       dockerfile: Dockerfile
-    image: bigpiloto/config-editor-v2:latest
+    image: bigpiloto/config-editor:latest
 
     environment:
       PORT: 8000

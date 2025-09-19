@@ -437,9 +437,12 @@ def move_path(
         temp.save_dirty(dirty_map)
 
     # atualizar temp
+    src_rel = str(src.relative_to(BASE_DIR)).lstrip("/")
+    dst_rel = str(dst.relative_to(BASE_DIR)).lstrip("/")
+    
     tmp_dir = Path(settings.TEMP_DIR)
-    old_tmp = tmp_dir / body.src
-    new_tmp = tmp_dir / body.dst
+    old_tmp = tmp_dir / src_rel
+    new_tmp = tmp_dir / dst_rel
     if old_tmp.exists():
         try:
             new_tmp.parent.mkdir(parents=True, exist_ok=True)

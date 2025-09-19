@@ -1,5 +1,5 @@
 # backend/routes/temp.py
-from fastapi import APIRouter, HTTPException, Depends, Query
+from fastapi import APIRouter, HTTPException, Depends, Query, Request
 from pathlib import Path
 from typing import Optional
 import os
@@ -52,7 +52,7 @@ def mark_dirty(path: str, is_dirty: bool):
 # ------------------------
 @router.put("/temp")
 async def save_temp(
-    request,
+    request: Request,
     path: Optional[str] = Query(None),
     content: Optional[str] = Query(None),
     user=Depends(require_user),

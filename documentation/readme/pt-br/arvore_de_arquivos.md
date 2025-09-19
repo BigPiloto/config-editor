@@ -117,7 +117,7 @@ Ao clicar em `/..` o **diretório principal** é selecionado e **toda a árvore 
 Para **recolher** uma pasta já aberta, clique na **seta (caret)** ao lado do nome
 
 > [!NOTE]
-> Clicar **sobre o nome** da pasta apenas **expande/seleciona** — **não** recolhe
+> Clicar **sobre o nome** da pasta apenas **expande/seleciona** — não recolhe
 
 ![Seta](/documentation/images/seta.png)
 
