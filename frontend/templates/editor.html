@@ -1090,13 +1090,13 @@ async function deletePath(fullPath) {
 }
 </script>
 
-<!-- Renomar -->
+<!-- Renomear -->
 <script>
 async function renamePath(fullPath) {
   if (!fullPath || fullPath === "/" || fullPath === "/..") return;
 
   const baseName = basename(fullPath);
-  const { value: newName } = await swalCenter.fire({
+  const { value: rawNewName } = await swalCenter.fire({
     title: t("ui.rename"),
     input: "text",
     inputValue: baseName,
@@ -1108,53 +1108,69 @@ async function renamePath(fullPath) {
     inputValidator: (value) => {
       if (!value) return t("errors.empty_name");
       if (value === baseName) return t("errors.same_name");
+      if (/[\\\/]/.test(value)) return t("errors.invalid_name"); // sem barras
+      if (value === "." || value === "..") return t("errors.invalid_name");
     }
   });
+  if (!rawNewName) return;
 
-  if (!newName) return;
-
+  const newName = rawNewName.trim();
   const parent = dirname(fullPath);
-  const newPath = (parent ? parent + "/" : "") + newName;
+  const newPath = normalizePath((parent ? parent + "/" : "") + newName);
 
   try {
     const res = await fetch("/api/mv", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
+      credentials: "same-origin",
       body: JSON.stringify({ src: fullPath, dst: newPath })
     });
-    if (!res.ok) throw new Error(await res.text());
 
-    // 🔑 sincroniza buffers e estado
-    if (openBuffers[fullPath]) {
+    if (!res.ok) {
+      let msg = "";
+      try {
+        const data = await res.json();
+        msg = data?.error?.message || data?.detail || data?.message || "";
+      } catch {
+        let raw = await res.text();
+        try { const data = JSON.parse(raw); raw = data?.error?.message || data?.detail || data?.message || raw; } catch {}
+        msg = raw;
+      }
+      if (!msg) {
+        if (res.status === 409) msg = t("errors.already_exists") || "Já existe um item com esse nome.";
+        else if (res.status === 400) msg = t("errors.invalid_name") || "Nome inválido.";
+        else if (res.status === 403) msg = t("errors.forbidden") || "Permissão negada.";
+        else if (res.status === 404) msg = t("errors.not_found") || "Caminho não encontrado.";
+        else msg = t("ui.failed_action") || "Falha ao executar a ação.";
+      }
+      await swalCenter.fire({ title: t("ui.error"), text: msg, icon: "error" });
+      return;
+    }
+
+    // --- sincroniza buffers/estado ---
+    if (openBuffers?.[fullPath]) {
       openBuffers[newPath] = openBuffers[fullPath];
       delete openBuffers[fullPath];
     }
-
     if (currentFile === fullPath) {
       currentFile = newPath;
-
-      // 🔑 se havia diff em andamento, reatacha ao novo caminho
-      if (diffDirtyState) {
-        diffDirtyState = {
-          ...diffDirtyState,
-          file: newPath
-        };
+      if (typeof diffDirtyState !== "undefined" && diffDirtyState) {
+        diffDirtyState = { ...diffDirtyState, file: newPath };
       }
-
-      // 🔑 reabrir editor com o novo caminho para atualizar listeners
       await openFile(newPath, diffDirtyState);
     }
 
-    // --- MIGRAR ASSOCIAÇÕES (arquivo e/ou pasta) ---
+    // --- MIGRAR ASSOCIAÇÕES (arquivo/pasta + filhos) ---
     const oldKey = kpath(fullPath);
     const newKey = kpath(newPath);
 
     const migrations = [];
     const seen = new Set();
+    const FC = (window.FILE_CONTAINERS ||= {});
 
     function addMig(fromK, toK) {
       if (seen.has(fromK)) return;
-      const c = FILE_CONTAINERS[fromK];
+      const c = FC[fromK];
       if (!c) return;
       seen.add(fromK);
       migrations.push([fromK, toK, c]);
@@ -1163,52 +1179,59 @@ async function renamePath(fullPath) {
     // chave exata
     addMig(oldKey, newKey);
 
-    // filhos (se pasta/ caminho mudou)
+    // filhos (corrigido: usar prefix.length no slice)
     const prefix = oldKey.endsWith("/") ? oldKey : oldKey + "/";
-    Object.keys(FILE_CONTAINERS).forEach(k => {
+    Object.keys(FC).forEach(k => {
       if (k.startsWith(prefix)) {
-        const suffix = k.slice(oldKey.length);
-        addMig(k, newKey + suffix);
+        const suffix = k.slice(prefix.length); // <-- correção
+        const joined = (newKey.endsWith("/") ? newKey : newKey + "/") + suffix; // garante '/'
+        addMig(k, joined);
       }
     });
 
     // aplica (memória + backend + UI)
     for (const [fromK, toK, containerName] of migrations) {
       // memória
-      FILE_CONTAINERS[toK] = containerName;
-      delete FILE_CONTAINERS[fromK];
+      FC[toK] = containerName;
+      delete FC[fromK];
 
-      // backend
-      try { await fetch(`/api/file/container?path=${encodeURIComponent(fromK)}`, { method:"DELETE" }); } catch {}
+      // backend (best-effort)
+      try {
+        await fetch(`/api/file/container?path=${encodeURIComponent(fromK)}`, {
+          method: "DELETE",
+          credentials: "same-origin"
+        });
+      } catch {}
       try {
         await fetch("/api/file/container", {
-          method:"PUT", headers:{ "Content-Type":"application/json" },
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          credentials: "same-origin",
           body: JSON.stringify({ path: toK, container: containerName })
         });
       } catch {}
 
       // UI
-      updateTreeContainerBadge(fromK, null);
-      updateTreeContainerBadge(toK, containerName);
+      updateTreeContainerBadge?.(fromK, null);
+      updateTreeContainerBadge?.(toK, containerName);
     }
-    announceContainerChange();
+    announceContainerChange?.();
 
-    
-
-    // abre árvore até o novo caminho
+    // Atualiza árvore destacando o novo caminho
     const parts = newPath.split("/").filter(Boolean);
     const openPaths = parts.map((_, i) => parts.slice(0, i + 1).join("/"));
     await loadTree("", null, openPaths, newPath);
 
-    swalCenter.fire({
+    await swalCenter.fire({
       title: t("ui.success"),
       text: t("ui.success_renamed"),
       icon: "success"
     });
+
   } catch (err) {
-    swalCenter.fire({
+    await swalCenter.fire({
       title: t("ui.error"),
-      text: err.message,
+      text: err?.message || String(err),
       icon: "error"
     });
   }

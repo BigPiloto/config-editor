@@ -56,13 +56,17 @@ Exclui um arquivo ou pasta selecionado
 ![Botão excluir](/documentation/images/excluir.png)
 
 > [!WARNING]
-> Só é possível excluir pastas vazias, sem arquivos ou outras pastas dentro
+> Só é possível excluir pastas vazias, (sem arquivos ou subpastas dentro)
 
 > [!IMPORTANT]
-> Não é possível criar um arquivo ou uma pasta de mesmo nome e extensão no mesmo caminho
+> No mesmo caminho, **não é permitido** existir um arquivo e uma pasta com o **mesmo nome**
 >
-> Exemplo impossível: arquivo: teste | pasta: teste
+> **Exemplo inválido**: arquivo: `teste` | pasta: `teste`
 >
-> Exemplo possível: arquivo: teste.txt | pasta: teste
+> **Exemplo válido**: arquivo: `teste.txt` | pasta: `teste`
 
+### Renomear
 
+Renomeia um arquivo ou pasta selecionada
+
+![Botão renomear](/documentation/images/renomear.png)

@@ -194,6 +194,12 @@ select, input, .input, textarea {
   border-radius:12px;
 }
 
+.swal2-validation-message {
+  background:var(--panel) !important;
+  color:var(--text) !important;
+  box-shadow: none !important;
+}
+
 .swal2-title {
   color:var(--text) !important;
 }
