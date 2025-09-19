@@ -169,6 +169,8 @@ Conforme **Dockerfile** na raiz do projeto, é possível rodar a aplicação com
 
 [Após subir o container](/documentation/readme/pt-br/container_criado.md)
 
+[Barra Superior](/documentation/readme/pt-br/barra_superior.md)
+
 ## Capturas de Tela
 
 ### Interface Editor Web

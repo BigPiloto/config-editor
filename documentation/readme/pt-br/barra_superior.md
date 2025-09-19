@@ -71,3 +71,19 @@ Ao clicar, abre um menu com opções como:
 - `Altera idioma` → página para selecionar outro idioma da interface
 
 ![Menu](/documentation/images/menu_br.png)
+
+## Logout
+
+Botão vermelho no canto direito, usado para encerrar a sessão do usuário
+
+![Sair](/documentation/images/sair.png)
+
+# Tutoriais relacionados
+
+[LEIA ME](/documentation/readme/README-pt-BR.md)
+
+[Primeiros passos](/documentation/readme/pt-br/primeiros_passos.md)
+
+[Após subir o container](/documentation/readme/pt-br/container_criado.md)
+
+→ [Barra Superior](/documentation/readme/pt-br/barra_superior.md)
