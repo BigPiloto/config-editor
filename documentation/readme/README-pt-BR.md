@@ -116,9 +116,9 @@ networks:
     2. Se precisar de mais arquivos, monte em subpastas
     3. ⚠️ Obrigatório: sempre defina um volume do host para /data mesmo se não tiver arquivos
         1. É em /data que ficam salvos:
-           Arquivos de configuração editados
-           Backups automáticos (/data/.backups)
-           Se não mapear, todas essas informações serão perdidas quando o container for removido ou reiniciado
+           - Arquivos de configuração editados
+           - Backups automáticos (/data/.backups)
+           - Se não mapear, todas essas informações serão perdidas quando o container for removido ou reiniciado
     4. Mesmo que você utilize apenas subpastas ou arquivos individuais (itens 17 e 18), ainda assim deve existir um volume principal montado em /data para garantir persistência
 17. `Volume de subpasta`: monta apenas uma subpasta em /data/pasta
     1. Pode haver mais de uma subpasta, desde que caminho diferente na aplicação
@@ -164,6 +164,8 @@ Conforme **Dockerfile** na raiz do projeto, é possível rodar a aplicação com
 ## Uso
 
 → [LEIA ME](/documentation/readme/README-pt-BR.md)
+
+[Primeiros passos](/documentation/readme/pt-br/primeiros_passos.md)
 
 ## Capturas de Tela
 
