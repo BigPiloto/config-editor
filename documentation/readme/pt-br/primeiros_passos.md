@@ -194,6 +194,7 @@ Necessário para:
 - Permitir o uso do botão Reiniciar
 
 ⚠️ Se não montar, o Config Editor funcionará apenas como editor de arquivos
+
 Nesse caso, use também:
 ```yaml
 DISABLE_DOCKER_CHECKS: "true"
