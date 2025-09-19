@@ -141,6 +141,7 @@ Exemplo de volume para montar a pasta completa:
 -  ⚠️ Atenção: não use nomes duplicados em /data, pois haverá conflito.
 -  ❌ Não é permitido mapear pastas diferentes para o mesmo destino /data para isso utilize subpastas
 - Se foi alterado em DATA_DIR aqui tambem deve ser alterado
+
 Exemplo alterando para outro diretório:
 ```yaml
 volumes:
