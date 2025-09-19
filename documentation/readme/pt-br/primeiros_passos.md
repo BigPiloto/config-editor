@@ -257,3 +257,5 @@ Opcional. Se não precisa de rede dedicada, pode remover
 [Após subir o container](/documentation/readme/pt-br/container_criado.md)
 
 [Barra Superior](/documentation/readme/pt-br/barra_superior.md)
+
+[Menu](/documentation/readme/pt-br/menu.md)

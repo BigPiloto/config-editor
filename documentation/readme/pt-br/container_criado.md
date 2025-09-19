@@ -72,3 +72,5 @@ Após o login, irá abrir o editor, para entender todas as funcionalidades, siga
 → [Após subir o container](/documentation/readme/pt-br/container_criado.md)
 
 [Barra Superior](/documentation/readme/pt-br/barra_superior.md)
+
+[Menu](/documentation/readme/pt-br/menu.md)

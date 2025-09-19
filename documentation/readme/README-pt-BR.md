@@ -171,6 +171,8 @@ Conforme **Dockerfile** na raiz do projeto, é possível rodar a aplicação com
 
 [Barra Superior](/documentation/readme/pt-br/barra_superior.md)
 
+[Menu](/documentation/readme/pt-br/menu.md)
+
 ## Capturas de Tela
 
 ### Interface Editor Web
