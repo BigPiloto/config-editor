@@ -81,9 +81,9 @@ networks:
 1. `image`: imagem oficial da aplicação (bigpiloto/config-editor:latest)
 2. `container_name`: nome do container no Docker
 3. `user: "0:0"`: executa como root para permitir acesso ao docker.sock
-  1. ⚠️ Recomendado manter, mas pode remover se rodar com permissões customizadas
+    1. ⚠️ Recomendado manter, mas pode remover se rodar com permissões customizadas
 4. `restart`: política de reinício automático
-  1. always, on-failure, etc
+    1. always, on-failure, etc
 5. `ports`: mapeamento de portas
   1. Troque a porta da esquerda para outra disponível no host
 6. `PORT`: porta interna usada pela aplicação
