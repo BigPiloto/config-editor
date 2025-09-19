@@ -152,6 +152,5 @@ Nessa situação, **dois símbolos** aparecem juntos
 Ao clicar com o botão direito do mouse em alguma pasta ou arquivo, é possível abrir um menu rápido com algumas opções
 
 > [!NOTE]
-> As opções de `Novo arquivo` e `Nova pasta` é referenciada pelo caminho do selecionado, verifique no rodapé
->
 > Não é possível realizar Download de pastas, somente arquivos
+

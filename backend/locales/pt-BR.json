@@ -97,6 +97,7 @@
     }
   },
   "errors": {
+    "already_exists": "Já existe",
     "container_not_found": "Nenhum container associado a este arquivo",
     "dir_already_exists": "A pasta já existe",
     "empty_file_name": "O nome do arquivo não pode estar vazio",

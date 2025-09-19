@@ -97,6 +97,7 @@
     }
   },
   "errors": {
+    "already_exists": "Already exists",
     "container_not_found": "No container associated with this file",
     "dir_already_exists": "Directory already exists",
     "dir_not_empty": "Directory is not empty",

@@ -14,11 +14,15 @@
     "editor.placeholder.subtitle":        "{{ T('editor.placeholder.subtitle') }}",
     "editor.placeholder.tip":             "{{ T('editor.placeholder.tip') }}",
 
+    "errors.already_exists":              "{{ T('errors.already_exists')}}",
     "errors.dir_already_exists":          "{{ T('errors.dir_already_exists') }}",
     "errors.empty_file_name":             "{{ T('errors.empty_file_name') }}",
     "errors.empty_folder_name":           "{{ T('errors.empty_folder_name') }}",
     "errors.empty_name":                  "{{ T('errors.empty_name') }}",
     "errors.file_already_exists":         "{{ T('errors.file_already_exists')}}",
+    "errors.forbidden":                   "{{ T('errors.forbidden')}}",
+    "errors.not_found":                   "{{ T('errors.not_found')}}",
+    "errors.invalid_name":                "{{ T('errors.invalid_name')}}",
     "errors.path_already_exists":         "{{ T('errors.path_already_exists') }}",
     "errors.rename_failed":               "{{ T('errors.rename_failed') }}",
     "errors.same_name":                   "{{ T('errors.same_name') }}",
@@ -1137,11 +1141,11 @@ async function renamePath(fullPath) {
         msg = raw;
       }
       if (!msg) {
-        if (res.status === 409) msg = t("errors.already_exists") || "Já existe um item com esse nome.";
-        else if (res.status === 400) msg = t("errors.invalid_name") || "Nome inválido.";
-        else if (res.status === 403) msg = t("errors.forbidden") || "Permissão negada.";
-        else if (res.status === 404) msg = t("errors.not_found") || "Caminho não encontrado.";
-        else msg = t("ui.failed_action") || "Falha ao executar a ação.";
+        if (res.status === 409) msg = t("errors.already_exists");
+        else if (res.status === 400) msg = t("errors.invalid_name");
+        else if (res.status === 403) msg = t("errors.forbidden");
+        else if (res.status === 404) msg = t("errors.not_found");
+        else msg = t("ui.failed_action");
       }
       await swalCenter.fire({ title: t("ui.error"), text: msg, icon: "error" });
       return;
