@@ -67,7 +67,7 @@ Ao clicar, abre um menu com opções como:
 - `Alterar usuário` → página para modificar o nome de usuário
 - `Alterar senha` → página para atualizar a senha de login
 - `Autenticação de 2 fatores` → página para habilitar ou desabilitar o 2FA (TOTP)
-  - > Essa opção só aparece se a variável de ambiente `TOTP_ENABLED` estiver definida como `true`
+  - Essa opção só aparece se a variável de ambiente `TOTP_ENABLED` estiver definida como `true`
 - `Altera idioma` → página para selecionar outro idioma da interface
 
 ![Menu](/documentation/images/menu_br.png)
