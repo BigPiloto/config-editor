@@ -935,9 +935,31 @@ async function createFolder(basePath) {
     const res = await fetch("/api/mkdir", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
+      credentials: "same-origin",
       body: JSON.stringify({ path: fullPath })
     });
-    if (!res.ok) throw new Error(await res.text());
+
+    if (!res.ok) {
+      let msg = "";
+      try {
+        const data = await res.json();
+        msg = data?.error?.message || data?.detail || data?.message || "";
+      } catch {
+        let raw = await res.text();
+        try { const data = JSON.parse(raw); raw = data?.error?.message || data?.detail || data?.message || raw; } catch {}
+        msg = raw;
+      }
+      if (!msg) {
+        // mapeia por status, útil p/ casos comuns
+        if (res.status === 409) msg = t("errors.already_exists");
+        else if (res.status === 400) msg = t("errors.invalid_name");
+        else if (res.status === 403) msg = t("errors.forbidden");
+        else if (res.status === 404) msg = t("errors.not_found");
+        else msg = t("ui.failed_action");
+      }
+      await swalCenter.fire({ title: t("ui.error"), text: msg, icon: "error" });
+      return;
+    }
 
     // abre a árvore inteira e expande até a nova pasta já destacando
     const parts = fullPath.split("/").filter(Boolean);
@@ -978,9 +1000,31 @@ async function createFile(basePath) {
     const res = await fetch("/api/file", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
+      credentials: "same-origin",
       body: JSON.stringify({ path: fullPath, content: "" }) // arquivo vazio
     });
-    if (!res.ok) throw new Error(await res.text());
+
+    if (!res.ok)
+    {
+      let msg = "";
+      try {
+        const data = await res.json();
+        msg = data?.error?.message || data?.detail || data?.message || "";
+      } catch {
+        let raw = await res.text();
+        try { const data = JSON.parse(raw); raw = data?.error?.message || data?.detail || data?.message || raw; } catch {}
+        msg = raw;
+    }
+    if (!msg) {
+      if (res.status === 409) msg = t("errors.already_exists");
+      else if (res.status === 400) msg = t("errors.invalid_name");
+      else if (res.status === 403) msg = t("errors.forbidden");
+      else if (res.status === 404) msg = t("errors.not_found");
+      else msg = t("ui.failed_action");
+    }
+    await swalCenter.fire({ title: t("ui.error"), text: msg, icon: "error" });
+    return;
+  }
 
     // abre a árvore inteira e expande até o novo arquivo, já destacando
     const parts = fullPath.split("/").filter(Boolean);
