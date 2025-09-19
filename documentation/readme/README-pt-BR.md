@@ -38,17 +38,17 @@ A aplicação também se integra ao Docker, exibindo o estado dos containers ass
 version: "3.9"
 services:
   config-editor:
-    image: bigpiloto/config-editor:latest # -------------------------- #1
-    container_name: config-editor # ---------------------------------- #2
+    image: bigpiloto/config-editor:latest # -------------------------- #1*
+    container_name: config-editor # ---------------------------------- #2*
     user: "0:0" # ---------------------------------------------------- #3
     restart: unless-stopped # ---------------------------------------- #4
     ports:
-      - "8000:8000" # ------------------------------------------------ #5
+      - "8000:8000" # ------------------------------------------------ #5*
     environment:
       PORT: "8000" # ------------------------------------------------- #6
       DATA_DIR: "/data" # -------------------------------------------- #7
       TOTP_ENABLED: "true" # ----------------------------------------- #8
-      SESSION_SECRET: "PUT_YOUR_SECRET_KEY_HERE" # ------------------- #9
+      SESSION_SECRET: "PUT_YOUR_SECRET_KEY_HERE" # ------------------- #9*
       HTTPS_ONLY: "false" # ------------------------------------------ #10
       TZ: "America/Sao_Paulo" # -------------------------------------- #11
       DIFF_ALLOW_EDIT: "true" # -------------------------------------- #12
@@ -56,10 +56,10 @@ services:
       DEFAULT_CONTAINER: "config-editor" # --------------------------- #14
       CONTAINER_ALIAS: "Config Editor" # ----------------------------- #15
     volumes:
-      - caminho_host_dos_arquivos:/data # ---------------------------- #16
+      - caminho_host_dos_arquivos:/data # ---------------------------- #16*
       - caminho_de_pasta:/data/pasta # ------------------------------- #17
       - caminho_de_arquivo:/data/arquivo.extensão # ------------------ #18
-      - caminho_dos_arquivos_de_configuração:/app/config # ----------- #19
+      - caminho_dos_arquivos_de_configuração:/app/config # ----------- #19*
       - /var/run/docker.sock:/var/run/docker.sock:ro # --------------- #20
 
     healthcheck: 
@@ -92,7 +92,9 @@ networks:
 6. `PORT`: porta interna usada pela aplicação
     1. ❌ Não altere (sempre 8000)
 7. `DATA_DIR`: diretório de trabalho dos arquivos
-    1. ❌ Interno fixo /data
+    1. Caminho do diretório dentro do container
+    2. Se alterado (diferente de /data) também trocar nos volumes
+       - Exemplo: `caminho_host_dos_arquivos:/nome_alterado`
 8. `TOTP_ENABLED`: ativa ou desativa a autenticação de dois fatores (2FA) no servidor
     1. "true" (habilitado) ou "false" (desabilitado)
 9. `SESSION_SECRET`: chave obrigatória para sessão *
@@ -109,9 +111,15 @@ networks:
     1. Pode trocar pelo nome real de um container seu configurado em container_name #2
 15. `CONTAINER_ALIAS`: nome amigável exibido na interface
     1. Pode trocar livremente
-16. `Volume de pasta inteira`: monta uma pasta completa em /data
+16. `Volume de pasta inteira`: monta uma pasta completa em /data *
     1. Não é permitido mapear pastas diferentes para o mesmo destino /data se não sobreescreve
     2. Se precisar de mais arquivos, monte em subpastas
+    3. ⚠️ Obrigatório: sempre defina um volume do host para /data mesmo se não tiver arquivos
+        1. É em /data que ficam salvos:
+           Arquivos de configuração editados
+           Backups automáticos (/data/.backups)
+           Se não mapear, todas essas informações serão perdidas quando o container for removido ou reiniciado
+    4. Mesmo que você utilize apenas subpastas ou arquivos individuais (itens 17 e 18), ainda assim deve existir um volume principal montado em /data para garantir persistência
 17. `Volume de subpasta`: monta apenas uma subpasta em /data/pasta
     1. Pode haver mais de uma subpasta, desde que caminho diferente na aplicação
 18. `Volume de arquivo único`: monta um arquivo específico em /data/arquivo.extensão
@@ -132,7 +140,7 @@ networks:
 24. `retries`: Quantas falhas consecutivas são toleradas antes do container ser considerado unhealthy
     1. Pode reduzir (ex: 3) para detectar mais rápido, ou aumentar para ser mais tolerante
 25. `start_period`: Período de carência logo após o container iniciar, antes de começar a checar saúde
-    1. ode aumentar se sua aplicação demorar mais para iniciar (ex: 60s)
+    1. Pode aumentar se sua aplicação demorar mais para iniciar (ex: 60s)
 26. `networks`: conecta o serviço a uma rede Docker
     1. Opcional. Se não precisa de rede dedicada, pode remover
 27. `cfgnet`: definição da rede que o container vai usar
@@ -150,6 +158,8 @@ networks:
 ### Método 2: Docker CLI
 
 Conforme **Dockerfile** na raiz do projeto, é possível rodar a aplicação com `docker build` e `docker run` sem precisar de `docker-compose`.
+
+**Não recomendado devido a não persistência de dados**
 
 ## Uso
 
