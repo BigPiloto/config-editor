@@ -46,7 +46,7 @@ Após o registro, o usuário e senha (com ou sem 2FA, conforme configurado) fica
 2. Digite o código de 6 digitos do seu app autenticador (Google Authenticator, Authy, etc)
 3. Clique em `Entrar`
 
-> [!WARNING]
+> [!IMPORTANT]
 > Se o usuário foi criado sem 2FA (usuário e senha apenas), mudar a variável de `false` para `true` não ativa o 2FA automaticamente. Isso apenas habilita o suporte ao 2FA no servidor, permitindo que o usuário cadastre um aplicativo autenticador.
 >
 >Enquanto o app autenticador não for cadastrado, o usuário continuará conseguindo acessar apenas com usuário e senha, mesmo com o 2FA ativado no servidor.
