@@ -891,3 +891,9 @@ button[disabled] {
   * { transition: none !important; animation: none !important; }
   #tree summary .caret::before { transition: none !important; }
 }
+
+#context-menu [data-action].is-disabled {
+  opacity: .45;
+  cursor: not-allowed;
+  pointer-events: none; /* bloqueia clique do mouse */
+}

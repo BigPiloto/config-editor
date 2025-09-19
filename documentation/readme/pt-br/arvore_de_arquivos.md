@@ -14,6 +14,8 @@ Cria uma nova pasta no caminho selecionado
 
 > [!TIP]
 > O caminho atual pode ser visualizado no rodapé da página
+>
+> O campo aceita **apenas o nome**, não o caminho
 
 > [!WARNING]
 > Os botões `Nova pasta` e `Novo arquivo` só ficam habilitados ao selecionar a raiz ou uma pasta
@@ -32,6 +34,8 @@ Cria um novo arquivo no caminho selecionado, de forma similar à criação de pa
 
 > [!TIP]
 > O caminho atual pode ser visualizado no rodapé da página
+>
+> O campo aceita **apenas o nome**, não o caminho
 
 > [!WARNING]
 > Os botões `Nova pasta` e `Novo arquivo` só ficam habilitados ao selecionar a raiz ou uma pasta
@@ -70,3 +74,84 @@ Exclui um arquivo ou pasta selecionado
 Renomeia um arquivo ou pasta selecionada
 
 ![Botão renomear](/documentation/images/renomear.png)
+
+> [!NOTE]
+> O novo nome **não pode** ser igual ao atual **nem** duplicar outro item no **mesmo caminho**
+>
+> Não é possível renomear para o mesmo nome
+
+> [!TIP]
+> O campo aceita **apenas o nome**, não o caminho
+>
+> É possível **adicionar ou alterar a extensão** ao renomear (ex.: `config` → `config.yaml`)
+
+### Filtro
+
+Pesquisa por **pastas** e **arquivos** na árvore
+
+![Filtro](/documentation/images/filtro.png)
+
+Ao digitar, a árvore é filtrada em tempo real e os caminhos até os itens correspondentes são **automaticamente expandidos**
+
+![Filtro ativo](/documentation/images/filtro_ativo.png)
+
+> [!TIP]
+> Ao clicar no `X`, o filtro é limpo e a árvore é **restaurada**: todas as pastas são recolhidas e fica aberto **apenas o caminho do item atualmente selecionado**
+
+### Raiz
+
+Ao clicar em `/..` o **diretório principal** é selecionado e **toda a árvore é recolhida**
+
+![Raiz](/documentation/images/raiz.png)
+
+> [!TIP]  
+> Use este atalho para voltar rapidamente ao nível inicial e limpar expansões abertas
+
+### Pastas e arquivos
+
+- **Arquivo:** ao clicar, ele é aberto no editor **à direita**
+- **Pasta:** ao clicar, ela é **selecionada e expandida**; se havia um arquivo aberto, o editor à direita é **fechado** (volta à tela inicial)
+
+![Pasta ou arquivo selecionado na árvore](/documentation/images/arvore_selecao.png)
+
+Para **recolher** uma pasta já aberta, clique na **seta (caret)** ao lado do nome
+
+> [!NOTE]
+> Clicar **sobre o nome** da pasta apenas **expande/seleciona** — **não** recolhe
+
+![Seta](/documentation/images/seta.png)
+
+### Alterações
+
+Sempre que um arquivo tiver mudanças **não aplicadas/salvas**, ele é sinalizado com um **círculo branco (⚪)**
+
+![Arquivo sujo](/documentation/images/sujo.png)
+
+> [!TIP]  
+> Ao **salvar** o arquivo, o indicador desaparece
+
+### Container associado
+
+Arquivos **associados a um container** exibem o **ícone do Docker** na árvore
+
+![Arquivo associado](/documentation/images/docker.png)
+
+### Alterações e container associado
+
+Um arquivo pode ter **alterações não aplicadas** e, ao mesmo tempo, estar **associado a um container**
+
+Nessa situação, **dois símbolos** aparecem juntos
+
+- ⚪ Círculo branco → arquivo com **mudanças não salvas/aplicadas**
+- 🐳 Ícone do Docker → arquivo **associado a container**
+
+![Arquivo associado e sujo](/documentation/images/docker_sujo.png)
+
+### Clique direito
+
+Ao clicar com o botão direito do mouse em alguma pasta ou arquivo, é possível abrir um menu rápido com algumas opções
+
+> [!NOTE]
+> As opções de `Novo arquivo` e `Nova pasta` é referenciada pelo caminho do selecionado, verifique no rodapé
+>
+> Não é possível realizar Download de pastas, somente arquivos

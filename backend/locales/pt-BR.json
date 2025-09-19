@@ -110,6 +110,7 @@
     "internal_error": "Erro interno do servidor",
     "internal_server_error": "Erro interno do servidor",
     "invalid_container": "Container inválido",
+    "invalid_name": "Nome inválido",
     "invalid_totp_secret": "Segredo TOTP inválido",
     "lang_not_supported": "O idioma selecionado não é suportado",
     "method_not_allowed": "Método HTTP não permitido para este recurso",

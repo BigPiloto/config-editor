@@ -1240,14 +1240,37 @@ async function renamePath(fullPath) {
 
 <!-- Menu suspenso -->
 <script>
+function toggleMenuItem(el, enabled) {
+  if (!el) return;
+  el.classList.toggle('is-disabled', !enabled);
+  el.setAttribute('aria-disabled', String(!enabled));
+  el.tabIndex = enabled ? 0 : -1;
+}
+
 function setupContextMenu() {
   const menu = document.getElementById("context-menu");
   if (!menu) return;
 
+  const itemDownload  = menu.querySelector('[data-action="download"]');
+  const itemRename    = menu.querySelector('[data-action="rename"]');
+  const itemDelete    = menu.querySelector('[data-action="delete"]');
+  const itemNewFile   = menu.querySelector('[data-action="new-file"]');
+  const itemNewFolder = menu.querySelector('[data-action="new-folder"]');
+
+  menu.addEventListener('click', (e) => {
+    const li = e.target.closest('[data-action]');
+    if (!li) return;
+    if (li.classList.contains('is-disabled') || li.getAttribute('aria-disabled') === 'true') {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+  });
+
   // 🔧 torna assíncrono para poder dar await openFile()
   document.addEventListener("contextmenu", async (e) => {
+    const tree = document.getElementById("tree");
     const node = e.target.closest(".item.file, summary, .item.root");
-    if (!node || !document.getElementById("tree").contains(node)) {
+    if (!node || !tree.contains(node)) {
       menu.style.display = "none";
       return;
     }
@@ -1288,6 +1311,21 @@ function setupContextMenu() {
       closeDiffIfAny();
       lockEditor(true, { message: "" });
     }
+
+    const isFile  = node.classList.contains("file");
+    const isRoot  = node.classList.contains("root");
+    const isFolder= node.matches("summary");
+
+    // Download: só para arquivo
+    toggleMenuItem(itemDownload, isFile);
+
+    // Novo arquivo/pasta: apenas para pasta/raiz
+    toggleMenuItem(itemNewFile,   isFolder || isRoot);
+    toggleMenuItem(itemNewFolder, isFolder || isRoot);
+
+    // Renomear/Excluir: não permitir na raiz
+    toggleMenuItem(itemRename, !isRoot);
+    toggleMenuItem(itemDelete, !isRoot);
 
     renderStatus();
     renderStatusBar();
