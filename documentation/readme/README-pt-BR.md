@@ -78,68 +78,95 @@ networks:
 ```
 ### Legenda
 
-1. `image`: imagem oficial da aplicação (bigpiloto/config-editor:latest)
-2. `container_name`: nome do container no Docker
+* Itens com `*` são obrigatórios definir no docker-compose, demais são opcionais, uma vez que já tem definido no padrão da aplicação
+
+1. `image`: imagem oficial da aplicação (bigpiloto/config-editor:latest) *
+2. `container_name`: nome do container no Docker *
+    1. Pode alterar livremente
 3. `user: "0:0"`: executa como root para permitir acesso ao docker.sock
     1. ⚠️ Recomendado manter, mas pode remover se rodar com permissões customizadas
 4. `restart`: política de reinício automático
     1. always, on-failure, etc
-5. `ports`: mapeamento de portas
-  1. Troque a porta da esquerda para outra disponível no host
+5. `ports`: mapeamento de portas *
+    1. Troque a porta da esquerda para outra disponível no host
 6. `PORT`: porta interna usada pela aplicação
-  1. ❌ Não altere (sempre 8000)
+    1. ❌ Não altere (sempre 8000)
 7. `DATA_DIR`: diretório de trabalho dos arquivos
-  1. ❌ Interno fixo /data
+    1. ❌ Interno fixo /data
 8. `TOTP_ENABLED`: ativa ou desativa a autenticação de dois fatores (2FA) no servidor
-  1. "true" (habilitado) ou "false" (desabilitado)
-9. `SESSION_SECRET`: chave obrigatória para sessão
-  1. ⚠️ Troque por uma string aleatória e secreta
+    1. "true" (habilitado) ou "false" (desabilitado)
+9. `SESSION_SECRET`: chave obrigatória para sessão *
+    1. ⚠️ Troque por uma string aleatória e secreta
 10. `HTTPS_ONLY`: força HTTPS no navegador
-  1. "true" (somente https) ou "false" (permite http)
+    1. "true" (somente https) ou "false" (permite http)
 11. `TZ`: fuso horário do container
-  1. Troque conforme sua região
+    1. Troque conforme sua região
 12. `DIFF_ALLOW_EDIT`: permite editar no modo Diff
-  1. "true" (habilitado) ou "false" (somente visualização)
+    1. "true" (habilitado) ou "false" (somente visualização)
 13. `DISABLE_DOCKER_CHECKS`: desativa verificações automáticas de containers
-  1. Só use "true" se não puder expor o docker.sock
+    1. Só use "true" se não puder expor o docker.sock
 14. `DEFAULT_CONTAINER`: container padrão quando um arquivo não tem associação
-  1. Pode trocar pelo nome real de um container seu configurado em container_name #2
+    1. Pode trocar pelo nome real de um container seu configurado em container_name #2
 15. `CONTAINER_ALIAS`: nome amigável exibido na interface
-  1. Pode trocar livremente
+    1. Pode trocar livremente
 16. `Volume de pasta inteira`: monta uma pasta completa em /data
-  1. Não é permitido mapear pastas diferentes para o mesmo destino /data se não sobreescreve
-  2. Se precisar de mais arquivos, monte em subpastas
+    1. Não é permitido mapear pastas diferentes para o mesmo destino /data se não sobreescreve
+    2. Se precisar de mais arquivos, monte em subpastas
 17. `Volume de subpasta`: monta apenas uma subpasta em /data/pasta
-  1. Pode haver mais de uma subpasta, desde que caminho diferente na aplicação
+    1. Pode haver mais de uma subpasta, desde que caminho diferente na aplicação
 18. `Volume de arquivo único`: monta um arquivo específico em /data/arquivo.extensão
-  1. Pode haver mais de um arquivo
-19. `/app/config volume`: configurações internas do app
-  1. ⚠️ Não altere o destino (/app/config) somente o caminho no seu servidor
-  2. Essencial para não perder a linguagem e a configuração de usuário
+    1. Pode haver mais de um arquivo
+19. `/app/config volume`: configurações internas do app *
+    1. ⚠️ Não altere o destino (/app/config) somente o caminho no seu servidor
+    2. Essencial para não perder a linguagem e a configuração de usuário
 20. `docker.sock`: necessário para reiniciar e inspecionar containers
-  1. ⚠️ Se não montar, funções de reinício/status não funcionarão.
+    1. ⚠️ Se não montar, funções de reinício/status não funcionarão.
 21. `test`: Comando que será executado para verificar se o container está saudável
-  1. Aqui ele chama a URL interna http://127.0.0.1:8000/api/readyz
-  2. Se a API não responder, retorna erro (exit 1) e o container é marcado como unhealthy
-  3. ⚠️ Obrigatório para o healthcheck funcionar
+    1. Aqui ele chama a URL interna http://127.0.0.1:8000/api/readyz
+    2. Se a API não responder, retorna erro (exit 1) e o container é marcado como unhealthy
+    3. ⚠️ Obrigatório para o healthcheck funcionar
 22. `interval`: Frequência com que o Docker executa o healthcheck
-  1. Pode ajustar (30s, 120s, etc) dependendo de quanto tempo tolera entre verificações
+    1. Pode ajustar (30s, 120s, etc) dependendo de quanto tempo tolera entre verificações
 23. `timeout`: Tempo máximo que o Docker espera o comando do healthcheck terminar
-  1. Pode aumentar se sua aplicação demorar para responder
+    1. Pode aumentar se sua aplicação demorar para responder
 24. `retries`: Quantas falhas consecutivas são toleradas antes do container ser considerado unhealthy
-  1. Pode reduzir (ex: 3) para detectar mais rápido, ou aumentar para ser mais tolerante
+    1. Pode reduzir (ex: 3) para detectar mais rápido, ou aumentar para ser mais tolerante
 25. `start_period`: Período de carência logo após o container iniciar, antes de começar a checar saúde
-  1. ode aumentar se sua aplicação demorar mais para iniciar (ex: 60s)
+    1. ode aumentar se sua aplicação demorar mais para iniciar (ex: 60s)
 26. `networks`: conecta o serviço a uma rede Docker
-  1. Opcional. Se não precisa de rede dedicada, pode remover
+    1. Opcional. Se não precisa de rede dedicada, pode remover
 27. `cfgnet`: definição da rede que o container vai usar
-  1. Se você não especificar nada, o Docker cria automaticamente uma rede bridge padrão
-  2. Opcional: pode remover se não precisar de rede dedicada
+    1. Se você não especificar nada, o Docker cria automaticamente uma rede bridge padrão
+    2. Opcional: pode remover se não precisar de rede dedicada
 28. `external: true`: indica que a rede já existe no Docker e não será criada automaticamente pelo docker-compose up.
-  1. Se deixar external: true mas a rede não existir, o Docker vai dar erro
-  2. Se quiser que o Compose crie a rede automaticamente, basta remover essa linha e deixar apenas
+    1. Se deixar external: true mas a rede não existir, o Docker vai dar erro
+    2. Se quiser que o Compose crie a rede automaticamente, basta remover essa linha e deixar apenas
   ```yaml
   networks:
   cfgnet:
     driver: bridge
   ```
+
+### Método 2: Docker CLI
+
+Conforme **Dockerfile** na raiz do projeto, é possível rodar a aplicação com `docker build` e `docker run` sem precisar de `docker-compose`.
+
+## Uso
+
+→ [LEIA ME](/documentation/readme/README-pt-BR.md)
+
+## Capturas de Tela
+
+### Interface Editor Web
+![Interface Editor Web](/documentation/images/screenshot_editor.png)
+
+### Interace Status de Saúde dos Containers
+![Interace Status de Saúde dos Containers](/documentation/images/screenshot_containers.png)
+
+## Suporte & Problemas
+
+- Relate bugs ou sugestões em: [Problemas](https://github.com/BigPiloto/config-editor/issues)
+
+## Licença
+
+Este projeto é licenciado sob a MIT License – veja o arquivo [MIT License](LICENSE) para mais detalhes.
