@@ -47,9 +47,9 @@ Após o registro, o usuário e senha (com ou sem 2FA, conforme configurado) fica
 3. Clique em `Entrar`
 
 > [!IMPORTANT]
-> Se o usuário foi criado sem 2FA (usuário e senha apenas), mudar a variável de `false` para `true` não ativa o 2FA automaticamente. Isso apenas habilita o suporte ao 2FA no servidor, permitindo que o usuário cadastre um aplicativo autenticador.
+> Se o usuário foi criado sem 2FA (usuário e senha apenas), mudar a variável de `false` para `true` não ativa o 2FA automaticamente. Isso apenas habilita o suporte ao 2FA no servidor, permitindo que o usuário cadastre um aplicativo autenticador
 >
->Enquanto o app autenticador não for cadastrado, o usuário continuará conseguindo acessar apenas com usuário e senha, mesmo com o 2FA ativado no servidor.
+>Enquanto o app autenticador não for cadastrado, o usuário continuará conseguindo acessar apenas com usuário e senha, mesmo com o 2FA ativado no servidor
 
 
 - Se a variável `TOTP_ENABLED` estiver definida como `false`, você verá a tela de login sem o 2FA:

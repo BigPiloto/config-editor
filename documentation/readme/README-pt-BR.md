@@ -4,31 +4,31 @@
 
 ## Visão Geral
 
-O Config Editor é uma aplicação web em FastAPI que permite editar com segurança arquivos de configuração de containers Docker diretamente pelo navegador.
+O Config Editor é uma aplicação web em FastAPI que permite editar com segurança arquivos de configuração de containers Docker diretamente pelo navegador
 
-Ele oferece login seguro, suporte a autenticação em dois fatores (2FA TOTP), criação automática de backups sempre que uma alteração é aplicada, além da ação Aplicar para atualizar configurações em tempo real.
+Ele oferece login seguro, suporte a autenticação em dois fatores (2FA TOTP), criação automática de backups sempre que uma alteração é aplicada, além da ação Aplicar para atualizar configurações em tempo real
 
-A aplicação também se integra ao Docker, exibindo o estado dos containers associados e fornecendo um botão dedicado para Reiniciar container.
+A aplicação também se integra ao Docker, exibindo o estado dos containers associados e fornecendo um botão dedicado para Reiniciar container
 
 ## Funcionalidades
 
-1. ✏️ Editor web baseado no Monaco Editor (o mesmo do VS Code).
+1. ✏️ Editor web baseado no Monaco Editor (o mesmo do VS Code)
 
-2. 🔐 Login seguro com senha e 2FA (Google Authenticator, Authy, etc).
+2. 🔐 Login seguro com senha e 2FA (Google Authenticator, Authy, etc)
 
-3. 💾 Backup automático sempre que um arquivo é aplicado, com opção de restauração.
+3. 💾 Backup automático sempre que um arquivo é aplicado, com opção de restauração
 
-4. 💡 Aplicar: aplica o arquivo e gera automaticamente um backup da versão anterior.
+4. 💡 Aplicar: aplica o arquivo e gera automaticamente um backup da versão anterior
 
-5. 🔄 Botão dedicado para Reiniciar container, diretamente pelo navegador.
+5. 🔄 Botão dedicado para Reiniciar container, diretamente pelo navegador
 
-6. 🛡️ Modo Diff com edição opcional, permitindo visualizar e editar diferenças antes de aplicar.
+6. 🛡️ Modo Diff com edição opcional, permitindo visualizar e editar diferenças antes de aplicar
 
-7. 📦 Integração com Docker, exibindo status de containers associados.
+7. 📦 Integração com Docker, exibindo status de containers associados
 
-8. ⚙️ Suporte ao DEFAULT_CONTAINER, permitindo definir um container padrão para arquivos sem associação.
+8. ⚙️ Suporte ao DEFAULT_CONTAINER, permitindo definir um container padrão para arquivos sem associação
 
-9. 🌍 Suporte multilíngue, atualmente em Inglês e Português do Brasil.
+9. 🌍 Suporte multilíngue, atualmente em Inglês e Português do Brasil
 
 ## Instalação
 
@@ -146,7 +146,7 @@ networks:
 27. `cfgnet`: definição da rede que o container vai usar
     1. Se você não especificar nada, o Docker cria automaticamente uma rede bridge padrão
     2. Opcional: pode remover se não precisar de rede dedicada
-28. `external: true`: indica que a rede já existe no Docker e não será criada automaticamente pelo docker-compose up.
+28. `external: true`: indica que a rede já existe no Docker e não será criada automaticamente pelo docker-compose up
     1. Se deixar external: true mas a rede não existir, o Docker vai dar erro
     2. Se quiser que o Compose crie a rede automaticamente, basta remover essa linha e deixar apenas
   ```yaml
@@ -157,7 +157,7 @@ networks:
 
 ### Método 2: Docker CLI
 
-Conforme **Dockerfile** na raiz do projeto, é possível rodar a aplicação com `docker build` e `docker run` sem precisar de `docker-compose`.
+Conforme **Dockerfile** na raiz do projeto, é possível rodar a aplicação com `docker build` e `docker run` sem precisar de `docker-compose`
 
 **Não recomendado devido a não persistência de dados**
 

@@ -2,9 +2,9 @@
 
 # Primeiros passos
 
-No arquivo [README-pt-BR](/documentation/readme/README-pt-BR.md) há uma explicação do que é o Config Editor e suas funcionalidades, formas de instalação e um exemplo básico de configuração para rodar o container.
+No arquivo [README-pt-BR](/documentation/readme/README-pt-BR.md) há uma explicação do que é o Config Editor e suas funcionalidades, formas de instalação e um exemplo básico de configuração para rodar o container
 
-Neste tutorial vamos detalhar melhor as opções de configuração disponíveis na instalação.
+Neste tutorial vamos detalhar melhor as opções de configuração disponíveis na instalação
 
 ### Image
 
@@ -12,7 +12,7 @@ Aqui define a imagem da aplicação, recomendado utilizar bigpiloto/config-edito
 
 ### Container name
 
-Aqui você define um nome para seu container (pode ser qualquer um).
+Aqui você define um nome para seu container (pode ser qualquer um)
 
 Exemplo:
 ``` yaml
@@ -21,9 +21,9 @@ container_name: config-editor
 
 ### User: "0:0"
 
-Esse parâmetro é necessário para permitir interação com o docker.sock.
+Esse parâmetro é necessário para permitir interação com o docker.sock
 
-Com ele, o Config Editor consegue inspecionar containers e executar o `Reiniciar` diretamente pela interface.
+Com ele, o Config Editor consegue inspecionar containers e executar o `Reiniciar` diretamente pela interface
 
 ### Restart
 
@@ -35,7 +35,7 @@ Política de reinício automático definido no docker
 
 ### Ports
 
-Por padrão, o aplicativo roda na porta 8000 dentro do container.
+Por padrão, o aplicativo roda na porta 8000 dentro do container
 
 Você pode expor essa porta em qualquer porta externa que preferir:
 
@@ -71,16 +71,16 @@ volumes:
 
 ### TOTP_ENABLED
 
-Define se a autenticação em dois fatores (2FA) estará ativa no sistema.
+Define se a autenticação em dois fatores (2FA) estará ativa no sistema
 
 - `true` → será necessário configurar o 2FA no primeiro login (via Google Authenticator, Authy, etc).
-- `false` → o registro inicial acontece apenas com usuário e senha.
+- `false` → o registro inicial acontece apenas com usuário e senha
 
 ### SESSION_SECRET
 
-Defina aqui uma chave secreta aleatória e segura, usada para criptografia de sessão.
+Defina aqui uma chave secreta aleatória e segura, usada para criptografia de sessão
 
-Ela deve ser gerada pelo administrador antes de subir o container.
+Ela deve ser gerada pelo administrador antes de subir o container
 
 Exemplo de geração:
 ```bash
@@ -107,10 +107,10 @@ Fuso horário do container, troque conforme sua região
 
 ### DIFF_ALLOW_EDIT
 
-Controla se o modo de visualização de diferenças (diff view) permite ou não edições diretas.
+Controla se o modo de visualização de diferenças (diff view) permite ou não edições diretas
 
-- `false` → você pode apenas visualizar as diferenças.
-- `true` → habilita a edição diretamente dentro da tela de diff.
+- `false` → você pode apenas visualizar as diferenças
+- `true` → habilita a edição diretamente dentro da tela de diff
 
 ### DISABLE_DOCKER_CHECKS
 
@@ -119,7 +119,7 @@ Controla se o Config Editor deve ou não interagir com o Docker para verificar o
 1. `false` (padrão) → habilita as integrações com Docker:
   - Mostra status/saúde dos containers associados
   - Permite usar o botão **Reiniciar container**
-2. `true` → desativa todas as checagens e ações sobre containers.
+2. `true` → desativa todas as checagens e ações sobre containers
   - A interface não exibirá status nem permitirá reinício
   - Use apenas em cenários onde **não é possível montar** o volume `/var/run/docker.sock`
 
@@ -134,14 +134,14 @@ CONTAINER_ALIAS: Nome amigável para essa visualização (não precisa ser igual
 
 ### Volumes
 
-Pasta usada dentro do container para leitura e escrita dos arquivos de configuração.
+Pasta usada dentro do container para leitura e escrita dos arquivos de configuração
 
 Exemplo de volume para montar a pasta completa:
 ```yaml
 - /srv/meus_servicos/config:/data
 ```
 > [!WARNING]
-> Não use nomes duplicados em /data, pois haverá conflito.
+> Não use nomes duplicados em /data, pois haverá conflito
 
 > [!CAUTION]
 > Não é permitido mapear pastas diferentes para o mesmo destino /data para isso utilize subpastas
