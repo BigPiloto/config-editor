@@ -149,8 +149,40 @@ Nessa situação, **dois símbolos** aparecem juntos
 
 ### Clique direito
 
-Ao clicar com o botão direito do mouse em alguma pasta ou arquivo, é possível abrir um menu rápido com algumas opções
+Ao clicar com o **botão direito** do mouse sobre um item da árvore (pasta, arquivo ou raiz), é exibido um **menu rápido** com ações contextuais
 
-> [!NOTE]
-> Não é possível realizar Download de pastas, somente arquivos
+![Menu suspenso](/documentation/images/menu_suspenso.png)
 
+As opções **variam conforme o tipo de item** selecionado
+
+- **Arquivo**
+  1. `Renomear`
+  2. `Excluir`
+  3. `Realizar download do arquivo`
+
+- **Pasta**
+  1. `Renomear`
+  2. `Excluir`
+  3. `Novo arquivo`
+  4. `Nova pasta`
+
+- **Raiz** (`/..`)
+  1. `Novo arquivo`
+  2. `Nova pasta`
+
+> [!WARNING]  
+> A ação `Excluir` para **pastas** só é permitida quando a pasta está **vazia** (sem arquivos ou subpastas)
+
+# Tutoriais relacionados
+
+[LEIA ME](/documentation/readme/README-pt-BR.md)
+
+[Primeiros passos](/documentation/readme/pt-br/primeiros_passos.md)
+
+[Após subir o container](/documentation/readme/pt-br/container_criado.md)
+
+[Barra Superior](/documentation/readme/pt-br/barra_superior.md)
+
+[Menu](/documentation/readme/pt-br/menu.md)
+
+→ [Árvore de arquivos](/documentation/readme/pt-br/arvore_de_arquivos.md)

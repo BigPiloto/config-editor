@@ -259,3 +259,5 @@ Opcional. Se não precisa de rede dedicada, pode remover
 [Barra Superior](/documentation/readme/pt-br/barra_superior.md)
 
 [Menu](/documentation/readme/pt-br/menu.md)
+
+[Árvore de arquivos](/documentation/readme/pt-br/arvore_de_arquivos.md)
