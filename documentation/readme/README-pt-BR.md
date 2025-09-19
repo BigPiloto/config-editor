@@ -167,6 +167,8 @@ Conforme **Dockerfile** na raiz do projeto, é possível rodar a aplicação com
 
 [Primeiros passos](/documentation/readme/pt-br/primeiros_passos.md)
 
+[Após subir o container](/documentation/readme/pt-br/container_criado.md)
+
 ## Capturas de Tela
 
 ### Interface Editor Web

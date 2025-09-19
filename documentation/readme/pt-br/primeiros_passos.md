@@ -95,7 +95,9 @@ PY
 Força o uso de HTTPS no navegador
 
 - `true` → todas as requisições HTTP serão redirecionadas para HTTPS
-⚠️ É necessário que o container esteja atrás de um proxy reverso ou load balancer que forneça o certificado TLS válido (ex.: Nginx, Traefik, Caddy)
+
+> [!WARNING]
+> É necessário que o container esteja atrás de um proxy reverso ou load balancer que forneça o certificado TLS válido (ex.: Nginx, Traefik, Caddy)
 
 - `false` → permite acesso tanto via HTTP quanto HTTPS (recomendado apenas para ambientes de teste ou redes internas)
 
@@ -138,9 +140,12 @@ Exemplo de volume para montar a pasta completa:
 ```yaml
 - /srv/meus_servicos/config:/data
 ```
--  ⚠️ Atenção: não use nomes duplicados em /data, pois haverá conflito.
--  ❌ Não é permitido mapear pastas diferentes para o mesmo destino /data para isso utilize subpastas
-- Se foi alterado em DATA_DIR aqui tambem deve ser alterado
+> [!WARNING]
+> Não use nomes duplicados em /data, pois haverá conflito.
+
+> [!CAUTION]
+> Não é permitido mapear pastas diferentes para o mesmo destino /data para isso utilize subpastas
+> Se foi alterado em DATA_DIR aqui tambem deve ser alterado
 
 Exemplo alterando para outro diretório:
 ```yaml
@@ -159,8 +164,8 @@ Exemplo de volume para montar arquivo:
 ```
 Pode haver subpastas dentro do container
 
-⚠️ Atenção:
-Obrigatório sempre definir um volume do host para /data mesmo se não tiver arquivos
+> [!WARNING]
+> Obrigatório sempre definir um volume do host para /data mesmo se não tiver arquivos
 
 - É em /data que ficam salvos:
   1. Arquivos de configuração editados
@@ -178,7 +183,8 @@ Nele são armazenados:
 - `lang.json` → idioma selecionado
 - `user.json` → credenciais do usuário administrador inicial
 
-⚠️ É **obrigatório mapear esse volume para o host** se você não quiser perder idioma e usuário/senha ao recriar o container
+> [!WARNING]
+> É **obrigatório mapear esse volume para o host** se você não quiser perder idioma e usuário/senha ao recriar o container
 
 Exemplo:
 ```yaml
@@ -193,7 +199,8 @@ Necessário para:
 - Exibir status dos containers associados
 - Permitir o uso do botão Reiniciar
 
-⚠️ Se não montar, o Config Editor funcionará apenas como editor de arquivos
+> [!NOTE]
+> Se não montar, o Config Editor funcionará apenas como editor de arquivos
 
 Nesse caso, use também:
 ```yaml
@@ -206,7 +213,8 @@ Define o comando que o Docker executa para verificar se o container está saudá
 
 Se a API não responder, retorna erro (exit 1) e o container é marcado como unhealthy
 
-⚠️ Obrigatório para o healthcheck funcionar
+> [!IMPORTANT]
+> Obrigatório para o healthcheck funcionar
 
 ### Interval
 
@@ -244,3 +252,5 @@ Opcional. Se não precisa de rede dedicada, pode remover
 [LEIA ME](/documentation/readme/README-pt-BR.md)
 
 → [Primeiros passos](/documentation/readme/pt-br/primeiros_passos.md)
+
+[Após subir o container](/documentation/readme/pt-br/container_criado.md)
