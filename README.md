@@ -35,7 +35,6 @@ The application also integrates with Docker, displaying the status of associated
 ### Method 1: Docker Compose (Recommended)
 
 ```yaml
-```yaml
 version: "3.9"
 services:
   config-editor:
