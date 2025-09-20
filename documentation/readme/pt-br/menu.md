@@ -94,7 +94,7 @@ Passos:
 
 Página para selecionar o idioma da interface
 
-- Atualmente disponível em Português (Brasil) e Inglês.
+- Atualmente disponível em Português (Brasil) e Inglês
 - A alteração é imediata e aplicada a toda a interface, mesmo se não clicar em `Confirma`
 
 ![Alterar idioma](/documentation/images/alterar_idioma.png)

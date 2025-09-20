@@ -90,9 +90,19 @@ Steps:
 2. Enter 2FA code
 3. Click `Disable 2FA`
 
+### Change language
 
+Page to select the interface language
 
+- Currently available in Portuguese (Brazil) and English
+- The change is immediate and applied to the entire interface, even if you don’t click `Confirm`
 
+![Change language](/documentation/images/change_lang.png)
+
+Steps:
+
+1. Select an option from the list
+2. Click `Confirm`
 
 # Related Tutorials
 
