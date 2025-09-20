@@ -796,6 +796,34 @@ async function openFile(path, restoreState = null) {
 
     if (token !== currentOpenToken) return;
 
+    let isDirtyOnOpen = false;
+    let diskBaseline = "";
+
+    if (restoreState) {
+      isDirtyOnOpen = restoreState.isDirty;
+      diskBaseline = normalizeEmpty(restoreState.diskBaseline);
+    } else {
+      // Verifica conteúdo real do disco para comparar
+      try {
+        const resFile = await fetch(`/api/file?path=${encodeURIComponent(tempKey)}`, {
+          credentials: "same-origin",
+          cache: "no-store"
+        });
+        if (resFile.ok) {
+          const data = await resFile.json();
+          const diskContent = data.content || "";
+          diskBaseline = normalizeEmpty(diskContent);
+          isDirtyOnOpen = normalizeEmpty(content) !== diskBaseline;
+        }
+      } catch (e) {
+        console.warn("Não consegui verificar disco:", e);
+        diskBaseline = normalizeEmpty(content);
+      }
+    }
+
+    // Define o estado dirty IMEDIATAMENTE
+    currentIsDirty = isDirtyOnOpen;
+
     // descarta modelo atual do editor, se houver
     const oldModel = window.editor.getModel();
     if (oldModel && !oldModel.isDisposed()) {
@@ -812,27 +840,22 @@ async function openFile(path, restoreState = null) {
 
     window.editor.setModel(model);
 
-    // baseline real do disco (normalizado)
-    const diskBaseline = normalizeEmpty(restoreState?.diskBaseline ?? content);
-
     currentFile = path;
     currentFolder = dirname(path);
     setSelectionType('file');
     publishState();
 
+    // Atualiza a UI da árvore IMEDIATAMENTE
+    const node = document.querySelector(`.item.file[data-path="${CSS.escape(path)}"]`);
+    if (node && node._dirtyDot) {
+      node._dirtyDot.style.display = isDirtyOnOpen ? "inline" : "none";
+      node.title = isDirtyOnOpen ? t("ui.unsaved_changes") : "";
+    }
+
     // se veio do diff com conteúdo sujo → restaura esse estado
     if (restoreState) {
       if (restoreState.isDirty) {
         model.setValue(restoreState.tempContent);
-        currentIsDirty = true;
-        const node = document.querySelector(`.item.file[data-path="${CSS.escape(path)}"]`);
-        if (node && node._dirtyDot) {
-          node._dirtyDot.style.display = "inline";
-          node.title = t("ui.unsaved_changes");
-        }
-        renderStatusBar();
-      } else {
-        currentIsDirty = false;
       }
     }
 
@@ -915,6 +938,7 @@ async function openFile(path, restoreState = null) {
       unlockEditor();
       renderStatus();
       renderStatusBar();
+      
       // garante associação carregada para o arquivo aberto e atualiza toolbar
       try {
         const assoc = await fetchAssoc(path);
