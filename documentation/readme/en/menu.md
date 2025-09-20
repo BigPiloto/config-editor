@@ -71,6 +71,25 @@ Page to enable or disable two-factor authentication (TOTP)
 
 #### Enable two-factor authentication
 
+![Enable 2FA](/documentation/images/enable_2fa.png)
+
+Steps:
+
+1. Enter current password
+2. Scan the QR Code with your authenticator app
+3. Enter the generated 2FA code
+4. Click `Enable 2FA`
+
+#### Disable two-factor authentication
+
+![Disable 2FA](/documentation/images/disable_2fa.png)
+
+Steps:
+
+1. Enter current password
+2. Enter 2FA code
+3. Click `Disable 2FA`
+
 
 
 
