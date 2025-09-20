@@ -117,7 +117,7 @@ networks:
     3. ⚠️ Obrigatório: sempre defina um volume do host para /data mesmo se não tiver arquivos
         - É em /data que ficam salvos:
            - Arquivos de configuração editados
-           - Backups automáticos (/data/.backups)
+           - Backups (/data/.backups)
            - Se não mapear, todas essas informações serão perdidas quando o container for removido ou reiniciado
     4. Mesmo que você utilize apenas subpastas ou arquivos individuais (itens 17 e 18), ainda assim deve existir um volume principal montado em /data para garantir persistência
 17. `Volume de subpasta`: monta apenas uma subpasta em /data/pasta
@@ -128,18 +128,18 @@ networks:
     1. ⚠️ Não altere o destino (/app/config) somente o caminho no seu servidor
     2. Essencial para não perder a linguagem e a configuração de usuário
 20. `docker.sock`: necessário para reiniciar e inspecionar containers
-    1. ⚠️ Se não montar, funções de reinício/status não funcionarão.
-21. `test`: Comando que será executado para verificar se o container está saudável
+    1. ⚠️ Se não montar, funções de reinício/status não funcionarão
+21. `test`: comando que será executado para verificar se o container está saudável
     1. Aqui ele chama a URL interna http://127.0.0.1:8000/api/readyz
     2. Se a API não responder, retorna erro (exit 1) e o container é marcado como unhealthy
     3. ⚠️ Obrigatório para o healthcheck funcionar
-22. `interval`: Frequência com que o Docker executa o healthcheck
+22. `interval`: frequência com que o Docker executa o healthcheck
     1. Pode ajustar (30s, 120s, etc) dependendo de quanto tempo tolera entre verificações
-23. `timeout`: Tempo máximo que o Docker espera o comando do healthcheck terminar
+23. `timeout`: tempo máximo que o Docker espera o comando do healthcheck terminar
     1. Pode aumentar se sua aplicação demorar para responder
-24. `retries`: Quantas falhas consecutivas são toleradas antes do container ser considerado unhealthy
+24. `retries`: quantas falhas consecutivas são toleradas antes do container ser considerado unhealthy
     1. Pode reduzir (ex: 3) para detectar mais rápido, ou aumentar para ser mais tolerante
-25. `start_period`: Período de carência logo após o container iniciar, antes de começar a checar saúde
+25. `start_period`: período de carência logo após o container iniciar, antes de começar a checar saúde
     1. Pode aumentar se sua aplicação demorar mais para iniciar (ex: 60s)
 26. `networks`: conecta o serviço a uma rede Docker
     1. Opcional. Se não precisa de rede dedicada, pode remover
@@ -183,7 +183,7 @@ Conforme **Dockerfile** na raiz do projeto, é possível rodar a aplicação com
 ![Interface Editor Web](/documentation/images/screenshot_editor.png)
 
 ### Interace Status de Saúde dos Containers
-![Interace Status de Saúde dos Containers](/documentation/images/screenshot_containers.png)
+![Inteface Status de Saúde dos Containers](/documentation/images/screenshot_containers.png)
 
 ## Suporte & Problemas
 
