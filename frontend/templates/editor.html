@@ -2465,12 +2465,12 @@ document.addEventListener('DOMContentLoaded', initRestartButton);
 <!-- Menu suspenso -->
 <div id="context-menu">
   <ul>
-    <li data-action="rename">Renomear</li>
-    <li data-action="delete">Excluir</li>
-    <li data-action="download">Download</li>
+    <li data-action="rename">{{ T('ui.rename_path') }}</li>
+    <li data-action="delete">{{ T('ui.delete_path') }}</li>
+    <li data-action="download">{{ T('ui.download_file') }}</li>
     <li class="separator"></li>
-    <li data-action="new-file">Novo arquivo</li>
-    <li data-action="new-folder">Nova pasta</li>
+    <li data-action="new-file">{{ T('ui.new_file') }}</li>
+    <li data-action="new-folder">{{ T('ui.new_folder') }}</li>
   </ul>
 </div>
 {% endblock %}

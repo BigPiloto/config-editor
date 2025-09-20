@@ -6,7 +6,7 @@ A árvore de arquivos Config Editor fica localizada a esquerda do editor de text
 
 ![Árvore de arquivos](/documentation/images/arvore_de_arquivos.png)
 
-### Nova Pasta
+### Nova pasta
 
 Cria uma nova pasta no caminho selecionado
 
