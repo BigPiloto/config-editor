@@ -43,11 +43,11 @@ As alterações são destacadas visualmente
 
 > [!NOTE]  
 > Se a variável de ambiente `DIFF_ALLOW_EDIT` estiver como `"true"`, o **painel direito** (conteúdo atual) permanece **editável** no modo Diferenças
-> Com `"false"`, o diff é **somente leitura**, útil para revisão antes de aplicar
+> Com `"false"`, o diferenças é **somente leitura**, útil para revisão antes de aplicar
 
 #### Ações no modo Diferenças
 
-- **Voltar ao editor** → Sai do modo Diferenças
+- **Voltar ao editor** → Sai do modo `Diferenças`
   Se `DIFF_ALLOW_EDIT = "true"` e você alterou o conteúdo durante o diff, **as mudanças permanecem** no editor ao voltar
 - **Aplicar versão em disco** → Grava no arquivo o **conteúdo da versão em disco** (descarta o que está no editor) e aplica
 - **Aplicar versão do editor** → Grava no arquivo o **conteúdo do editor** (substitui o que está em disco) e aplica
@@ -60,6 +60,7 @@ As alterações são destacadas visualmente
 ### Validar
 
 Se o arquivo **tiver suporte a validação**, você pode verificar se o conteúdo **está válido** (ex.: sintaxe/formato)
+
 A verificação roda **sobre o conteúdo atual do editor** — não precisa salvar antes
 
 ![Botão validar](/documentation/images/validar.png)
@@ -67,17 +68,20 @@ A verificação roda **sobre o conteúdo atual do editor** — não precisa salv
 ### Salvar arquivo
 
 Grava no disco o **conteúdo do editor** (substitui o que está em disco) e remove o indicador de **alterações não salvas (⚪)**
+
 Não cria backup e **não reinicia** container
 
 ![Botão salvar arquivo](/documentation/images/salvar_arquivo.png)
 
 > [!TIP]  
-> Quer preservar a versão atual? Use **Criar backup** antes de salvar
+> Quer preservar a versão atual? Use `Criar backup` antes de salvar
 
 ### Baixar arquivo
 
 Faz o download do **arquivo em disco**
+
 Se houver alterações **não salvas** no editor, elas **não** vão no download
+
 Para baixar as mudanças recentes, **salve** primeiro
 
 ![Botão baixar arquivo](/documentation/images/baixar_arquivo.png)
@@ -92,7 +96,7 @@ Cria um backup do **arquivo em disco** (a versão atualmente salva), **não** do
 > Se houver alterações **não salvas** no editor, elas **não entram** no backup
 
 > [!TIP]  
-> Para incluir suas edições, **salve** primeiro e depois clique em **Criar backup**
+> Para incluir suas edições, **salve** primeiro e depois clique em `Criar backup`
 
 ### Gerenciar backup
 
@@ -116,7 +120,7 @@ Após escolher um backup, abre-se um pop-up com três opções:
 
 #### Diferenças pelo backup
 
-A tela é semelhante ao modo **Diferenças** padrão:
+A tela é semelhante ao modo `Diferenças` padrão:
 
 ![Diferenças backups](/documentation/images/diferencas_backup.png)
 
@@ -131,7 +135,9 @@ Na parte superior do editor, você encontra:
 
 > [!CAUTION]  
 > O backup armazena **apenas o conteúdo do arquivo**, não o nome/extensão  
+>
 > Se você mudou a **extensão** do arquivo e **aplicar um backup**, o conteúdo será restaurado, **mas o nome/extensão atuais permanecem**
+>
 > Caso necessário, **renomeie** o arquivo após aplicar o backup
 
 ### Associar container
@@ -150,11 +156,12 @@ Você pode **salvar** a associação ou **excluir** caso queira removê-la
 > Ao **renomear** ou **mover** o arquivo (inclusive mudar a extensão), a **associação é mantida**
 
 > [!TIP]  
-> A associação habilita o **botão Reiniciar** para esse arquivo e também exibe o **estado** do container na interface
+> A associação habilita o **botão `Reiniciar`** para esse arquivo e também exibe o **estado** do container na interface
 
 > [!WARNING]  
 > Para funcionar, é necessário que a integração com Docker esteja ativa (socket montado em `/var/run/docker.sock` e permissões corretas)
-> Se o container não for encontrado, o botão de **Reiniciar** ficará desativado e uma mensagem de erro será exibida ao tentar usar a ação
+>
+> Se o container não for encontrado, o **botão de `Reiniciar`** exibirá uma mensagem de erro ao tentar usar a ação
 
 ### Reiniciar
 
@@ -165,7 +172,7 @@ Envia o comando de **reinício** para o container **associado** ao arquivo
 Ao clicar, um pop-up solicita **confirmação** do reinício
 
 > [!NOTE]  
-> O botão **Reiniciar** só fica disponível quando há um **container associado** ao arquivo
+> O botão `Reiniciar` só fica disponível quando há um **container associado** ao arquivo
 
 # Tutoriais relacionados
 
