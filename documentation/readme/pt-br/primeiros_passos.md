@@ -8,7 +8,7 @@ Neste tutorial vamos detalhar melhor as opções de configuração disponíveis 
 
 ### Image
 
-Aqui define a imagem da aplicação, recomendado utilizar bigpiloto/config-editor:latest
+Aqui define a imagem da aplicação, recomendado utilizar `bigpiloto/config-editor:latest`
 
 ### Container name
 
@@ -21,7 +21,7 @@ container_name: config-editor
 
 ### User: "0:0"
 
-Esse parâmetro é necessário para permitir interação com o docker.sock
+Esse parâmetro é necessário para permitir interação com o **docker.sock**
 
 Com ele, o Config Editor consegue inspecionar containers e executar o `Reiniciar` diretamente pela interface
 
@@ -54,7 +54,7 @@ Porta interna usada pela aplicação, não altere (sempre 8000)
 O `DATA_DIR` define onde a aplicação armazena todos os arquivos de trabalho:
 
 - Arquivos de configuração editados
-- Backups automáticos (`.backups`)
+- Backups (`.backups`)
 - Temporários (`.tmp`)
 
 Por padrão é `/data`
@@ -140,6 +140,7 @@ Exemplo de volume para montar a pasta completa:
 ```yaml
 - /srv/meus_servicos/config:/data
 ```
+
 > [!WARNING]
 > Não use nomes duplicados em /data, pois haverá conflito
 
@@ -156,12 +157,14 @@ volumes:
 
 Exemplo de volume para montar a subpasta completa:
 ```yaml
-- /srv/meus_servicos/config:/data/config
+volumes:
+  - /srv/meus_servicos/config:/data/config
 ```
 
 Exemplo de volume para montar arquivo:
 ```yaml
-- /srv/meus_servicos/arquivo.extensao:/data/arquivo.extensao
+volumes:
+  - /srv/meus_servicos/arquivo.extensao:/data/arquivo.extensao
 ```
 Pode haver subpastas dentro do container
 
@@ -170,7 +173,7 @@ Pode haver subpastas dentro do container
 
 - É em /data que ficam salvos:
   1. Arquivos de configuração editados
-  2. Backups automáticos (/data/.backups)
+  2. Backups (/data/.backups)
 
 Se não mapear, todas essas informações serão perdidas quando o container for removido ou reiniciado
 
