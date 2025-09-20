@@ -11,6 +11,10 @@ The **Editor** is where you view and edit files and access the main actions
 
 ![Editor open](/documentation/images/editor_en_aberto.png)
 
+To increase or decrease the horizontal size of the tree/editor, just click and drag the divider; double-clicking it will reset to the default size
+
+![Editor divider](/documentation/images/divisoria.png)
+
 ### Editor bottom bar
 
 When a file is open, the editor footer displays:

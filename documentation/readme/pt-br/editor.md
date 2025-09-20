@@ -11,6 +11,10 @@ O **Editor** é onde você visualiza e edita arquivos e acessa as ações princi
 
 ![Editor aberto](/documentation/images/editor_br_aberto.png)
 
+Para aumenta ou diminuir o tamanho horinzontal da árvore/editor é só clicar e arrastar na divisória, se der 2 cliques ele volta para o padrão
+
+![Divisória do editor](/documentation/images/divisoria.png)
+
 ### Barra inferior do editor
 
 Quando um arquivo está aberto, o rodapé do editor exibe:
