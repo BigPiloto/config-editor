@@ -37,7 +37,7 @@ templates.env.globals.update({
 app.add_middleware(
     SessionMiddleware,
     secret_key=settings.SESSION_SECRET,
-    same_site="lax",
+    same_site="none",
     https_only=settings.HTTPS_ONLY,
 )
 
@@ -184,6 +184,16 @@ async def validation_exception_handler(request: Request, exc: RequestValidationE
 
 @app.middleware("http")
 async def enforce_https(request, call_next):
+    cf_visitor = request.headers.get("cf-visitor")
+    if cf_visitor:
+        try:
+            import json
+            data = json.loads(cf_visitor)
+            if data.get("scheme") == "https":
+                request.scope["scheme"] = "https"
+        except Exception:
+            pass
+            
     if settings.HTTPS_ONLY:
         proto = request.headers.get("x-forwarded-proto") or request.url.scheme
         if proto != "https":
